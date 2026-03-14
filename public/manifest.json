@@ -4,8 +4,8 @@
   "description": "AI Security & VPN",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#00e5a0",
+  "background_color": "#000000",
+  "theme_color": "#ff6b2b",
   "icons": [
     {
       "src": "/icons/icon-192.png",
