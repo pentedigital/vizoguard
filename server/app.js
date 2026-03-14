@@ -29,6 +29,33 @@ app.use("/api/license", licenseRouter);
 // VPN API
 app.use("/api/vpn", vpnRouter);
 
+// Checkout session creation (server-side so we can set metadata.plan)
+app.post("/api/checkout", async (req, res) => {
+  const { plan } = req.body;
+  const priceMap = {
+    vpn: process.env.STRIPE_PRICE_VPN,
+    security_vpn: process.env.STRIPE_PRICE_SECURITY_VPN,
+  };
+  const priceId = priceMap[plan];
+  if (!priceId) return res.status(400).json({ error: "Invalid plan" });
+
+  try {
+    const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      line_items: [{ price: priceId, quantity: 1 }],
+      metadata: { plan },
+      subscription_data: { metadata: { plan } },
+      success_url: `${process.env.APP_URL}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.APP_URL}/#pricing`,
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("Checkout error:", err.message);
+    res.status(500).json({ error: "Failed to create checkout session" });
+  }
+});
+
 // Health check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
