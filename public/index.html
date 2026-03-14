@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vizoguard — AI Security &amp; VPN for Mac &amp; PC</title>
   <meta name="description" content="AI-powered security that sees threats before they happen. Encrypted VPN with no logs. Two plans: Vizoguard Pro ($99.99/yr) or Vizoguard Basic ($19.99/yr).">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00e5a0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -96,7 +101,7 @@
       <p class="pricing-desc">Every coffee shop, every hotel, every airport &mdash; someone is watching. Vizoguard Basic encrypts everything you send. No logs. No tracking. Less than $2 a month.</p>
       <ul class="pricing-features">
         <li>Encrypted VPN</li>
-        <li>Unlimited devices</li>
+        <li>1 device per license</li>
         <li>Unlimited bandwidth</li>
         <li>Mac, Windows, iOS, Android</li>
         <li>Zero logs</li>
@@ -157,7 +162,7 @@
 
   <div class="faq-item">
     <button class="faq-question">What's the difference between the two plans?</button>
-    <div class="faq-answer"><p><strong>Vizoguard Basic</strong> ($19.99/yr) gives you an encrypted VPN on unlimited devices. <strong>Vizoguard Pro</strong> ($99.99/yr) adds the full desktop app with AI threat blocking, phishing detection, connection monitoring, and the self-healing immune system &mdash; plus VPN.</p></div>
+    <div class="faq-answer"><p><strong>Vizoguard Basic</strong> ($19.99/yr) gives you an encrypted VPN on 1 device. <strong>Vizoguard Pro</strong> ($99.99/yr) adds the full desktop app with AI threat blocking, phishing detection, connection monitoring, and the self-healing immune system &mdash; plus VPN.</p></div>
   </div>
 
   <div class="faq-item">
@@ -167,7 +172,7 @@
 
   <div class="faq-item">
     <button class="faq-question">How many devices can I use?</button>
-    <div class="faq-answer"><p>The VPN works on unlimited devices per license, any platform. The Pro desktop app binds to 1 device. To transfer, contact support@vizoguard.com.</p></div>
+    <div class="faq-answer"><p>One license covers one device, any platform. Both Basic and Pro bind to a single machine on first activation. To transfer, contact support@vizoguard.com.</p></div>
   </div>
 
   <div class="faq-item">
@@ -191,6 +196,11 @@
   <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
 </footer>
 
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 <script src="/js/main.js"></script>
 </body>
 </html>

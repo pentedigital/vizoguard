@@ -60,8 +60,12 @@ async function listAccessKeys() {
   return data.accessKeys || [];
 }
 
+async function setDataLimit(keyId, bytes) {
+  await outlineFetch(`/access-keys/${keyId}/data-limit`, "PUT", { limit: { bytes } });
+}
+
 async function getServer() {
   return outlineFetch("/server");
 }
 
-module.exports = { createAccessKey, deleteAccessKey, listAccessKeys, getServer };
+module.exports = { createAccessKey, deleteAccessKey, listAccessKeys, getServer, setDataLimit };
