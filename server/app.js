@@ -41,14 +41,16 @@ app.post("/api/checkout", async (req, res) => {
   if (!priceId) return res.status(400).json({ error: "Invalid plan" });
 
   try {
-    const session = await stripe.checkout.sessions.create({
+    const sessionOpts = {
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { plan },
       subscription_data: { metadata: { plan } },
+      allow_promotion_codes: true,
       success_url: `${process.env.APP_URL}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/#pricing`,
-    });
+    };
+    const session = await stripe.checkout.sessions.create(sessionOpts);
     res.json({ url: session.url });
   } catch (err) {
     console.error("Checkout error:", err.message);
