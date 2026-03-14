@@ -1,10 +1,11 @@
-const CACHE_NAME = 'vg-v1';
+const CACHE_NAME = 'vg-v2';
 
 const APP_SHELL = [
   '/',
   '/css/style.css',
   '/js/main.js',
-  '/thank-you.html'
+  '/thank-you.html',
+  '/manifest.json'
 ];
 
 // Install: cache the app shell
