@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Vizoguard</title>
+  <meta name="description" content="Vizoguard Privacy Policy. No logs, no tracking, no cookies. We collect the bare minimum to deliver your license.">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00e5a0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/security.html">Security</a>
+    <a href="mailto:support@vizoguard.com">Contact</a>
+  </nav>
+</header>
+
+<section class="legal">
+  <h1 class="section-title">Privacy Policy</h1>
+  <p><strong>Last updated:</strong> March 2026</p>
+
+  <h2>What We Collect</h2>
+  <p>Vizoguard collects only what is necessary to deliver and manage your license:</p>
+  <ul>
+    <li><strong>Email address</strong> — for license delivery and support communication</li>
+    <li><strong>License key</strong> — to identify your subscription</li>
+    <li><strong>Device hardware ID</strong> — to bind your license to a single device</li>
+    <li><strong>Stripe customer and subscription IDs</strong> — for billing and subscription management</li>
+  </ul>
+  <p>That is everything. There is nothing else.</p>
+
+  <h2>What We Do Not Collect</h2>
+  <p>Vizoguard does not collect, store, or process any of the following:</p>
+  <ul>
+    <li>Browsing history</li>
+    <li>DNS queries</li>
+    <li>Traffic content</li>
+    <li>IP addresses of visited sites</li>
+    <li>Connection timestamps</li>
+    <li>Bandwidth usage</li>
+    <li>VPN session data</li>
+  </ul>
+
+  <h2>VPN: Strict No-Logs Policy</h2>
+  <p>Vizoguard's VPN is powered by Outline Server, which does not log user traffic. We maintain a strict no-logs policy:</p>
+  <ul>
+    <li>No activity logs</li>
+    <li>No connection logs</li>
+    <li>No metadata logs</li>
+  </ul>
+  <p>We cannot see what you browse, where you connect, or when you use the VPN. That data does not exist.</p>
+
+  <h2>Data Storage</h2>
+  <p>All account and license data is stored in a SQLite database on a single Hostinger VPS located in Brazil (187.77.129.43). Data is encrypted at rest via filesystem encryption.</p>
+
+  <h2>Third Parties</h2>
+  <p>We share data with exactly two third-party services:</p>
+  <ul>
+    <li><strong>Stripe</strong> — payment processing. Stripe handles all credit card data directly. Vizoguard never sees or stores card numbers.</li>
+    <li><strong>Hostinger</strong> — email delivery via SMTP for license key delivery and support.</li>
+  </ul>
+  <p>We use no analytics platforms, no tracking pixels, and no advertising networks.</p>
+
+  <h2>Data Retention</h2>
+  <p>License and account data is retained while your subscription is active. Data is deleted upon request. To request deletion, email <a href="mailto:support@vizoguard.com">support@vizoguard.com</a>.</p>
+
+  <h2>Cookies</h2>
+  <p>vizoguard.com uses no cookies. There is no tracking. There are no analytics. The site is static HTML.</p>
+
+  <h2>GDPR</h2>
+  <p>If you are located in the European Union, you have the right to request a full export of your data or request its deletion. To exercise either right, email <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> and we will respond within 30 days.</p>
+
+  <h2>Contact</h2>
+  <p>For any privacy-related questions or requests, contact us at <a href="mailto:support@vizoguard.com">support@vizoguard.com</a>.</p>
+</section>
+
+<footer>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/security.html">Security</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
+</body>
+</html>

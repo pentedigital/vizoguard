@@ -1,10 +1,13 @@
-const CACHE_NAME = 'vg-v2';
+const CACHE_NAME = 'vg-v3';
 
 const APP_SHELL = [
   '/',
   '/css/style.css',
   '/js/main.js',
   '/thank-you.html',
+  '/privacy.html',
+  '/terms.html',
+  '/security.html',
   '/manifest.json'
 ];
 
