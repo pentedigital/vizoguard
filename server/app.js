@@ -47,6 +47,7 @@ app.post("/api/checkout", async (req, res) => {
       metadata: { plan },
       subscription_data: { metadata: { plan } },
       allow_promotion_codes: true,
+      payment_method_collection: "if_required",
       success_url: `${process.env.APP_URL}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/#pricing`,
     };
