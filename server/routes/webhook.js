@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const express = require("express");
 const crypto = require("crypto");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 const { sendLicenseEmail } = require("../email");
 
@@ -16,7 +17,6 @@ function generateKey() {
 
 // Stripe requires raw body for signature verification
 router.post("/", express.raw({ type: "application/json" }), async (req, res) => {
-  const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -35,6 +35,15 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (!email) {
           console.error("No email in checkout session", session.id);
           break;
+        }
+
+        // Idempotency: skip if license already exists for this subscription
+        if (session.subscription) {
+          const existing = stmts.findBySubscription.get(session.subscription);
+          if (existing) {
+            console.log(`License already exists for subscription ${session.subscription}, skipping`);
+            break;
+          }
         }
 
         const plan = session.metadata?.plan || "security_vpn";
@@ -101,7 +110,8 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     }
   } catch (err) {
     console.error(`Error processing ${event.type}:`, err);
-    return res.status(500).json({ error: "Internal processing error" });
+    // Return 200 to prevent Stripe retry loops; error is logged above
+    return res.json({ received: true });
   }
 
   res.json({ received: true });

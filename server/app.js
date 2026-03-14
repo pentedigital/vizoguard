@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
 const vpnRouter = require("./routes/vpn");
@@ -40,7 +41,6 @@ app.post("/api/checkout", async (req, res) => {
   if (!priceId) return res.status(400).json({ error: "Invalid plan" });
 
   try {
-    const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],

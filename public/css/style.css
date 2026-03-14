@@ -61,7 +61,14 @@ a:hover { opacity: 0.8; }
 }
 
 .animate-up {
-  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+}
+
+.animate-up.visible {
+  animation-name: fadeUp;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
 }
 
 .delay-1 { animation-delay: 0.1s; }
@@ -81,9 +88,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 6%;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 24px max(6%, calc((100% - 1400px) / 2 + 6%));
   background: rgba(10, 10, 15, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -214,14 +219,6 @@ nav a:hover { color: var(--ice); opacity: 1; }
   box-shadow: 0 8px 30px rgba(0, 229, 160, 0.08);
 }
 
-/* ── Section divider ───────────────────────── */
-.divider {
-  width: 48px;
-  height: 1px;
-  background: var(--border);
-  margin: 0 auto;
-}
-
 /* ── Section headers ───────────────────────── */
 .section-label {
   font-family: var(--mono);
@@ -242,14 +239,6 @@ nav a:hover { color: var(--ice); opacity: 1; }
   text-align: center;
   line-height: 1.1;
   margin-bottom: 20px;
-}
-
-.section-sub {
-  text-align: center;
-  color: var(--mist);
-  font-size: 1.05rem;
-  max-width: 480px;
-  margin: 0 auto;
 }
 
 /* ── Features ──────────────────────────────── */
@@ -597,13 +586,6 @@ footer p {
 
 footer a { color: #4a5568; }
 footer a:hover { color: var(--mist); opacity: 1; }
-
-footer .footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 16px;
-}
 
 /* ── Thank-you page ────────────────────────── */
 .thankyou {

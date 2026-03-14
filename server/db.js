@@ -66,7 +66,7 @@ const stmts = {
   findPeersByLicense: db.prepare("SELECT * FROM vpn_peers WHERE license_id = ?"),
   findPeerByKey: db.prepare("SELECT * FROM vpn_peers WHERE public_key = ?"),
   findPeerByIp: db.prepare("SELECT * FROM vpn_peers WHERE assigned_ip = ?"),
-  getMaxIp: db.prepare("SELECT assigned_ip FROM vpn_peers ORDER BY id DESC LIMIT 1"),
+  getMaxIp: db.prepare("SELECT assigned_ip FROM vpn_peers ORDER BY CAST(REPLACE(assigned_ip, '10.66.66.', '') AS INTEGER) DESC LIMIT 1"),
   deactivatePeer: db.prepare("UPDATE vpn_peers SET is_active = 0 WHERE id = ?"),
   activatePeer: db.prepare("UPDATE vpn_peers SET is_active = 1 WHERE id = ?"),
   deletePeer: db.prepare("DELETE FROM vpn_peers WHERE id = ? AND license_id = ?"),

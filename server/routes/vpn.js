@@ -14,17 +14,7 @@ const VPN_DNS = process.env.VPN_DNS || "1.1.1.1, 1.0.0.1";
 const VPN_SUBNET = "10.66.66";
 const MAX_PEERS_PER_LICENSE = 3;
 
-// Generate WireGuard keys using wg command
-async function generateKeys() {
-  const { stdout: privateKey } = await execFileAsync("wg", ["genkey"]);
-  const { stdout: publicKey } = await execFileAsync("wg", ["pubkey"], {
-    input: privateKey.trim(),
-  });
-  // For pubkey via stdin, use spawn approach
-  return { privateKey: privateKey.trim(), publicKey: publicKey.trim() };
-}
-
-// Generate keys properly (wg pubkey reads from stdin)
+// Generate WireGuard keys (wg pubkey reads from stdin)
 async function generateWgKeys() {
   const { stdout: privateKey } = await execFileAsync("wg", ["genkey"]);
   const privKey = privateKey.trim();

@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 
 const router = Router();
@@ -60,7 +61,6 @@ router.get("/lookup", async (req, res) => {
   }
 
   try {
-    const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (!session.subscription && !session.customer) {
