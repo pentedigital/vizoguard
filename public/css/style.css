@@ -144,7 +144,9 @@ nav a:hover { color: var(--text); text-decoration: none; }
   height: 1px;
   background: var(--border);
   max-width: 1080px;
-  margin: 0 auto;
+  margin: 0 auto 0;
+  padding: 0 24px;
+  background-clip: content-box;
 }
 
 /* ── Features ─────────────────── */
@@ -349,7 +351,13 @@ nav a:hover { color: var(--text); text-decoration: none; }
   font-weight: 600;
   color: var(--accent);
   min-width: 24px;
+  flex-shrink: 0;
   padding-top: 2px;
+}
+
+.step > div {
+  flex: 1;
+  min-width: 0;
 }
 
 .step h3 {
@@ -590,38 +598,107 @@ footer a:hover { color: var(--text-2); text-decoration: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive ───────────────── */
-@media (max-width: 768px) {
-  header { padding: 0 20px; }
-  nav { gap: 20px; }
-  nav a { font-size: 0.75rem; }
 
-  .hero { padding: 120px 20px 80px; }
-  .hero h1 { font-size: 2rem; }
-  .hero p { font-size: 1rem; }
-  .hero-buttons { flex-direction: column; align-items: center; }
-  .hero-buttons .btn { width: 100%; max-width: 280px; }
+/* Tablet landscape / small desktop */
+@media (max-width: 1024px) {
+  header { padding: 0 32px; }
+  nav { gap: 24px; }
 
-  .features { padding: 64px 20px; }
-  .features-grid { grid-template-columns: 1fr; gap: 32px; }
-
-  .pricing { padding: 64px 20px; }
-  .pricing-grid { grid-template-columns: 1fr; }
-
-  .steps-section { padding: 64px 20px; }
-  .faq { padding: 64px 20px; }
-
-  .download-buttons { flex-direction: column; align-items: center; }
-  .download-buttons .btn, .download-buttons .btn-secondary { width: 100%; max-width: 280px; }
-
-  .legal { padding: 100px 20px 60px; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 32px; }
+  .hero { padding: 140px 24px 100px; }
 }
 
+/* Tablet portrait / large phone */
+@media (max-width: 768px) {
+  header {
+    padding: 0 20px;
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  nav { gap: 20px; }
+  nav a {
+    font-size: 0.75rem;
+    padding: 8px 0; /* 44px touch target with line-height */
+  }
+
+  .hero { padding: 120px 20px 72px; }
+  .hero h1 { font-size: 2rem; line-height: 1.15; }
+  .hero p { font-size: 0.9375rem; margin-bottom: 28px; }
+  .hero-buttons { flex-direction: column; align-items: center; }
+  .hero-buttons .btn { width: 100%; max-width: 320px; }
+
+  .features { padding: 56px 20px; }
+  .features h2 { margin-bottom: 40px; }
+  .features-grid { grid-template-columns: 1fr; gap: 28px; }
+
+  .pricing { padding: 56px 20px; }
+  .pricing > p { margin-bottom: 32px; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+  .pricing-card { padding: 28px 24px; }
+
+  .steps-section { padding: 56px 20px; }
+  .steps-section h2 { margin-bottom: 32px; }
+
+  .faq { padding: 56px 20px; }
+  .faq h2 { margin-bottom: 32px; }
+  .faq-question {
+    font-size: 0.875rem;
+    padding: 18px 0;
+    min-height: 44px; /* touch target */
+  }
+
+  .download-buttons { flex-direction: column; align-items: center; }
+  .download-buttons .btn,
+  .download-buttons .btn-secondary { width: 100%; max-width: 320px; }
+
+  .divider { padding: 0 20px; }
+
+  .legal { padding: 100px 20px 60px; }
+  .legal h1 { font-size: 1.5rem; }
+
+  .thankyou { padding: 120px 20px 80px; }
+  .thankyou h1 { font-size: 1.5rem; }
+  .license-box { padding: 24px 20px; }
+  .license-key { font-size: 1.1rem; }
+
+  footer { padding: 36px 20px; }
+}
+
+/* Small phone */
 @media (max-width: 480px) {
-  header { flex-direction: column; height: auto; padding: 12px 16px; gap: 8px; }
-  nav { gap: 16px; flex-wrap: wrap; justify-content: center; }
+  header {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 16px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0));
+    gap: 8px;
+  }
+  nav { gap: 14px; flex-wrap: wrap; justify-content: center; }
 
-  .hero { padding: 100px 16px 60px; }
-  .hero h1 { font-size: 1.75rem; }
+  .hero { padding: 110px 16px 56px; }
+  .hero h1 { font-size: 1.625rem; }
+  .hero p { font-size: 0.875rem; }
+  .hero-buttons .btn { max-width: 100%; }
 
+  .features { padding: 48px 16px; }
+  .feature h3 { font-size: 0.9375rem; }
+  .feature p { font-size: 0.8125rem; }
+
+  .pricing { padding: 48px 16px; }
+  .pricing h2 { font-size: 1.5rem; }
+  .pricing-grid { max-width: 100%; }
+  .pricing-card { padding: 24px 20px; }
   .pricing-amount .dollar { font-size: 2rem; }
+  .pricing-amount .cents { font-size: 1rem; }
+  .pricing-tag { top: 12px; right: 12px; font-size: 0.625rem; }
+
+  .steps-section { padding: 48px 16px; }
+  .steps-section h2 { font-size: 1.5rem; }
+  .step { gap: 16px; padding: 20px 0; }
+
+  .faq { padding: 48px 16px; }
+  .faq h2 { font-size: 1.5rem; }
+
+  .divider { padding: 0 16px; }
+
+  footer p { font-size: 0.6875rem; }
 }
