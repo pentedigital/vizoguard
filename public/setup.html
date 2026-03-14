@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup — Vizoguard</title>
+  <meta name="description" content="Set up Vizoguard on your device. Platform-specific instructions for iPhone, Android, Mac, and Windows.">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ff6b2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .setup {
+      text-align: center;
+      padding: 120px 24px 80px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .setup h1 {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .setup > p {
+      font-size: 0.9375rem;
+      color: var(--text-2);
+      margin-bottom: 32px;
+    }
+    .detected-label {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(255, 107, 43, 0.08);
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .platform-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .platform-card h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .setup-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .setup-step:first-of-type {
+      border-top: 1px solid var(--border);
+    }
+    .setup-step:last-of-type {
+      border-bottom: none;
+    }
+    .setup-step-num {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 20px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .setup-step-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .setup-step-content p {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+    .setup-step-content .btn {
+      width: 100%;
+      margin-bottom: 0;
+    }
+    .platform-card .note {
+      font-size: 0.8125rem;
+      color: var(--text-3);
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+    .platform-card .alt-link {
+      font-size: 0.8125rem;
+      color: var(--text-3);
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+    .platform-card .alt-link a {
+      color: var(--accent);
+    }
+    .vpn-key-box {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .vpn-key-box label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .vpn-key-box .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .vpn-key-box .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 20px;
+      background: transparent;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-family: var(--font);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .vpn-key-box .btn-copy:hover {
+      background: var(--surface);
+      border-color: var(--text-3);
+    }
+    .no-key-msg {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .no-key-msg p {
+      font-size: 0.9375rem;
+      color: var(--text-2);
+      margin-bottom: 16px;
+    }
+    .show-all-link {
+      display: inline-block;
+      font-size: 0.8125rem;
+      color: var(--text-3);
+      margin-top: 16px;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .show-all-link:hover {
+      color: var(--text-2);
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .setup { padding: 100px 20px 60px; }
+      .platform-card { padding: 28px 24px; }
+      .vpn-key-box { padding: 24px 20px; }
+    }
+    @media (max-width: 480px) {
+      .setup { padding: 100px 16px 48px; }
+      .setup h1 { font-size: 1.5rem; }
+      .platform-card { padding: 24px 20px; }
+      .vpn-key-box { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+  <nav>
+    <a href="/#features">Features</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="mailto:support@vizoguard.com">Contact</a>
+  </nav>
+</header>
+
+<section class="setup">
+  <h1>Set up Vizoguard</h1>
+  <p>Follow the steps below to get protected on your device.</p>
+
+  <div id="detected-label" style="display: none;"></div>
+
+  <!-- VPN key section (shown when ?key= is present) -->
+  <div id="vpn-key-section" style="display: none;">
+    <div class="vpn-key-box">
+      <label>Your VPN Access Key</label>
+      <a id="vpn-connect-btn" href="#" class="btn">Connect to Vizoguard VPN</a>
+      <button id="vpn-copy-btn" class="btn-copy" onclick="copyKey()">Copy key</button>
+    </div>
+  </div>
+
+  <!-- No key message (shown when no ?key= param) -->
+  <div id="no-key-section" style="display: none;">
+    <div class="no-key-msg">
+      <p>Subscribe first to get your VPN access key.</p>
+      <a href="/#pricing" class="btn btn-secondary">View plans</a>
+    </div>
+  </div>
+
+  <!-- iPhone/iPad card -->
+  <div id="card-ios" class="platform-card" style="display: none;">
+    <h2>Protect your iPhone in 30 seconds.</h2>
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-content">
+        <p>Install the Outline app</p>
+        <a href="https://apps.apple.com/app/outline-app/id1356177741" class="btn btn-secondary" target="_blank" rel="noopener">Install Outline</a>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">2</div>
+      <div class="setup-step-content">
+        <p>Tap to connect</p>
+        <a id="ios-connect-btn" href="#" class="btn connect-btn" style="display: none;">Connect VPN</a>
+        <p class="no-key-inline" style="display: none; color: var(--text-3); font-size: 0.8125rem;">Get your access key first from <a href="/#pricing">pricing</a>.</p>
+      </div>
+    </div>
+    <p class="note">Your VPN access key will be imported automatically.</p>
+  </div>
+
+  <!-- Android card -->
+  <div id="card-android" class="platform-card" style="display: none;">
+    <h2>Protect your Android in 30 seconds.</h2>
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-content">
+        <p>Install the Outline app</p>
+        <a href="https://play.google.com/store/apps/details?id=org.outline.android.client" class="btn btn-secondary" target="_blank" rel="noopener">Install Outline</a>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">2</div>
+      <div class="setup-step-content">
+        <p>Tap to connect</p>
+        <a id="android-connect-btn" href="#" class="btn connect-btn" style="display: none;">Connect VPN</a>
+        <p class="no-key-inline" style="display: none; color: var(--text-3); font-size: 0.8125rem;">Get your access key first from <a href="/#pricing">pricing</a>.</p>
+      </div>
+    </div>
+    <p class="note">Your VPN access key will be imported automatically.</p>
+  </div>
+
+  <!-- Mac card -->
+  <div id="card-mac" class="platform-card" style="display: none;">
+    <h2>Full protection for your Mac.</h2>
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-content">
+        <p>Download Vizoguard Pro — AI security + VPN in one app.</p>
+        <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac (.dmg)</a>
+      </div>
+    </div>
+    <p class="alt-link">Or VPN only: <a href="https://apps.apple.com/app/outline-app/id1356177741" target="_blank" rel="noopener">Install Outline from the App Store</a></p>
+  </div>
+
+  <!-- Windows card -->
+  <div id="card-windows" class="platform-card" style="display: none;">
+    <h2>Full protection for your Windows PC.</h2>
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-content">
+        <p>Download Vizoguard Pro — AI security + VPN in one app.</p>
+        <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn">Download for Windows (.exe)</a>
+      </div>
+    </div>
+    <p class="alt-link">Or VPN only: <a href="https://www.microsoft.com/store/apps/9s38ghmg8g7l" target="_blank" rel="noopener">Install Outline from the Microsoft Store</a></p>
+  </div>
+
+  <a class="show-all-link" id="show-all-link" onclick="showAllPlatforms()">Show all platforms</a>
+</section>
+
+<footer>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/security.html">Security</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
+<script>
+(function() {
+  // Parse VPN key from URL
+  const params = new URLSearchParams(window.location.search);
+  const vpnKey = params.get('key');
+  let hasKey = false;
+
+  if (vpnKey) {
+    hasKey = true;
+    document.getElementById('vpn-key-section').style.display = 'block';
+    // The ss:// URL can be opened directly — Outline intercepts this protocol
+    document.getElementById('vpn-connect-btn').href = vpnKey;
+
+    // Set connect buttons on platform cards
+    document.querySelectorAll('.connect-btn').forEach(function(btn) {
+      btn.href = vpnKey;
+      btn.style.display = 'inline-flex';
+    });
+
+    // Store key for copy
+    window._vpnKey = vpnKey;
+  } else {
+    document.getElementById('no-key-section').style.display = 'block';
+    // Show inline no-key messages on mobile cards
+    document.querySelectorAll('.no-key-inline').forEach(function(el) {
+      el.style.display = 'block';
+    });
+  }
+
+  // Platform detection
+  var ua = navigator.userAgent || '';
+  var platform = 'all';
+
+  if (/iPhone|iPad|iPod/.test(ua)) {
+    platform = 'ios';
+  } else if (/Android/.test(ua)) {
+    platform = 'android';
+  } else if (/Macintosh|Mac OS X/.test(ua)) {
+    platform = 'mac';
+  } else if (/Windows/.test(ua)) {
+    platform = 'windows';
+  }
+
+  var platformNames = {
+    ios: 'iPhone',
+    android: 'Android',
+    mac: 'Mac',
+    windows: 'Windows'
+  };
+
+  if (platform !== 'all') {
+    // Show detected label
+    var label = document.getElementById('detected-label');
+    label.innerHTML = '<span class="detected-label">Detected: ' + platformNames[platform] + '</span>';
+    label.style.display = 'block';
+
+    // Show only the matching card
+    document.getElementById('card-' + platform).style.display = 'block';
+  } else {
+    // Show all cards
+    document.getElementById('card-ios').style.display = 'block';
+    document.getElementById('card-android').style.display = 'block';
+    document.getElementById('card-mac').style.display = 'block';
+    document.getElementById('card-windows').style.display = 'block';
+    // Hide the "show all" link since all are already visible
+    document.getElementById('show-all-link').style.display = 'none';
+  }
+})();
+
+function showAllPlatforms() {
+  document.getElementById('card-ios').style.display = 'block';
+  document.getElementById('card-android').style.display = 'block';
+  document.getElementById('card-mac').style.display = 'block';
+  document.getElementById('card-windows').style.display = 'block';
+  document.getElementById('show-all-link').style.display = 'none';
+}
+
+function copyKey() {
+  var key = window._vpnKey;
+  if (!key) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(key).then(function() {
+      document.getElementById('vpn-copy-btn').textContent = 'Copied!';
+      setTimeout(function() {
+        document.getElementById('vpn-copy-btn').textContent = 'Copy key';
+      }, 2000);
+    });
+  } else {
+    // Fallback
+    var ta = document.createElement('textarea');
+    ta.value = key;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('vpn-copy-btn').textContent = 'Copied!';
+    setTimeout(function() {
+      document.getElementById('vpn-copy-btn').textContent = 'Copy key';
+    }, 2000);
+  }
+}
+</script>
+</body>
+</html>

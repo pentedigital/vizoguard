@@ -47,7 +47,11 @@
         <label>Your VPN Access Key</label>
         <div class="license-key" id="vpn-key-display" style="font-size: 0.75rem; color: var(--teal);"></div>
       </div>
-      <p>Download the <a href="https://getoutline.org/get-started/">Outline app</a> and paste this key to connect.</p>
+      <div class="download-buttons" style="margin-top: 16px;">
+        <a id="vpn-connect-btn" href="#" class="btn">Connect to Vizoguard VPN</a>
+      </div>
+      <p style="margin-top: 12px;">Download the <a href="https://getoutline.org/get-started/">Outline app</a> and paste this key to connect.</p>
+      <p style="margin-top: 8px;"><a id="setup-guide-link" href="/setup.html">Need help setting up? Visit our setup guide</a></p>
     </div>
 
     <div id="pro-downloads" style="display: none;">
@@ -120,6 +124,8 @@ if ('serviceWorker' in navigator) {
           // Show VPN access key if available
           if (data.access_url) {
             document.getElementById("vpn-key-display").textContent = data.access_url;
+            document.getElementById("vpn-connect-btn").href = data.access_url;
+            document.getElementById("setup-guide-link").href = "/setup.html?key=" + encodeURIComponent(data.access_url);
             document.getElementById("vpn-key-section").style.display = "block";
           }
 
