@@ -37,6 +37,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           break;
         }
 
+        const plan = session.metadata?.plan || "security_vpn";
         const licenseKey = generateKey();
         const expiresAt = new Date();
         expiresAt.setFullYear(expiresAt.getFullYear() + 1);
@@ -44,15 +45,16 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         stmts.insert.run({
           key: licenseKey,
           email,
+          plan,
           customer: session.customer || null,
           subscription: session.subscription || null,
           expires_at: expiresAt.toISOString(),
         });
 
-        console.log(`License created: ${licenseKey} for ${email}`);
+        console.log(`License created: ${licenseKey} for ${email} (plan: ${plan})`);
 
         try {
-          await sendLicenseEmail(email, licenseKey);
+          await sendLicenseEmail(email, licenseKey, plan);
           console.log(`License email sent to ${email}`);
         } catch (emailErr) {
           console.error("Failed to send license email:", emailErr.message);

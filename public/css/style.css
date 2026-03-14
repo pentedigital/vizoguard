@@ -288,6 +288,105 @@ nav a:hover { color: #fff; }
   font-size: 0.95rem;
 }
 
+/* ── Pricing ─────────────────────── */
+.pricing {
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.pricing h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.pricing .subtitle {
+  color: var(--text-muted);
+  margin-bottom: 48px;
+  font-size: 1.05rem;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 750px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  text-align: left;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
+}
+
+.pricing-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.pricing-price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.pricing-price span {
+  font-size: 1.5rem;
+}
+
+.pricing-price small {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.pricing-desc {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+}
+
+.pricing-features li {
+  color: var(--text);
+  padding: 8px 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(42, 53, 72, 0.5);
+}
+
+.pricing-features li::before {
+  content: "\2713";
+  color: var(--green);
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.pricing-card .btn {
+  width: 100%;
+  text-align: center;
+}
+
 /* ── Footer ──────────────────────── */
 footer {
   text-align: center;
@@ -368,6 +467,7 @@ footer a:hover { color: #fff; }
   .hero h1 { font-size: 2.2rem; }
   .hero { padding: 60px 20px 50px; }
   .features-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
   .steps { flex-direction: column; align-items: center; }
   header { flex-direction: column; gap: 12px; }
   nav a { margin-left: 1rem; }

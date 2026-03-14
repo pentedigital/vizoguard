@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
+const vpnRouter = require("./routes/vpn");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,9 @@ app.use(express.json());
 
 // License API
 app.use("/api/license", licenseRouter);
+
+// VPN API
+app.use("/api/vpn", vpnRouter);
 
 // Health check
 app.get("/api/health", (_req, res) => {

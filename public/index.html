@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vizoguard — AI Security for Mac &amp; PC</title>
-  <meta name="description" content="AI-powered security that sees threats before they happen. Protects against phishing, malware, and malicious links in real time. $99.99/year.">
+  <title>Vizoguard — AI Security &amp; VPN for Mac &amp; PC</title>
+  <meta name="description" content="AI-powered security and fast VPN for Mac and PC. Two plans: Security + VPN ($99.99/yr) or VPN only ($19.99/yr).">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -13,6 +13,7 @@
   <div class="logo">Vizo<span>guard</span></div>
   <nav>
     <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
     <a href="#how-it-works">How It Works</a>
     <a href="#faq">FAQ</a>
     <a href="mailto:support@vizoguard.com">Contact</a>
@@ -21,19 +22,18 @@
 
 <section class="hero">
   <h1>AI security that <span>sees threats</span> before they happen</h1>
-  <p>Vizoguard protects your Mac and PC from phishing, malware, and malicious links in real time. Set it and forget it.</p>
-  <button class="btn" onclick="startCheckout()">Subscribe — $99.99/year</button>
-  <p class="hero-price">Annual subscription. Cancel anytime. 1 device per license.</p>
+  <p>Vizoguard protects your Mac and PC from phishing, malware, and malicious links in real time &mdash; plus a fast, private VPN powered by WireGuard.</p>
+  <a href="#pricing" class="btn">See Plans</a>
 </section>
 
 <section class="features" id="features">
   <h2>What Vizoguard Does</h2>
-  <p class="subtitle">Six layers of protection running silently in the background.</p>
+  <p class="subtitle">Security and privacy in one app.</p>
   <div class="features-grid">
     <div class="feature-card">
       <div class="icon">&#x1f6e1;</div>
       <h3>Real-Time Threat Blocking</h3>
-      <p>Every URL you visit is checked against live threat intelligence before it loads. Malicious sites are blocked instantly.</p>
+      <p>Every URL is checked against live threat intelligence before it loads. Malicious sites are blocked instantly.</p>
     </div>
     <div class="feature-card">
       <div class="icon">&#x1f3a3;</div>
@@ -41,14 +41,14 @@
       <p>AI analysis detects phishing pages, malware downloads, and social engineering attacks even on brand-new domains.</p>
     </div>
     <div class="feature-card">
+      <div class="icon">&#x1f510;</div>
+      <h3>WireGuard VPN</h3>
+      <p>Fast, modern VPN that encrypts all your traffic. Connect up to 3 devices. Works on Mac, Windows, iOS, and Android.</p>
+    </div>
+    <div class="feature-card">
       <div class="icon">&#x1f50c;</div>
       <h3>Connection Monitoring</h3>
       <p>See every outbound connection from your machine. Get alerted when apps connect to suspicious servers.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">&#x1f514;</div>
-      <h3>Device Intrusion Alerts</h3>
-      <p>Instant notifications when new USB devices, Bluetooth connections, or network interfaces appear.</p>
     </div>
     <div class="feature-card">
       <div class="icon">&#x1f9ec;</div>
@@ -63,18 +63,53 @@
   </div>
 </section>
 
+<section class="pricing" id="pricing">
+  <h2>Simple Pricing</h2>
+  <p class="subtitle">Choose the plan that fits you. Cancel anytime.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-badge">VPN Only</div>
+      <div class="pricing-price">$19<span>.99</span><small>/year</small></div>
+      <p class="pricing-desc">Fast, private VPN powered by WireGuard.</p>
+      <ul class="pricing-features">
+        <li>WireGuard VPN</li>
+        <li>Up to 3 devices</li>
+        <li>Unlimited bandwidth</li>
+        <li>Mac, Windows, iOS, Android</li>
+        <li>No logs</li>
+      </ul>
+      <button class="btn btn-outline" onclick="startCheckout('vpn')">Get VPN — $19.99/yr</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Security + VPN</div>
+      <div class="pricing-price">$99<span>.99</span><small>/year</small></div>
+      <p class="pricing-desc">Full AI security suite plus VPN.</p>
+      <ul class="pricing-features">
+        <li>Everything in VPN plan</li>
+        <li>Real-time threat blocking</li>
+        <li>Phishing &amp; malware detection</li>
+        <li>Connection monitoring</li>
+        <li>Device intrusion alerts</li>
+        <li>Self-healing immune system</li>
+        <li>Desktop app (Mac &amp; Windows)</li>
+      </ul>
+      <button class="btn" onclick="startCheckout('security_vpn')">Get Security + VPN — $99.99/yr</button>
+    </div>
+  </div>
+</section>
+
 <section class="how-it-works" id="how-it-works">
   <h2>How It Works</h2>
   <div class="steps">
     <div class="step">
       <div class="step-number">1</div>
       <h3>Subscribe</h3>
-      <p>Pay $99.99/year. Your license key is emailed immediately.</p>
+      <p>Pick your plan. Your license key is emailed immediately.</p>
     </div>
     <div class="step">
       <div class="step-number">2</div>
       <h3>Download</h3>
-      <p>Install the app on your Mac or PC. Enter your license key.</p>
+      <p>Install the app or import your WireGuard VPN config.</p>
     </div>
     <div class="step">
       <div class="step-number">3</div>
@@ -88,33 +123,33 @@
   <h2>FAQ</h2>
 
   <div class="faq-item">
-    <button class="faq-question">What does Vizoguard protect against?</button>
-    <div class="faq-answer"><p>Phishing websites, malware downloads, malicious redirects, suspicious outbound connections, and device-level intrusions like unauthorized USB or Bluetooth devices.</p></div>
+    <button class="faq-question">What's the difference between the two plans?</button>
+    <div class="faq-answer"><p>The <strong>VPN plan</strong> ($19.99/yr) gives you a fast WireGuard VPN on up to 3 devices. The <strong>Security + VPN plan</strong> ($99.99/yr) adds the full Vizoguard desktop app with AI threat blocking, phishing detection, connection monitoring, and the immune system — plus VPN.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">How many devices can I use with one license?</button>
-    <div class="faq-answer"><p>One license works on one device. It binds to your hardware on first activation. To transfer to a new device, contact support@vizoguard.com.</p></div>
+    <button class="faq-question">How does the VPN work?</button>
+    <div class="faq-answer"><p>Vizoguard VPN uses WireGuard, the fastest modern VPN protocol. After subscribing, you generate a config file and import it into the WireGuard app (or the Vizoguard desktop app handles it automatically). Your traffic is encrypted and routed through our server.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">How many devices can I use?</button>
+    <div class="faq-answer"><p>The VPN works on up to 3 devices per license (any platform). The Security desktop app binds to 1 device. To transfer, contact support@vizoguard.com.</p></div>
   </div>
 
   <div class="faq-item">
     <button class="faq-question">Does it work offline?</button>
-    <div class="faq-answer"><p>Yes. Vizoguard caches threat data locally and continues protecting you offline. It validates your license online every 24 hours, with a 7-day grace period if you're disconnected.</p></div>
+    <div class="faq-answer"><p>The security features cache threat data locally and work offline. Your license validates online every 24 hours with a 7-day grace period. The VPN requires an internet connection.</p></div>
   </div>
 
   <div class="faq-item">
     <button class="faq-question">Can I cancel my subscription?</button>
-    <div class="faq-answer"><p>Anytime. Your protection continues until the end of your paid period. No refund hassle — cancel from your Stripe billing portal or email support.</p></div>
+    <div class="faq-answer"><p>Anytime. Your protection continues until the end of your paid period. Cancel from your Stripe billing portal or email support.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">Does it slow down my internet?</button>
-    <div class="faq-answer"><p>No. Vizoguard runs a lightweight local proxy that adds less than 1ms of latency. Threat checks happen in parallel — you won't notice it.</p></div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">What operating systems are supported?</button>
-    <div class="faq-answer"><p>macOS 12+ (Monterey and later) and Windows 10/11. Native apps for both platforms — no browser extension needed.</p></div>
+    <button class="faq-question">What platforms are supported?</button>
+    <div class="faq-answer"><p>VPN: Mac, Windows, iOS, Android, Linux — anything that runs WireGuard. Security app: macOS 12+ and Windows 10/11.</p></div>
   </div>
 </section>
 
