@@ -83,7 +83,9 @@ router.get("/lookup", async (req, res) => {
     res.json({
       key: license.key,
       email: license.email,
+      plan: license.plan,
       expires: license.expires_at,
+      access_url: license.outline_access_key || null,
     });
   } catch (err) {
     console.error("License lookup error:", err.message);

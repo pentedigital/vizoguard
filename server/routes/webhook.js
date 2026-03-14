@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 const { sendLicenseEmail } = require("../email");
+const outline = require("../outline");
 
 const router = Router();
 
@@ -62,8 +63,20 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
         console.log(`License created: ${licenseKey} for ${email} (plan: ${plan})`);
 
+        // Auto-provision Outline VPN access key
+        let accessUrl = null;
         try {
-          await sendLicenseEmail(email, licenseKey, plan);
+          const newLicense = stmts.findByKey.get(licenseKey);
+          const result = await outline.createAccessKey(email);
+          stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
+          accessUrl = result.accessUrl;
+          console.log(`Outline key created for ${licenseKey}: key_id=${result.id}`);
+        } catch (outlineErr) {
+          console.error("Failed to create Outline key:", outlineErr.message);
+        }
+
+        try {
+          await sendLicenseEmail(email, licenseKey, plan, accessUrl);
           console.log(`License email sent to ${email}`);
         } catch (emailErr) {
           console.error("Failed to send license email:", emailErr.message);
@@ -87,7 +100,20 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
       case "customer.subscription.deleted": {
         const sub = event.data.object;
+        const expiredLicense = stmts.findBySubscription.get(sub.id);
         stmts.updateStatus.run("expired", sub.id);
+
+        // Revoke Outline VPN access
+        if (expiredLicense && expiredLicense.outline_key_id) {
+          try {
+            await outline.deleteAccessKey(expiredLicense.outline_key_id);
+            stmts.clearOutlineKey.run(expiredLicense.id);
+            console.log(`Outline key revoked for subscription ${sub.id}`);
+          } catch (err) {
+            console.error("Failed to revoke Outline key:", err.message);
+          }
+        }
+
         console.log(`Subscription expired: ${sub.id}`);
         break;
       }

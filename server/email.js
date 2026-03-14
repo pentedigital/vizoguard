@@ -10,23 +10,27 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendLicenseEmail(email, licenseKey, plan) {
+async function sendLicenseEmail(email, licenseKey, plan, accessUrl) {
   const appUrl = process.env.APP_URL || "https://vizoguard.com";
-  const isVpnOnly = plan === "vpn";
-  const planName = isVpnOnly ? "Vizoguard VPN" : "Vizoguard Security + VPN";
+  const isBasic = plan === "vpn";
+  const planName = isBasic ? "Vizoguard Basic" : "Vizoguard Pro";
 
-  const downloadSection = isVpnOnly
-    ? `\nVPN Setup:\n  Use your license key to generate VPN configs at ${appUrl}\n  Or use the Vizoguard app for automatic setup.\n`
-    : `\nDownload the app:\n  Mac:     ${appUrl}/downloads/Vizoguard-latest.dmg\n  Windows: ${appUrl}/downloads/Vizoguard-Setup-latest.exe\n`;
+  const vpnSetup = accessUrl
+    ? `\nVPN Setup:\n  1. Download the Outline app: https://getoutline.org/get-started/\n  2. Open the app and tap "Add Server"\n  3. Paste your access key: ${accessUrl}\n`
+    : `\nVPN Setup:\n  Log in at ${appUrl} to generate your VPN access key.\n`;
+
+  const downloadSection = isBasic
+    ? vpnSetup
+    : `\nDownload the app:\n  Mac:     ${appUrl}/downloads/Vizoguard-latest.dmg\n  Windows: ${appUrl}/downloads/Vizoguard-Setup-latest.exe\n${vpnSetup}`;
 
   const text = `Welcome to ${planName}!
 
 Your license key: ${licenseKey}
 ${downloadSection}
 How to activate:
-  1. ${isVpnOnly ? "Visit vizoguard.com/vpn or install the app" : "Install and open Vizoguard"}
-  2. Enter your license key when prompted
-  3. You're ${isVpnOnly ? "connected" : "protected"}!
+  1. ${isBasic ? "Download the Outline app from getoutline.org" : "Install Vizoguard and enter your license key"}
+  2. ${accessUrl ? "Paste your VPN access key in the Outline app" : "Generate your VPN key at vizoguard.com"}
+  3. You're ${isBasic ? "connected" : "protected"}!
 
 Your subscription renews automatically each year. Manage it anytime from your Stripe billing portal.
 
@@ -34,37 +38,45 @@ Questions? Reply to this email.
 
 — Vizoguard Team`;
 
-  const downloadHtml = isVpnOnly
-    ? `<p style="margin-bottom: 16px;"><strong>VPN Setup:</strong></p>
-       <p style="margin: 4px 0 24px; color: #8892a4;">Use your license key to generate WireGuard configs. Import them into the <a href="https://www.wireguard.com/install/" style="color: #3b82f6;">WireGuard app</a> on any device (up to 3 devices).</p>`
-    : `<p style="margin-bottom: 16px;"><strong>Download the app:</strong></p>
-       <p style="margin: 4px 0;"><a href="${appUrl}/downloads/Vizoguard-latest.dmg" style="color: #3b82f6;">Download for Mac (.dmg)</a></p>
-       <p style="margin: 4px 0 24px;"><a href="${appUrl}/downloads/Vizoguard-Setup-latest.exe" style="color: #3b82f6;">Download for Windows (.exe)</a></p>`;
+  const vpnHtml = accessUrl
+    ? `<div style="background: #111827; border: 1px solid #1a2235; border-radius: 8px; padding: 20px; margin: 16px 0;">
+         <p style="color: #8a93a6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 8px;">Your VPN Access Key</p>
+         <p style="font-size: 11px; font-family: monospace; color: #00e5a0; word-break: break-all; margin: 0;">${accessUrl}</p>
+       </div>
+       <p style="margin: 4px 0 16px;"><a href="https://getoutline.org/get-started/" style="color: #00e5a0;">Download the Outline app</a> and paste this key to connect.</p>`
+    : `<p style="margin: 4px 0 16px; color: #8a93a6;">Log in at <a href="${appUrl}" style="color: #00e5a0;">vizoguard.com</a> to generate your VPN access key.</p>`;
+
+  const downloadHtml = isBasic
+    ? vpnHtml
+    : `<p style="margin-bottom: 12px;"><strong>Download the app:</strong></p>
+       <p style="margin: 4px 0;"><a href="${appUrl}/downloads/Vizoguard-latest.dmg" style="color: #00e5a0;">Download for Mac (.dmg)</a></p>
+       <p style="margin: 4px 0 20px;"><a href="${appUrl}/downloads/Vizoguard-Setup-latest.exe" style="color: #00e5a0;">Download for Windows (.exe)</a></p>
+       ${vpnHtml}`;
 
   const html = `
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e17; color: #e2e8f0; padding: 40px 20px;">
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #f0f2f5; padding: 40px 20px;">
   <div style="max-width: 520px; margin: 0 auto;">
-    <h1 style="color: #3b82f6; font-size: 24px; margin-bottom: 8px;">Welcome to ${planName}</h1>
-    <p style="color: #8892a4; margin-bottom: 32px;">${isVpnOnly ? "Fast, private VPN powered by WireGuard" : "AI security + VPN for your Mac &amp; PC"}</p>
+    <h1 style="color: #00e5a0; font-size: 24px; margin-bottom: 8px;">Welcome to ${planName}</h1>
+    <p style="color: #8a93a6; margin-bottom: 32px;">${isBasic ? "Fast, private VPN — no logs, no tracking" : "AI security + VPN for your Mac &amp; PC"}</p>
 
-    <div style="background: #1a2332; border: 1px solid #2a3548; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
-      <p style="color: #8892a4; font-size: 13px; margin: 0 0 8px;">YOUR LICENSE KEY</p>
-      <p style="font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 2px; margin: 0; font-family: monospace;">${licenseKey}</p>
+    <div style="background: #111827; border: 1px solid #00e5a0; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
+      <p style="color: #8a93a6; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px;">Your License Key</p>
+      <p style="font-size: 20px; font-weight: 700; color: #f0f2f5; letter-spacing: 2px; margin: 0; font-family: monospace;">${licenseKey}</p>
     </div>
 
     ${downloadHtml}
 
     <p style="margin-bottom: 8px;"><strong>How to activate:</strong></p>
-    <ol style="color: #8892a4; padding-left: 20px; margin-bottom: 32px;">
-      <li>${isVpnOnly ? "Visit vizoguard.com/vpn or install the app" : "Install and open Vizoguard"}</li>
-      <li>Enter your license key</li>
-      <li>You're ${isVpnOnly ? "connected" : "protected"}!</li>
+    <ol style="color: #8a93a6; padding-left: 20px; margin-bottom: 32px;">
+      <li>${isBasic ? "Download the Outline app" : "Install Vizoguard and enter your license key"}</li>
+      <li>${accessUrl ? "Paste your VPN access key in the Outline app" : "Generate your VPN key at vizoguard.com"}</li>
+      <li>You're ${isBasic ? "connected" : "protected"}!</li>
     </ol>
 
-    <p style="color: #475569; font-size: 13px; border-top: 1px solid #2a3548; padding-top: 20px;">
+    <p style="color: #4a5568; font-size: 13px; border-top: 1px solid #1a2235; padding-top: 20px;">
       Your subscription renews automatically each year. Questions? Reply to this email.<br>
       &copy; 2026 Vizoguard
     </p>

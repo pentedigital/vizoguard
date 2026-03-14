@@ -37,11 +37,20 @@
       <div class="license-key" id="license-key-display"></div>
     </div>
 
-    <p>Download Vizoguard. Enter this key. That's it.</p>
+    <div id="vpn-key-section" style="display: none;">
+      <div class="license-box" style="border-color: var(--border); box-shadow: none;">
+        <label>Your VPN Access Key</label>
+        <div class="license-key" id="vpn-key-display" style="font-size: 0.75rem; color: var(--teal);"></div>
+      </div>
+      <p>Download the <a href="https://getoutline.org/get-started/">Outline app</a> and paste this key to connect.</p>
+    </div>
 
-    <div class="download-buttons">
-      <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
-      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
+    <div id="pro-downloads" style="display: none;">
+      <p>Download Vizoguard. Enter your license key. That's it.</p>
+      <div class="download-buttons">
+        <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
+        <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
+      </div>
     </div>
   </div>
 
@@ -97,6 +106,17 @@
           document.getElementById("license-key-display").textContent = data.key;
           document.getElementById("email-display").textContent = data.email || "your email";
           document.getElementById("success").style.display = "block";
+
+          // Show VPN access key if available
+          if (data.access_url) {
+            document.getElementById("vpn-key-display").textContent = data.access_url;
+            document.getElementById("vpn-key-section").style.display = "block";
+          }
+
+          // Show desktop app downloads for Pro plan
+          if (data.plan === "security_vpn") {
+            document.getElementById("pro-downloads").style.display = "block";
+          }
           return;
         }
 
