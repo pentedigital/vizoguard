@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You — Vizoguard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+</header>
+
+<section class="thankyou">
+  <div id="loading">
+    <h1>Processing your order...</h1>
+    <div class="spinner"></div>
+    <p>Retrieving your license key. This usually takes a few seconds.</p>
+  </div>
+
+  <div id="success" style="display: none;">
+    <h1>You're in!</h1>
+    <p>Your license key has been emailed to <strong id="email-display"></strong>.</p>
+
+    <div class="license-box">
+      <label>Your License Key</label>
+      <div class="license-key" id="license-key-display"></div>
+    </div>
+
+    <p>Download Vizoguard, enter this key, and you're protected.</p>
+
+    <div class="download-buttons">
+      <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
+      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-outline">Download for Windows</a>
+    </div>
+  </div>
+
+  <div id="pending" style="display: none;">
+    <h1>Almost there!</h1>
+    <p>Your payment was received. Your license key will be emailed to you shortly.</p>
+    <p>If you don't receive it within a few minutes, contact <a href="mailto:support@vizoguard.com">support@vizoguard.com</a>.</p>
+    <div class="download-buttons" style="margin-top: 32px;">
+      <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
+      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-outline">Download for Windows</a>
+    </div>
+  </div>
+
+  <div id="error-state" style="display: none;">
+    <h1>Something went wrong</h1>
+    <p>We couldn't retrieve your license. Don't worry — your payment is safe.</p>
+    <p>Contact <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> and we'll sort it out immediately.</p>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Vizoguard. All rights reserved.</p>
+</footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get("session_id");
+
+  if (!sessionId) {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("error-state").style.display = "block";
+  } else {
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    async function pollLicense() {
+      attempts++;
+      try {
+        const res = await fetch(`/api/license/lookup?session_id=${encodeURIComponent(sessionId)}`);
+        const data = await res.json();
+
+        if (data.key) {
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("license-key-display").textContent = data.key;
+          document.getElementById("email-display").textContent = data.email || "your email";
+          document.getElementById("success").style.display = "block";
+          return;
+        }
+
+        if (data.pending && attempts < maxAttempts) {
+          setTimeout(pollLicense, 3000);
+          return;
+        }
+
+        // Max retries or unexpected response
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("pending").style.display = "block";
+      } catch (err) {
+        if (attempts < maxAttempts) {
+          setTimeout(pollLicense, 3000);
+          return;
+        }
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("error-state").style.display = "block";
+      }
+    }
+
+    pollLicense();
+  }
+</script>
+</body>
+</html>

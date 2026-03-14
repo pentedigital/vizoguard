@@ -1,0 +1,7 @@
+node_modules/
+.env
+data/vizoguard.db
+data/vizoguard.db-shm
+data/vizoguard.db-wal
+data/logs/
+data/backups/
