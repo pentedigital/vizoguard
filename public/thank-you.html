@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thank You — Vizoguard</title>
+  <title>Welcome to Vizoguard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -13,48 +13,66 @@
 </header>
 
 <section class="thankyou">
+
+  <!-- Loading state -->
   <div id="loading">
-    <h1>Processing your order...</h1>
+    <div class="status-icon" style="border-color: var(--border);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <h1>Activating your license...</h1>
     <div class="spinner"></div>
-    <p>Retrieving your license key. This usually takes a few seconds.</p>
+    <p>This usually takes a few seconds.</p>
   </div>
 
+  <!-- Success state -->
   <div id="success" style="display: none;">
-    <h1>You're in!</h1>
-    <p>Your license key has been emailed to <strong id="email-display"></strong>.</p>
+    <div class="status-icon success">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1>You're protected.</h1>
+    <p>Your license key has been sent to <strong style="color: var(--ice);" id="email-display"></strong>.</p>
 
     <div class="license-box">
       <label>Your License Key</label>
       <div class="license-key" id="license-key-display"></div>
     </div>
 
-    <p>Download Vizoguard, enter this key, and you're protected.</p>
+    <p>Download Vizoguard. Enter this key. That's it.</p>
 
     <div class="download-buttons">
       <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
-      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-outline">Download for Windows</a>
+      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
     </div>
   </div>
 
+  <!-- Pending state -->
   <div id="pending" style="display: none;">
-    <h1>Almost there!</h1>
-    <p>Your payment was received. Your license key will be emailed to you shortly.</p>
-    <p>If you don't receive it within a few minutes, contact <a href="mailto:support@vizoguard.com">support@vizoguard.com</a>.</p>
-    <div class="download-buttons" style="margin-top: 32px;">
+    <div class="status-icon" style="border-color: var(--teal); background: var(--teal-dim);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <h1>Almost there.</h1>
+    <p>Your payment was received. Your license key will arrive by email within a few minutes.</p>
+    <p>If it doesn't show up, reach out to <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> &mdash; we'll make it right.</p>
+    <div class="download-buttons" style="margin-top: 36px;">
       <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
-      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-outline">Download for Windows</a>
+      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
     </div>
   </div>
 
+  <!-- Error state -->
   <div id="error-state" style="display: none;">
-    <h1>Something went wrong</h1>
-    <p>We couldn't retrieve your license. Don't worry — your payment is safe.</p>
+    <div class="status-icon" style="border-color: var(--red); background: rgba(255, 59, 59, 0.08);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
+    <h1>Something went wrong.</h1>
+    <p>We couldn't retrieve your license. Don't worry &mdash; your payment is safe.</p>
     <p>Contact <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> and we'll sort it out immediately.</p>
   </div>
+
 </section>
 
 <footer>
-  <p>&copy; 2026 Vizoguard. All rights reserved.</p>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
 </footer>
 
 <script>
@@ -87,7 +105,6 @@
           return;
         }
 
-        // Max retries or unexpected response
         document.getElementById("loading").style.display = "none";
         document.getElementById("pending").style.display = "block";
       } catch (err) {

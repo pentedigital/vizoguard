@@ -29,4 +29,27 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!wasOpen) item.classList.add("open");
     });
   });
+
+  // ── Scroll-triggered animations ──────────────
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  document.querySelectorAll(".animate-up").forEach((el) => {
+    el.style.opacity = "0";
+    observer.observe(el);
+  });
 });
+
+// Add visible class trigger for animation
+const style = document.createElement("style");
+style.textContent = `.animate-up { opacity: 0; } .animate-up.visible { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }`;
+document.head.appendChild(style);
