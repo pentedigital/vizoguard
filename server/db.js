@@ -12,7 +12,7 @@ db.exec(`
     id                      INTEGER PRIMARY KEY AUTOINCREMENT,
     key                     TEXT    UNIQUE NOT NULL,
     email                   TEXT    NOT NULL,
-    plan                    TEXT    NOT NULL DEFAULT 'pro',
+    plan                    TEXT    NOT NULL DEFAULT 'security_vpn',
     stripe_customer_id      TEXT,
     stripe_subscription_id  TEXT    UNIQUE,
     device_id               TEXT,
@@ -26,6 +26,8 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_licenses_key ON licenses(key);
   CREATE INDEX IF NOT EXISTS idx_licenses_subscription ON licenses(stripe_subscription_id);
+  CREATE INDEX IF NOT EXISTS idx_licenses_customer ON licenses(stripe_customer_id);
+  CREATE INDEX IF NOT EXISTS idx_licenses_email ON licenses(email);
 `);
 
 // Migrate existing DB: add columns if missing
@@ -37,7 +39,7 @@ if (!cols.includes("outline_key_id")) {
   db.exec("ALTER TABLE licenses ADD COLUMN outline_key_id TEXT");
 }
 
-// Drop old vpn_peers table if it exists
+// One-time migration cleanup (safe to leave — no-ops after first run)
 db.exec("DROP TABLE IF EXISTS vpn_peers");
 
 const stmts = {

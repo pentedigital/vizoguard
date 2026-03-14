@@ -33,7 +33,11 @@ function outlineFetch(path, method = "GET", body = null) {
         if (res.statusCode < 200 || res.statusCode >= 300) {
           return reject(new Error(`Outline API ${method} ${path}: ${res.statusCode} ${data}`));
         }
-        resolve(data ? JSON.parse(data) : null);
+        try {
+          resolve(data ? JSON.parse(data) : null);
+        } catch (e) {
+          reject(new Error(`Outline API returned invalid JSON: ${data.slice(0, 200)}`));
+        }
       });
     });
 

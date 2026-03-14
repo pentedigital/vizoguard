@@ -47,7 +47,11 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           }
         }
 
-        const plan = session.metadata?.plan || "security_vpn";
+        const plan = session.metadata?.plan;
+        if (!plan || !["vpn", "security_vpn"].includes(plan)) {
+          console.error(`Invalid or missing plan in checkout session ${session.id}: ${plan}`);
+          break;
+        }
         const licenseKey = generateKey();
         const expiresAt = new Date();
         expiresAt.setFullYear(expiresAt.getFullYear() + 1);
@@ -68,6 +72,8 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         try {
           const newLicense = stmts.findByKey.get(licenseKey);
           const result = await outline.createAccessKey(email);
+          const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+          await outline.setDataLimit(result.id, DATA_LIMIT_BYTES);
           stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
           accessUrl = result.accessUrl;
           console.log(`Outline key created for ${licenseKey}: key_id=${result.id}`);

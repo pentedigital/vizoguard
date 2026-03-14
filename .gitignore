@@ -5,3 +5,5 @@ data/vizoguard.db-shm
 data/vizoguard.db-wal
 data/logs/
 data/backups/
+downloads/*.dmg
+downloads/*.exe

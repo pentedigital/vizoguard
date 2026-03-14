@@ -32,7 +32,7 @@ app.use("/api/vpn", vpnRouter);
 
 // Checkout session creation (server-side so we can set metadata.plan)
 app.post("/api/checkout", async (req, res) => {
-  const { plan } = req.body;
+  const plan = req.body?.plan;
   const priceMap = {
     vpn: process.env.STRIPE_PRICE_VPN,
     security_vpn: process.env.STRIPE_PRICE_SECURITY_VPN,
