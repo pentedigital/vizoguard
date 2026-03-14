@@ -31,7 +31,7 @@ function outlineFetch(path, method = "GET", body = null) {
           return resolve(null);
         }
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          return reject(new Error(`Outline API ${method} ${path}: ${res.statusCode} ${data}`));
+          return reject(new Error(`Outline API ${method} failed: ${res.statusCode}`));
         }
         try {
           resolve(data ? JSON.parse(data) : null);
@@ -56,6 +56,7 @@ async function createAccessKey(name) {
 }
 
 async function deleteAccessKey(id) {
+  if (!/^\d+$/.test(String(id))) throw new Error("Invalid access key ID");
   await outlineFetch(`/access-keys/${id}`, "DELETE");
 }
 
@@ -65,6 +66,7 @@ async function listAccessKeys() {
 }
 
 async function setDataLimit(keyId, bytes) {
+  if (!/^\d+$/.test(String(keyId))) throw new Error("Invalid access key ID");
   await outlineFetch(`/access-keys/${keyId}/data-limit`, "PUT", { limit: { bytes } });
 }
 

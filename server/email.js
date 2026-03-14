@@ -10,9 +10,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+}
+
 async function sendLicenseEmail(email, licenseKey, plan, accessUrl) {
   const appUrl = process.env.APP_URL || "https://vizoguard.com";
   const isBasic = plan === "vpn";
+  const safeKey = escapeHtml(licenseKey);
+  const safeAccessUrl = accessUrl ? escapeHtml(accessUrl) : null;
   const planName = isBasic ? "Vizoguard Basic" : "Vizoguard Pro";
 
   const vpnSetup = accessUrl
@@ -41,7 +47,7 @@ Questions? Reply to this email.
   const vpnHtml = accessUrl
     ? `<div style="background: #111827; border: 1px solid #1a2235; border-radius: 8px; padding: 20px; margin: 16px 0;">
          <p style="color: #8a93a6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 8px;">Your VPN Access Key</p>
-         <p style="font-size: 11px; font-family: monospace; color: #00e5a0; word-break: break-all; margin: 0;">${accessUrl}</p>
+         <p style="font-size: 11px; font-family: monospace; color: #00e5a0; word-break: break-all; margin: 0;">${safeAccessUrl}</p>
        </div>
        <p style="margin: 4px 0 16px;"><a href="https://getoutline.org/get-started/" style="color: #00e5a0;">Download the Outline app</a> and paste this key to connect.</p>`
     : `<p style="margin: 4px 0 16px; color: #8a93a6;">Log in at <a href="${appUrl}" style="color: #00e5a0;">vizoguard.com</a> to generate your VPN access key.</p>`;
@@ -64,7 +70,7 @@ Questions? Reply to this email.
 
     <div style="background: #111827; border: 1px solid #00e5a0; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
       <p style="color: #8a93a6; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px;">Your License Key</p>
-      <p style="font-size: 20px; font-weight: 700; color: #f0f2f5; letter-spacing: 2px; margin: 0; font-family: monospace;">${licenseKey}</p>
+      <p style="font-size: 20px; font-weight: 700; color: #f0f2f5; letter-spacing: 2px; margin: 0; font-family: monospace;">${safeKey}</p>
     </div>
 
     ${downloadHtml}

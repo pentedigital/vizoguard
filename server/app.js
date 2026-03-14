@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
@@ -24,14 +25,19 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Rate limiting
+const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false });
+const checkoutLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, standardHeaders: true, legacyHeaders: false });
+const licenseLimiter = rateLimit({ windowMs: 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false });
+
 // License API
-app.use("/api/license", licenseRouter);
+app.use("/api/license", licenseLimiter, licenseRouter);
 
 // VPN API
-app.use("/api/vpn", vpnRouter);
+app.use("/api/vpn", apiLimiter, vpnRouter);
 
 // Checkout session creation (server-side so we can set metadata.plan)
-app.post("/api/checkout", async (req, res) => {
+app.post("/api/checkout", checkoutLimiter, async (req, res) => {
   const plan = req.body?.plan;
   const priceMap = {
     vpn: process.env.STRIPE_PRICE_VPN,
