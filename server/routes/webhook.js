@@ -132,10 +132,15 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const expiredLicense = stmts.findBySubscription.get(sub.id);
         stmts.updateStatus.run("expired", sub.id);
 
-        // Revoke Outline VPN access
+        // Revoke Outline VPN access (use correct node for multi-node)
         if (expiredLicense && expiredLicense.outline_key_id) {
           try {
-            await outline.deleteAccessKey(expiredLicense.outline_key_id);
+            let revokeApiUrl = null;
+            if (expiredLicense.vpn_node_id) {
+              const node = stmts.findNodeById.get(expiredLicense.vpn_node_id);
+              if (node) revokeApiUrl = node.api_url;
+            }
+            await outline.deleteAccessKey(expiredLicense.outline_key_id, revokeApiUrl);
             stmts.clearOutlineKey.run(expiredLicense.id);
             console.log(`Outline key revoked for subscription ${sub.id}`);
           } catch (err) {
