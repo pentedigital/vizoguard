@@ -21,11 +21,8 @@ router.post("/", (req, res) => {
     return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
   }
 
-  if (license.status === "cancelled") {
-    // Cancelled but still within paid period
-    if (license.expires_at && new Date(license.expires_at) < new Date()) {
-      return res.status(403).json({ valid: false, error: "Subscription cancelled and expired", status: "expired" });
-    }
+  if (license.status === "suspended") {
+    return res.status(403).json({ valid: false, error: "Payment failed — please update your payment method at vizoguard.com", status: "suspended" });
   }
 
   if (license.expires_at && new Date(license.expires_at) < new Date()) {
