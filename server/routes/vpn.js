@@ -7,7 +7,7 @@ const router = Router();
 // Middleware: validate license has VPN access
 function requireVpnLicense(req, res, next) {
   const { key } = req.body;
-  if (!key) return res.status(400).json({ error: "Missing license key" });
+  if (!key || typeof key !== "string" || key.length > 24) return res.status(400).json({ error: "Missing or invalid license key" });
 
   const license = stmts.findByKey.get(key);
   if (!license) return res.status(404).json({ error: "License not found" });

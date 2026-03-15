@@ -26,7 +26,7 @@ app.use(cors({
     "https://www.vizoguard.com",
   ],
 }));
-app.use(express.json());
+app.use(express.json({ limit: "16kb" }));
 
 // Rate limiting
 const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false });
@@ -41,7 +41,7 @@ app.use("/api/vpn", apiLimiter, vpnRouter);
 
 // Checkout session creation (server-side so we can set metadata.plan)
 app.post("/api/checkout", checkoutLimiter, async (req, res) => {
-  const plan = req.body?.plan;
+  const plan = typeof req.body?.plan === "string" ? req.body.plan : null;
   const priceMap = {
     vpn: process.env.STRIPE_PRICE_VPN,
     security_vpn: process.env.STRIPE_PRICE_SECURITY_VPN,

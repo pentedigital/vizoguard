@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Vizoguard</title>
   <meta name="description" content="Your Vizoguard license is ready. Connect your VPN or download the desktop app.">
+  <meta name="robots" content="noindex">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00e5a0">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,11 +15,11 @@
   <style>
     .qr-box { text-align: center; margin: 20px 0; }
     .qr-box canvas { border-radius: 12px; background: #fff; padding: 12px; }
-    .qr-label { color: var(--muted); font-size: 0.75rem; margin-top: 8px; }
+    .qr-label { color: var(--text-2); font-size: 0.75rem; margin-top: 8px; }
     .copy-btn { background: var(--surface); border: 1px solid var(--border); color: var(--ice); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-top: 8px; }
     .copy-btn:hover { border-color: var(--teal); }
     .vpn-steps { text-align: left; max-width: 320px; margin: 24px auto 0; }
-    .vpn-steps li { color: var(--muted); margin-bottom: 8px; font-size: 0.9rem; }
+    .vpn-steps li { color: var(--text-2); margin-bottom: 8px; font-size: 0.9rem; }
     .vpn-steps strong { color: var(--ice); }
   </style>
 </head>
@@ -152,7 +153,7 @@ function connectVPN(e) {
   setTimeout(() => {
     const ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad/.test(ua)) {
-      window.location.href = "https://apps.apple.com/app/outline-app/id1356178125";
+      window.location.href = "https://apps.apple.com/app/outline-app/id1356177741";
     } else if (/android/.test(ua)) {
       window.location.href = "https://play.google.com/store/apps/details?id=org.outline.android.client";
     } else {
@@ -168,8 +169,7 @@ function copyKey() {
     btns.forEach(b => { b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy access key', 2000); });
   }).catch(() => {
     // Fallback: select text
-    const el = document.querySelector('.license-key[style*="teal"]');
-    if (el) { const range = document.createRange(); range.selectNodeContents(el); window.getSelection().removeAllRanges(); window.getSelection().addRange(range); }
+    prompt("Copy your access key:", vpnAccessUrl);
   });
 }
 

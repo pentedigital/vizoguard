@@ -50,6 +50,12 @@
 - nginx reverse proxy: `/etc/nginx/sites-available/vizoguard` → static site + API proxy + downloads
 - SSL: Let's Encrypt via certbot (auto-renew), cert at `/etc/letsencrypt/live/vizoguard.com/`
 - `systemctl restart nginx` after config changes
+- Outline VPN: Docker containers `shadowbox` + `watchtower` on ports 41298 (mgmt) + 19285 (access keys)
+- DB backups: daily at 3am via `/root/backup-db.sh`, 30-day retention in `/root/backups/`
+- PM2 log rotation: `pm2-logrotate` (10MB max, 7-day retention)
+
+## Scripts
+- `python3 setup-env.py` — auto-creates Stripe products/prices/webhook, tests SMTP, validates Outline
 
 ## Environment
 - Copy `server/.env.example` to `server/.env` before running

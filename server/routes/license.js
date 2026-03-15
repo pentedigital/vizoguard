@@ -8,8 +8,11 @@ const router = Router();
 router.post("/", (req, res) => {
   const { key, device_id } = req.body;
 
-  if (!key || !device_id) {
+  if (!key || !device_id || typeof key !== "string" || typeof device_id !== "string") {
     return res.status(400).json({ valid: false, error: "Missing key or device_id" });
+  }
+  if (key.length > 24 || device_id.length > 255) {
+    return res.status(400).json({ valid: false, error: "Invalid input" });
   }
 
   const license = stmts.findByKey.get(key);
@@ -63,8 +66,8 @@ router.post("/", (req, res) => {
 // GET /api/license/lookup?session_id=xxx — for thank-you page
 router.get("/lookup", async (req, res) => {
   const { session_id } = req.query;
-  if (!session_id) {
-    return res.status(400).json({ error: "Missing session_id" });
+  if (!session_id || typeof session_id !== "string" || !session_id.startsWith("cs_")) {
+    return res.status(400).json({ error: "Missing or invalid session_id" });
   }
 
   try {

@@ -45,9 +45,6 @@ if (!cols.includes("outline_key_id")) {
   db.exec("ALTER TABLE licenses ADD COLUMN outline_key_id TEXT");
 }
 
-// One-time migration cleanup (safe to leave — no-ops after first run)
-db.exec("DROP TABLE IF EXISTS vpn_peers");
-
 const stmts = {
   insert: db.prepare(`
     INSERT INTO licenses (key, email, plan, stripe_customer_id, stripe_subscription_id, status, expires_at)

@@ -68,7 +68,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           expires_at: expiresAt.toISOString(),
         });
 
-        console.log(`License created: ${licenseKey} for ${email} (plan: ${plan})`);
+        console.log(`License created for ${email} (plan: ${plan})`);
 
         // Auto-provision Outline VPN access key
         let accessUrl = null;
@@ -80,7 +80,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           await outline.setDataLimit(result.id, DATA_LIMIT_BYTES);
           stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
           accessUrl = result.accessUrl;
-          console.log(`Outline key created for ${licenseKey}: key_id=${result.id}`);
+          console.log(`Outline key provisioned for license (key_id=${result.id})`);
         } catch (outlineErr) {
           console.error("Failed to create Outline key:", outlineErr.message);
         }
