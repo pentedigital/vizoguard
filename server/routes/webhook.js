@@ -97,10 +97,26 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const subId = invoice.subscription;
         if (!subId) break;
 
-        const expiresAt = new Date();
-        expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+        // Use Stripe's actual period end instead of calculating from "now"
+        let expiresAt;
+        if (invoice.lines?.data?.[0]?.period?.end) {
+          expiresAt = new Date(invoice.lines.data[0].period.end * 1000);
+        } else {
+          expiresAt = new Date();
+          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+        }
         stmts.updateExpiry.run(expiresAt.toISOString(), subId);
         console.log(`Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
+        break;
+      }
+
+      case "invoice.payment_failed": {
+        const invoice = event.data.object;
+        const subId = invoice.subscription;
+        if (!subId) break;
+
+        stmts.updateStatus.run("suspended", subId);
+        console.log(`Payment failed for subscription ${subId}, status set to suspended`);
         break;
       }
 

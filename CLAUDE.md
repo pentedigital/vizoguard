@@ -50,7 +50,7 @@
 - Copy `server/.env.example` to `server/.env` before running
 - Required env vars: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_VPN`, `STRIPE_PRICE_SECURITY_VPN`, `SMTP_PASS`, `OUTLINE_API_URL`
 - Optional: `PORT` (default 3000), `DB_PATH` (default `data/vizoguard.db`), `APP_URL` (default `https://vizoguard.com`)
-- Server host: srv1450871, Ubuntu, Docker 28.2.2
+- Server host: srv1450871 (187.77.131.31), Ubuntu
 - Git credentials stored in `/root/.git-credentials`
 - `gh` CLI must be installed manually (`apt install gh`) and authed via `gh auth login`
 

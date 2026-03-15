@@ -63,6 +63,10 @@ router.get("/lookup", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
+    if (session.payment_status !== "paid") {
+      return res.json({ pending: true });
+    }
+
     if (!session.subscription && !session.customer) {
       return res.json({ pending: true });
     }
