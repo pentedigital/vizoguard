@@ -27,6 +27,7 @@ function outlineFetch(path, method = "GET", body = null) {
       let data = "";
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
+        clearTimeout(timeout);
         if (method === "DELETE" && (res.statusCode === 204 || res.statusCode === 200)) {
           return resolve(null);
         }
@@ -41,7 +42,10 @@ function outlineFetch(path, method = "GET", body = null) {
       });
     });
 
-    req.on("error", reject);
+    const timeout = setTimeout(() => {
+      req.destroy(new Error(`Outline API ${method} timed out after 10s`));
+    }, 10000);
+    req.on("error", (err) => { clearTimeout(timeout); reject(err); });
     if (payload) req.write(payload);
     req.end();
   });
