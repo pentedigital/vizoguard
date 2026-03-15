@@ -12,9 +12,12 @@
 ## Live Site
 - https://vizoguard.com/ — landing page, setup guide, privacy/terms
 - Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
+- Legal entity: PRIME360 HOLDING LTD (Malta)
+- Pages: index, setup, privacy, terms, thank-you (security page removed)
 
 ## Database
-- Single table: `licenses` (key, email, plan, stripe IDs, device_id, status, expires_at, outline keys)
+- `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id
+- `vpn_nodes` table: multi-node VPN (region, host, api_url, status, max_keys)
 - Plans: `vpn` (Basic) and `security_vpn` (Pro)
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
 

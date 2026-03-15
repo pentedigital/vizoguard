@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v11';
+const CACHE_NAME = 'vg-v12';
 
 const APP_SHELL = [
   '/',
@@ -37,6 +37,11 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Only handle same-origin requests — let external requests (fonts, CDN) pass through
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   // Network-only for API calls (never cache license/auth data)
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(fetch(request));
@@ -65,7 +70,7 @@ self.addEventListener('fetch', (event) => {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
-        });
+        }).catch(() => cached);
         return cached || fetchPromise;
       })
     );
