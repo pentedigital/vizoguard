@@ -4,6 +4,21 @@ const outline = require("../outline");
 
 const router = Router();
 
+const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+
+// Get the API URL for a license's assigned node, or pick the best node
+function getNodeApiUrl(license) {
+  if (license.vpn_node_id) {
+    const node = stmts.findNodeById.get(license.vpn_node_id);
+    if (node && node.status === "active") return { apiUrl: node.api_url, nodeId: node.id };
+  }
+  // Pick least-loaded active node
+  const best = stmts.bestNode.get();
+  if (best) return { apiUrl: best.api_url, nodeId: best.id };
+  // Fallback to default (env var)
+  return { apiUrl: null, nodeId: null };
+}
+
 // Middleware: validate license has VPN access
 function requireVpnLicense(req, res, next) {
   const { key } = req.body;
@@ -24,11 +39,6 @@ function requireVpnLicense(req, res, next) {
     return res.status(403).json({ error: "Your plan does not include VPN access" });
   }
 
-  // 1-device enforcement for Pro (security_vpn) plan:
-  // Pro users must activate the desktop app first, which binds their device_id.
-  // The VPN key is only issued to a license that already has a bound device,
-  // ensuring 1 license = 1 device = 1 VPN key.
-  // Basic (vpn) plan skips this check since Basic users don't have the desktop app.
   if (license.plan === "security_vpn" && !license.device_id) {
     return res.status(403).json({
       error: "Please activate your desktop app first to bind your device before using VPN",
@@ -49,20 +59,16 @@ router.post("/create", requireVpnLicense, async (req, res) => {
       return res.json({ access_url: license.outline_access_key });
     }
 
-    const result = await outline.createAccessKey(license.email);
-
-    // Set a 100 GB/month data transfer limit to prevent abuse if the ss:// URL
-    // is shared. The primary 1-device enforcement is that each license binds to
-    // one device and only one Outline key is created per license. The data cap
-    // is a secondary safeguard.
-    const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
-    await outline.setDataLimit(result.id, DATA_LIMIT_BYTES);
+    const { apiUrl, nodeId } = getNodeApiUrl(license);
+    const result = await outline.createAccessKey(license.email, apiUrl);
+    await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
 
     stmts.setOutlineKey.run(result.accessUrl, result.id, license.id);
+    if (nodeId) stmts.setLicenseNode.run(nodeId, license.id);
 
     res.json({ access_url: result.accessUrl });
   } catch (err) {
-    console.error("VPN create error:", err);
+    console.error("VPN create error:", err.message);
     res.status(500).json({ error: "Failed to create VPN access key" });
   }
 });
@@ -84,21 +90,39 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
       return res.status(404).json({ error: "No VPN key to delete" });
     }
 
-    await outline.deleteAccessKey(license.outline_key_id);
+    const { apiUrl } = getNodeApiUrl(license);
+    await outline.deleteAccessKey(license.outline_key_id, apiUrl);
     stmts.clearOutlineKey.run(license.id);
 
     res.json({ success: true });
   } catch (err) {
-    console.error("VPN delete error:", err);
+    console.error("VPN delete error:", err.message);
     res.status(500).json({ error: "Failed to delete VPN key" });
   }
 });
 
-// GET /api/vpn/status — public server status
+// GET /api/vpn/status — all nodes status
 router.get("/status", async (_req, res) => {
   try {
-    const server = await outline.getServer();
-    res.json({ status: "online", name: server.name, version: server.version });
+    const nodes = stmts.listActiveNodes.all();
+    if (nodes.length === 0) {
+      // Fallback: check default server
+      const server = await outline.getServer();
+      return res.json({ status: "online", name: server.name, version: server.version, nodes: 1 });
+    }
+
+    const results = await Promise.allSettled(
+      nodes.map(async (n) => {
+        const server = await outline.getServer(n.api_url);
+        const keyCount = stmts.nodeKeyCount.get(n.id);
+        return { id: n.id, region: n.region, name: n.name, status: "online", keys: keyCount.count };
+      })
+    );
+
+    const online = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+    const offline = results.filter((r) => r.status === "rejected").length;
+
+    res.json({ status: online.length > 0 ? "online" : "offline", nodes: online, offline });
   } catch {
     res.json({ status: "offline" });
   }

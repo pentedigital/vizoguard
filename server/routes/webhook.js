@@ -70,17 +70,20 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
         console.log(`License created for ${email} (plan: ${plan})`);
 
-        // Auto-provision Outline VPN access key
+        // Auto-provision Outline VPN access key (picks best node)
         let accessUrl = null;
         try {
           const newLicense = stmts.findByKey.get(licenseKey);
           if (!newLicense) throw new Error("License not found after insert");
-          const result = await outline.createAccessKey(email);
+          const bestNode = stmts.bestNode.get();
+          const apiUrl = bestNode ? bestNode.api_url : null;
+          const result = await outline.createAccessKey(email, apiUrl);
           const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
-          await outline.setDataLimit(result.id, DATA_LIMIT_BYTES);
+          await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
           stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
+          if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
           accessUrl = result.accessUrl;
-          console.log(`Outline key provisioned for license (key_id=${result.id})`);
+          console.log(`Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
           console.error("Failed to create Outline key:", outlineErr.message);
         }

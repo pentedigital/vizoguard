@@ -11,7 +11,7 @@
 
 ## Live Site
 - https://vizoguard.com/ — landing page, setup guide, privacy/terms
-- Pricing: Basic ($19.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
+- Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
 
 ## Database
 - Single table: `licenses` (key, email, plan, stripe IDs, device_id, status, expires_at, outline keys)

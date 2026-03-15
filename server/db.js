@@ -35,6 +35,20 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_licenses_subscription ON licenses(stripe_subscription_id);
   CREATE INDEX IF NOT EXISTS idx_licenses_customer ON licenses(stripe_customer_id);
   CREATE INDEX IF NOT EXISTS idx_licenses_email ON licenses(email);
+
+  CREATE TABLE IF NOT EXISTS vpn_nodes (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    region      TEXT    NOT NULL,
+    name        TEXT    NOT NULL,
+    host        TEXT    NOT NULL,
+    api_url     TEXT    NOT NULL,
+    status      TEXT    NOT NULL DEFAULT 'active',
+    max_keys    INTEGER NOT NULL DEFAULT 1000,
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_vpn_nodes_region ON vpn_nodes(region);
+  CREATE INDEX IF NOT EXISTS idx_vpn_nodes_status ON vpn_nodes(status);
 `);
 
 // Migrate existing DB: add columns if missing
@@ -44,6 +58,9 @@ if (!cols.includes("outline_access_key")) {
 }
 if (!cols.includes("outline_key_id")) {
   db.exec("ALTER TABLE licenses ADD COLUMN outline_key_id TEXT");
+}
+if (!cols.includes("vpn_node_id")) {
+  db.exec("ALTER TABLE licenses ADD COLUMN vpn_node_id INTEGER");
 }
 
 const stmts = {
@@ -60,7 +77,25 @@ const stmts = {
   updateLastCheck: db.prepare("UPDATE licenses SET last_check = datetime('now') WHERE id = ?"),
   clearDevice: db.prepare("UPDATE licenses SET device_id = NULL WHERE id = ?"),
   setOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = ?, outline_key_id = ? WHERE id = ?"),
-  clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL WHERE id = ?"),
+  clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL WHERE id = ?"),
+  setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
+
+  // VPN nodes
+  insertNode: db.prepare("INSERT INTO vpn_nodes (region, name, host, api_url, max_keys) VALUES (@region, @name, @host, @api_url, @max_keys)"),
+  findNodeById: db.prepare("SELECT * FROM vpn_nodes WHERE id = ?"),
+  listActiveNodes: db.prepare("SELECT * FROM vpn_nodes WHERE status = 'active'"),
+  bestNode: db.prepare(`
+    SELECT n.*, COUNT(l.id) AS active_keys
+    FROM vpn_nodes n
+    LEFT JOIN licenses l ON l.vpn_node_id = n.id AND l.status IN ('active', 'cancelled')
+    WHERE n.status = 'active'
+    GROUP BY n.id
+    HAVING active_keys < n.max_keys
+    ORDER BY active_keys ASC
+    LIMIT 1
+  `),
+  updateNodeStatus: db.prepare("UPDATE vpn_nodes SET status = ? WHERE id = ?"),
+  nodeKeyCount: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE vpn_node_id = ? AND status IN ('active', 'cancelled')"),
 };
 
 module.exports = { db, stmts };

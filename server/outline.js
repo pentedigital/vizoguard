@@ -1,12 +1,12 @@
 const https = require("https");
 
-const API_URL = process.env.OUTLINE_API_URL;
+const DEFAULT_API_URL = process.env.OUTLINE_API_URL;
 
-function outlineFetch(path, method = "GET", body = null) {
+function outlineFetch(apiUrl, path, method = "GET", body = null) {
   return new Promise((resolve, reject) => {
-    if (!API_URL) return reject(new Error("OUTLINE_API_URL not configured"));
+    if (!apiUrl) return reject(new Error("Outline API URL not configured"));
 
-    const url = new URL(`${API_URL}${path}`);
+    const url = new URL(`${apiUrl}${path}`);
     const payload = body ? JSON.stringify(body) : null;
 
     const opts = {
@@ -51,31 +51,35 @@ function outlineFetch(path, method = "GET", body = null) {
   });
 }
 
-async function createAccessKey(name) {
-  const key = await outlineFetch("/access-keys", "POST");
+// All functions accept optional apiUrl parameter for multi-node support
+// Falls back to DEFAULT_API_URL (from .env) for backward compatibility
+
+async function createAccessKey(name, apiUrl) {
+  const url = apiUrl || DEFAULT_API_URL;
+  const key = await outlineFetch(url, "/access-keys", "POST");
   if (name) {
-    await outlineFetch(`/access-keys/${key.id}/name`, "PUT", { name });
+    await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });
   }
   return { id: String(key.id), accessUrl: key.accessUrl };
 }
 
-async function deleteAccessKey(id) {
+async function deleteAccessKey(id, apiUrl) {
   if (!/^\d+$/.test(String(id))) throw new Error("Invalid access key ID");
-  await outlineFetch(`/access-keys/${id}`, "DELETE");
+  await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${id}`, "DELETE");
 }
 
-async function listAccessKeys() {
-  const data = await outlineFetch("/access-keys");
+async function listAccessKeys(apiUrl) {
+  const data = await outlineFetch(apiUrl || DEFAULT_API_URL, "/access-keys");
   return data.accessKeys || [];
 }
 
-async function setDataLimit(keyId, bytes) {
+async function setDataLimit(keyId, bytes, apiUrl) {
   if (!/^\d+$/.test(String(keyId))) throw new Error("Invalid access key ID");
-  await outlineFetch(`/access-keys/${keyId}/data-limit`, "PUT", { limit: { bytes } });
+  await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${keyId}/data-limit`, "PUT", { limit: { bytes } });
 }
 
-async function getServer() {
-  return outlineFetch("/server");
+async function getServer(apiUrl) {
+  return outlineFetch(apiUrl || DEFAULT_API_URL, "/server");
 }
 
 module.exports = { createAccessKey, deleteAccessKey, listAccessKeys, getServer, setDataLimit };
