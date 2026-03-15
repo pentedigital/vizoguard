@@ -1,10 +1,9 @@
-const CACHE_NAME = 'vg-v6';
+const CACHE_NAME = 'vg-v7';
 
 const APP_SHELL = [
   '/',
   '/css/style.css',
   '/js/main.js',
-  '/thank-you.html',
   '/setup.html',
   '/privacy.html',
   '/terms.html',
@@ -20,7 +19,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate: clean old caches
+// Activate: clean old caches immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -34,7 +33,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: network-first for API, cache-first for static assets
+// Fetch strategy
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -45,16 +44,30 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first for static assets
-  if (/\.(css|js|html|png|svg|ico)$/.test(url.pathname) || url.pathname === '/') {
+  // Network-first for HTML pages (ensures updates are immediate)
+  if (url.pathname === '/' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Stale-while-revalidate for static assets (CSS/JS/images)
+  if (/\.(css|js|png|svg|ico|woff2?)$/.test(url.pathname)) {
     event.respondWith(
       caches.match(request).then((cached) => {
-        if (cached) return cached;
-        return fetch(request).then((response) => {
+        const fetchPromise = fetch(request).then((response) => {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
         });
+        return cached || fetchPromise;
       })
     );
     return;
