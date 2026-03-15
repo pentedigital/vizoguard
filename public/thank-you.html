@@ -4,13 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Vizoguard</title>
-  <meta name="description" content="Your Vizoguard license is ready. Download the app and start protecting your device.">
+  <meta name="description" content="Your Vizoguard license is ready. Connect your VPN or download the desktop app.">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00e5a0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .qr-box { text-align: center; margin: 20px 0; }
+    .qr-box canvas { border-radius: 12px; background: #fff; padding: 12px; }
+    .qr-label { color: var(--muted); font-size: 0.75rem; margin-top: 8px; }
+    .copy-btn { background: var(--surface); border: 1px solid var(--border); color: var(--ice); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-top: 8px; }
+    .copy-btn:hover { border-color: var(--teal); }
+    .vpn-steps { text-align: left; max-width: 320px; margin: 24px auto 0; }
+    .vpn-steps li { color: var(--muted); margin-bottom: 8px; font-size: 0.9rem; }
+    .vpn-steps strong { color: var(--ice); }
+  </style>
 </head>
 <body>
 
@@ -30,38 +40,69 @@
     <p>This usually takes a few seconds.</p>
   </div>
 
-  <!-- Success state -->
-  <div id="success" style="display: none;">
+  <!-- Success: Basic plan (VPN only) -->
+  <div id="success-basic" style="display: none;">
+    <div class="status-icon success">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1>Your VPN is ready.</h1>
+    <p>License sent to <strong style="color: var(--ice);" id="basic-email"></strong>.</p>
+
+    <div class="license-box">
+      <label>Your License Key</label>
+      <div class="license-key" id="basic-license-key"></div>
+    </div>
+
+    <div id="basic-vpn-section" style="display: none;">
+      <div class="download-buttons" style="margin-top: 24px;">
+        <a id="basic-connect-btn" href="#" class="btn" onclick="connectVPN(event)">Connect with Outline</a>
+      </div>
+
+      <div class="qr-box" id="basic-qr-box" style="display: none;">
+        <canvas id="basic-qr"></canvas>
+        <div class="qr-label">Scan with your phone to connect on mobile</div>
+      </div>
+
+      <button class="copy-btn" id="basic-copy-btn" onclick="copyKey()">Copy access key</button>
+
+      <ol class="vpn-steps">
+        <li><strong>Tap "Connect with Outline"</strong> above. If Outline is installed, it imports automatically.</li>
+        <li><strong>Don't have Outline?</strong> <a href="https://getoutline.org/get-started/" style="color: var(--teal);">Download it</a> for Mac, Windows, iOS, or Android.</li>
+        <li><strong>On another device?</strong> Scan the QR code or copy the access key.</li>
+      </ol>
+
+      <p style="margin-top: 16px;"><a href="/setup.html" id="basic-setup-link" style="color: var(--teal);">Need help? Visit our setup guide</a></p>
+    </div>
+  </div>
+
+  <!-- Success: Pro plan (Security + VPN) -->
+  <div id="success-pro" style="display: none;">
     <div class="status-icon success">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h1>You're protected.</h1>
-    <p>Your license key has been sent to <strong style="color: var(--ice);" id="email-display"></strong>.</p>
+    <p>License sent to <strong style="color: var(--ice);" id="pro-email"></strong>.</p>
 
     <div class="license-box">
       <label>Your License Key</label>
-      <div class="license-key" id="license-key-display"></div>
+      <div class="license-key" id="pro-license-key"></div>
     </div>
 
-    <div id="vpn-key-section" style="display: none;">
-      <div class="license-box" style="border-color: var(--border); box-shadow: none;">
-        <label>Your VPN Access Key</label>
-        <div class="license-key" id="vpn-key-display" style="font-size: 0.75rem; color: var(--teal);"></div>
-      </div>
-      <div class="download-buttons" style="margin-top: 16px;">
-        <a id="vpn-connect-btn" href="#" class="btn">Connect to Vizoguard VPN</a>
-      </div>
-      <p style="margin-top: 12px;">Download the <a href="https://getoutline.org/get-started/">Outline app</a> and paste this key to connect.</p>
-      <p style="margin-top: 8px;"><a id="setup-guide-link" href="/setup.html">Need help setting up? Visit our setup guide</a></p>
+    <p style="margin-top: 20px;">Download Vizoguard. Enter your license key. That's it.</p>
+    <div class="download-buttons">
+      <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
+      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-secondary">Download for Windows</a>
     </div>
 
-    <div id="pro-downloads" style="display: none;">
-      <p>Download Vizoguard. Enter your license key. That's it.</p>
+    <div id="pro-vpn-section" style="display: none; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border);">
+      <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 12px;">Your VPN access key is also available separately:</p>
       <div class="download-buttons">
-        <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
-        <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
+        <a id="pro-connect-btn" href="#" class="btn btn-secondary" onclick="connectVPN(event)">Connect with Outline</a>
       </div>
+      <button class="copy-btn" id="pro-copy-btn" onclick="copyKey()">Copy access key</button>
     </div>
+
+    <p style="margin-top: 16px;"><a href="/setup.html" id="pro-setup-link" style="color: var(--teal);">Need help? Visit our setup guide</a></p>
   </div>
 
   <!-- Pending state -->
@@ -72,10 +113,6 @@
     <h1>Almost there.</h1>
     <p>Your payment was received. Your license key will arrive by email within a few minutes.</p>
     <p>If it doesn't show up, reach out to <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> &mdash; we'll make it right.</p>
-    <div class="download-buttons" style="margin-top: 36px;">
-      <a href="/downloads/Vizoguard-latest.dmg" class="btn">Download for Mac</a>
-      <a href="/downloads/Vizoguard-Setup-latest.exe" class="btn btn-ghost">Download for Windows</a>
-    </div>
   </div>
 
   <!-- Error state -->
@@ -94,69 +131,125 @@
   <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/security.html">Security</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
 </footer>
 
+<!-- QR code library (lightweight, no deps) -->
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
-</script>
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
 
-  if (!sessionId) {
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("error-state").style.display = "block";
-  } else {
-    let attempts = 0;
-    const maxAttempts = 10;
+let vpnAccessUrl = null;
 
-    async function pollLicense() {
-      attempts++;
-      try {
-        const res = await fetch(`/api/license/lookup?session_id=${encodeURIComponent(sessionId)}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+function connectVPN(e) {
+  if (!vpnAccessUrl) return;
+  e.preventDefault();
 
-        if (data.key) {
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("license-key-display").textContent = data.key;
-          document.getElementById("email-display").textContent = data.email || "your email";
-          document.getElementById("success").style.display = "block";
+  // Try deep link — if Outline is installed, it opens and imports the key
+  window.location.href = vpnAccessUrl;
 
-          // Show VPN access key if available
-          if (data.access_url) {
-            document.getElementById("vpn-key-display").textContent = data.access_url;
-            document.getElementById("vpn-connect-btn").href = data.access_url;
-            document.getElementById("setup-guide-link").href = "/setup.html?key=" + encodeURIComponent(data.access_url);
-            document.getElementById("vpn-key-section").style.display = "block";
-          }
-
-          // Show desktop app downloads for Pro plan
-          if (data.plan === "security_vpn") {
-            document.getElementById("pro-downloads").style.display = "block";
-          }
-          return;
-        }
-
-        if (data.pending && attempts < maxAttempts) {
-          setTimeout(pollLicense, 3000);
-          return;
-        }
-
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("pending").style.display = "block";
-      } catch (err) {
-        if (attempts < maxAttempts) {
-          setTimeout(pollLicense, 3000);
-          return;
-        }
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-state").style.display = "block";
-      }
+  // Fallback: if nothing happened after 1.5s, redirect to Outline download
+  setTimeout(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad/.test(ua)) {
+      window.location.href = "https://apps.apple.com/app/outline-app/id1356178125";
+    } else if (/android/.test(ua)) {
+      window.location.href = "https://play.google.com/store/apps/details?id=org.outline.android.client";
+    } else {
+      window.location.href = "https://getoutline.org/get-started/";
     }
+  }, 1500);
+}
 
-    pollLicense();
+function copyKey() {
+  if (!vpnAccessUrl) return;
+  navigator.clipboard.writeText(vpnAccessUrl).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns.forEach(b => { b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy access key', 2000); });
+  }).catch(() => {
+    // Fallback: select text
+    const el = document.querySelector('.license-key[style*="teal"]');
+    if (el) { const range = document.createRange(); range.selectNodeContents(el); window.getSelection().removeAllRanges(); window.getSelection().addRange(range); }
+  });
+}
+
+function showQR(canvasId, text) {
+  try {
+    new QRious({ element: document.getElementById(canvasId), value: text, size: 180, backgroundAlpha: 1, foreground: '#0a0a0f', background: '#ffffff', level: 'M' });
+    document.getElementById(canvasId).parentElement.style.display = 'block';
+  } catch (e) { /* QR library not loaded — skip */ }
+}
+
+function showSuccess(data) {
+  document.getElementById("loading").style.display = "none";
+  vpnAccessUrl = data.access_url || null;
+
+  if (data.plan === "security_vpn") {
+    // Pro plan
+    document.getElementById("pro-license-key").textContent = data.key;
+    document.getElementById("pro-email").textContent = data.email || "your email";
+    if (vpnAccessUrl) {
+      document.getElementById("pro-connect-btn").href = vpnAccessUrl;
+      document.getElementById("pro-vpn-section").style.display = "block";
+    }
+    document.getElementById("pro-setup-link").href = "/setup.html" + (vpnAccessUrl ? "?key=" + encodeURIComponent(vpnAccessUrl) : "");
+    document.getElementById("success-pro").style.display = "block";
+  } else {
+    // Basic plan
+    document.getElementById("basic-license-key").textContent = data.key;
+    document.getElementById("basic-email").textContent = data.email || "your email";
+    if (vpnAccessUrl) {
+      document.getElementById("basic-connect-btn").href = vpnAccessUrl;
+      document.getElementById("basic-vpn-section").style.display = "block";
+      showQR("basic-qr", vpnAccessUrl);
+    }
+    document.getElementById("basic-setup-link").href = "/setup.html" + (vpnAccessUrl ? "?key=" + encodeURIComponent(vpnAccessUrl) : "");
+    document.getElementById("success-basic").style.display = "block";
   }
+}
+
+// Poll for license
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("session_id");
+
+if (!sessionId) {
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("error-state").style.display = "block";
+} else {
+  let attempts = 0;
+  const maxAttempts = 10;
+
+  async function pollLicense() {
+    attempts++;
+    try {
+      const res = await fetch(`/api/license/lookup?session_id=${encodeURIComponent(sessionId)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (data.key) {
+        showSuccess(data);
+        return;
+      }
+
+      if (data.pending && attempts < maxAttempts) {
+        setTimeout(pollLicense, 3000);
+        return;
+      }
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("pending").style.display = "block";
+    } catch (err) {
+      if (attempts < maxAttempts) {
+        setTimeout(pollLicense, 3000);
+        return;
+      }
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("error-state").style.display = "block";
+    }
+  }
+
+  pollLicense();
+}
 </script>
 </body>
 </html>
