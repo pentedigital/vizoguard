@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 // Trust nginx reverse proxy (needed for rate limiting with X-Forwarded-For)
 app.set("trust proxy", 1);
+app.disable("x-powered-by");
 
 // Stripe webhook MUST come before express.json() — needs raw body
 app.use("/api/webhook", webhookRouter);
@@ -82,6 +83,11 @@ app.post("/api/checkout", checkoutLimiter, async (req, res) => {
 // Health check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Catch-all: hide framework fingerprint
+app.use((_req, res) => {
+  res.status(404).json({ error: "Not found" });
 });
 
 app.listen(PORT, "127.0.0.1", () => {
