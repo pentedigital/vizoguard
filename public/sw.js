@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v9';
+const CACHE_NAME = 'vg-v10';
 
 const APP_SHELL = [
   '/',
@@ -7,7 +7,6 @@ const APP_SHELL = [
   '/setup.html',
   '/privacy.html',
   '/terms.html',
-  '/security.html',
   '/manifest.json'
 ];
 
