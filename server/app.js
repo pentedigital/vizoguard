@@ -12,6 +12,9 @@ const vpnRouter = require("./routes/vpn");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust nginx reverse proxy (needed for rate limiting with X-Forwarded-For)
+app.set("trust proxy", 1);
+
 // Stripe webhook MUST come before express.json() — needs raw body
 app.use("/api/webhook", webhookRouter);
 

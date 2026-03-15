@@ -38,13 +38,18 @@
 
 ## Stripe Integration
 - Checkout: `POST /api/checkout` — creates Stripe Checkout session with plan metadata
-- Webhook events handled: `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.deleted`, `customer.subscription.updated`
+- Webhook events handled: `checkout.session.completed`, `invoice.payment_succeeded`, `invoice.payment_failed`, `customer.subscription.deleted`, `customer.subscription.updated`
 - Webhook route MUST be before `express.json()` middleware (needs raw body for signature verification)
 
 ## Security Rules
 - Never log license keys, VPN access URLs, or Stripe secrets
 - Outline API uses `rejectUnauthorized: false` — scoped to self-signed Outline server only
 - All API routes are rate-limited
+
+## Infrastructure
+- nginx reverse proxy: `/etc/nginx/sites-available/vizoguard` → static site + API proxy + downloads
+- SSL: Let's Encrypt via certbot (auto-renew), cert at `/etc/letsencrypt/live/vizoguard.com/`
+- `systemctl restart nginx` after config changes
 
 ## Environment
 - Copy `server/.env.example` to `server/.env` before running
