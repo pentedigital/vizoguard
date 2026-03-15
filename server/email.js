@@ -92,10 +92,14 @@ Questions? Reply to this email.
 
   await transporter.sendMail({
     from: `"Vizoguard" <${process.env.SMTP_USER || "support@vizoguard.com"}>`,
+    replyTo: "support@vizoguard.com",
     to: email,
     subject: `Your ${planName} License Key`,
     text,
     html,
+    headers: {
+      "List-Unsubscribe": "<mailto:support@vizoguard.com?subject=unsubscribe>",
+    },
   });
 }
 
