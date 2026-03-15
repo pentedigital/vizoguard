@@ -32,10 +32,20 @@ router.post("/", (req, res) => {
     return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
   }
 
-  // Device binding
+  // Device binding (atomic — WHERE device_id IS NULL prevents race conditions)
   if (!license.device_id) {
-    // First activation — bind this device
-    stmts.bindDevice.run(device_id, license.id);
+    const result = stmts.bindDevice.run(device_id, license.id);
+    if (result.changes === 0) {
+      // Another request bound a device between our SELECT and UPDATE
+      const updated = stmts.findByKey.get(key);
+      if (updated && updated.device_id !== device_id) {
+        return res.status(403).json({
+          valid: false,
+          error: "License is bound to a different device. Contact support@vizoguard.com to transfer.",
+          status: "device_mismatch",
+        });
+      }
+    }
   } else if (license.device_id !== device_id) {
     return res.status(403).json({
       valid: false,

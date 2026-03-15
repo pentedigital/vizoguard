@@ -6,6 +6,11 @@ async function startCheckout(plan) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ plan }),
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert(err.error || "Something went wrong. Please try again.");
+      return;
+    }
     const data = await res.json();
 
     if (data.url) {

@@ -19,6 +19,9 @@ function generateKey() {
 // Stripe requires raw body for signature verification
 router.post("/", express.raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"];
+  if (!sig) {
+    return res.status(400).send("Missing stripe-signature header");
+  }
 
   let event;
   try {
@@ -71,6 +74,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         let accessUrl = null;
         try {
           const newLicense = stmts.findByKey.get(licenseKey);
+          if (!newLicense) throw new Error("License not found after insert");
           const result = await outline.createAccessKey(email);
           const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
           await outline.setDataLimit(result.id, DATA_LIMIT_BYTES);
