@@ -6,6 +6,7 @@
   <title>Welcome to Vizoguard</title>
   <meta name="description" content="Your Vizoguard license is ready. Connect your VPN or download the desktop app.">
   <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://vizoguard.com/thank-you.html">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00e5a0">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,6 +25,7 @@
   </style>
 </head>
 <body>
+<a href="#main" class="skip-nav">Skip to content</a>
 
 <header>
   <a href="/" class="logo">Vizo<span>guard</span></a>
@@ -34,7 +36,7 @@
   <!-- Loading state -->
   <div id="loading">
     <div class="status-icon" style="border-color: var(--border);">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h1>Activating your license...</h1>
     <div class="spinner"></div>
@@ -44,7 +46,7 @@
   <!-- Success: Basic plan (VPN only) -->
   <div id="success-basic" style="display: none;">
     <div class="status-icon success">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h1>Your VPN is ready.</h1>
     <p>License sent to <strong style="color: var(--ice);" id="basic-email"></strong>.</p>
@@ -79,7 +81,7 @@
   <!-- Success: Pro plan (Security + VPN) -->
   <div id="success-pro" style="display: none;">
     <div class="status-icon success">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h1>You're protected.</h1>
     <p>License sent to <strong style="color: var(--ice);" id="pro-email"></strong>.</p>
@@ -109,7 +111,7 @@
   <!-- Pending state -->
   <div id="pending" style="display: none;">
     <div class="status-icon" style="border-color: var(--teal); background: var(--teal-dim);">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     </div>
     <h1>Almost there.</h1>
     <p>Your payment was received. Your license key will arrive by email within a few minutes.</p>
@@ -119,7 +121,7 @@
   <!-- Error state -->
   <div id="error-state" style="display: none;">
     <div class="status-icon" style="border-color: var(--red); background: rgba(255, 59, 59, 0.08);">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
     </div>
     <h1>Something went wrong.</h1>
     <p>We couldn't retrieve your license. Don't worry &mdash; your payment is safe.</p>
