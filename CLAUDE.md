@@ -68,5 +68,13 @@
 - Git credentials stored in `/root/.git-credentials`
 - `gh` CLI must be installed manually (`apt install gh`) and authed via `gh auth login`
 
+## Gotchas
+- GitHub Actions SSH deploy fails (Hostinger blocks GitHub runner IPs) — use `gh run download` + manual copy to `/var/www/vizoguard/downloads/`
+- Docker host network mode bypasses UFW — use iptables directly for Outline port restrictions
+- nginx `add_header` in a `location` block replaces parent headers — use `include /etc/nginx/snippets/security-headers.conf` in every location
+- Service worker must skip external-origin fetches (fonts, CDN) or CSP causes TypeError crash
+- Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
+- `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
+
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
