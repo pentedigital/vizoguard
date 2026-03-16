@@ -30,8 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
       const item = btn.parentElement;
       const wasOpen = item.classList.contains("open");
-      document.querySelectorAll(".faq-item").forEach((i) => i.classList.remove("open"));
-      if (!wasOpen) item.classList.add("open");
+      document.querySelectorAll(".faq-item").forEach((i) => {
+        i.classList.remove("open");
+        i.querySelector(".faq-question").setAttribute("aria-expanded", "false");
+      });
+      if (!wasOpen) {
+        item.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+      }
     });
   });
 

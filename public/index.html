@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18020160060');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vizoguard — AI Security &amp; VPN</title>
@@ -64,12 +72,7 @@
         "url": "https://vizoguard.com/#pricing"
       }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1",
-      "bestRating": "5"
-    }
+    "sameAs": ["https://github.com/pentedigital/vizoguard-app"]
   }
   </script>
   <script type="application/ld+json">
@@ -138,6 +141,9 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <noscript><style>.animate-up{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -273,32 +279,32 @@
   <h2>FAQ</h2>
 
   <div class="faq-item">
-    <button class="faq-question">What's the difference between Basic and Pro?</button>
+    <button class="faq-question" aria-expanded="false">What's the difference between Basic and Pro?</button>
     <div class="faq-answer"><p><strong>Basic</strong> ($24.99/yr) is an encrypted VPN with 100 GB/month on all platforms via the Outline app. <strong>Pro</strong> ($99.99/yr) adds AI threat blocking, phishing detection, connection monitoring, and a self-healing immune system via the Vizoguard desktop app — plus VPN.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">How does the VPN work?</button>
+    <button class="faq-question" aria-expanded="false">How does the VPN work?</button>
     <div class="faq-answer"><p>After subscribing, tap "Connect with Outline" on the thank-you page. The Outline app opens and imports your VPN automatically. No copy-paste needed. Pro users also get VPN built into the Vizoguard desktop app.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">How many devices?</button>
+    <button class="faq-question" aria-expanded="false">How many devices?</button>
     <div class="faq-answer"><p><strong>Basic:</strong> Use your VPN on any device via the Outline app (100 GB/month shared). <strong>Pro:</strong> One license binds to one device on first activation. Contact support@vizoguard.com to transfer.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">Can I cancel?</button>
+    <button class="faq-question" aria-expanded="false">Can I cancel?</button>
     <div class="faq-answer"><p>Anytime. Protection continues until the end of your paid period. Cancel from Stripe or email support.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">What platforms?</button>
+    <button class="faq-question" aria-expanded="false">What platforms?</button>
     <div class="faq-answer"><p>VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. Security app: macOS 12+ and Windows 10/11.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">Does it work offline?</button>
+    <button class="faq-question" aria-expanded="false">Does it work offline?</button>
     <div class="faq-answer"><p>Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet.</p></div>
   </div>
 </section>

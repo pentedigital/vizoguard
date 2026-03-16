@@ -22,6 +22,8 @@
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
 
 ## Commands
+- `nginx -t` — validate nginx config before restart
+- `sqlite3 data/vizoguard.db` — open database (use `.tables`, `.schema licenses`)
 - `cd server && node app.js` — start server (dev)
 - `pm2 start ecosystem.config.js` — start in production
 - `pm2 restart vizoguard-api` — restart after changes

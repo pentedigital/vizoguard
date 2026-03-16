@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18020160060');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Vizoguard</title>
   <meta name="description" content="Your Vizoguard license is ready. Connect your VPN or download the desktop app.">
   <meta name="robots" content="noindex">
-  <link rel="canonical" href="https://vizoguard.com/thank-you.html">
+
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00e5a0">
   <meta name="mobile-web-app-capable" content="yes">
@@ -15,6 +23,9 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .qr-box { text-align: center; margin: 20px 0; }
@@ -73,7 +84,7 @@
 
       <ol class="vpn-steps">
         <li><strong>Tap "Connect with Outline"</strong> above. If Outline is installed, it imports automatically.</li>
-        <li><strong>Don't have Outline?</strong> <a href="https://getoutline.org/get-started/" style="color: var(--teal);">Download it</a> for Mac, Windows, iOS, or Android.</li>
+        <li><strong>Don't have Outline?</strong> <a href="https://getoutline.org/get-started/" target="_blank" rel="noopener" style="color: var(--teal);">Download it</a> for Mac, Windows, iOS, or Android.</li>
         <li><strong>On another device?</strong> Scan the QR code or copy the access key.</li>
       </ol>
 
@@ -138,7 +149,7 @@
 </footer>
 
 <!-- QR code library (lightweight, no deps) -->
-<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<script src="/js/qrious.min.js"></script>
 
 <script>
 if ('serviceWorker' in navigator) {
