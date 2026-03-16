@@ -14,6 +14,7 @@
 - Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
 - Legal entity: PRIME360 HOLDING LTD (Malta)
 - Pages: index, setup, privacy, terms, thank-you (security page removed)
+- Analytics: Google Ads conversion tracking (gtag.js, ID: AW-18020160060) on all pages; purchase conversion fires on thank-you page
 
 ## Database
 - `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id
@@ -23,10 +24,11 @@
 
 ## Commands
 - `nginx -t` — validate nginx config before restart
+- `systemctl reload nginx` — apply nginx changes (zero-downtime)
 - `sqlite3 data/vizoguard.db` — open database (use `.tables`, `.schema licenses`)
 - `cd server && node app.js` — start server (dev)
 - `pm2 start ecosystem.config.js` — start in production
-- `pm2 restart vizoguard-api` — restart after changes
+- `pm2 reload vizoguard-api` — zero-downtime reload (cluster mode)
 - `pm2 logs vizoguard-api --lines 50` — view recent logs
 - Production path: `/var/www/vizoguard/`
 - Logs: `data/logs/error.log`, `data/logs/out.log`
@@ -52,11 +54,17 @@
 - All API routes are rate-limited
 
 ## Infrastructure
+- Production path: `/var/www/vizoguard/` — `public/` and `server/` are symlinks to `/root/vizoguard/`
+- VPS: 4 vCPU (AMD EPYC 9355P) / 16 GB RAM / 200 GB NVMe / 16 TB bandwidth
+- PM2: cluster mode, 2 instances (uses 2 of 4 cores)
 - nginx reverse proxy: `/etc/nginx/sites-available/vizoguard` → static site + API proxy + downloads
-- SSL: Let's Encrypt via certbot (auto-renew), cert at `/etc/letsencrypt/live/vizoguard.com/`
-- `systemctl restart nginx` after config changes
+- SSL: Let's Encrypt via certbot (auto-renew)
 - Outline VPN: Docker containers `shadowbox` + `watchtower` on ports 41298 (mgmt) + 19285 (access keys)
+- Shadowbox memory limit: 2 GB
+- Monitoring: Prometheus (localhost:9090) + Grafana (localhost:3001, default admin/admin)
+- Security: fail2ban (sshd + 3 nginx jails), Monarx malware scanner, UFW firewall
 - DB backups: daily at 3am via `/root/backup-db.sh`, 30-day retention in `/root/backups/`
+- VPN healthcheck: every 5min via cron (`/root/vpn-healthcheck.sh`)
 - PM2 log rotation: `pm2-logrotate` (10MB max, 7-day retention)
 
 ## Scripts
@@ -77,6 +85,10 @@
 - Service worker must skip external-origin fetches (fonts, CDN) or CSP causes TypeError crash
 - Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
 - `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
+- Bump `CACHE_NAME` version in `public/sw.js` after changing CSS/JS/HTML — otherwise returning visitors get stale cached content
+- Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
+- `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
+- Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
