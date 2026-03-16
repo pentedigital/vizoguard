@@ -30,7 +30,6 @@
 - `pm2 start ecosystem.config.js` — start in production
 - `pm2 reload vizoguard-api` — zero-downtime reload (cluster mode)
 - `pm2 logs vizoguard-api --lines 50` — view recent logs
-- Production path: `/var/www/vizoguard/`
 - Logs: `data/logs/error.log`, `data/logs/out.log`
 
 ## API Routes
