@@ -200,6 +200,15 @@ function showSuccess(data) {
   document.getElementById("loading").style.display = "none";
   vpnAccessUrl = data.access_url || null;
 
+  // Google Ads purchase conversion
+  var conversionValue = data.plan === "security_vpn" ? 99.99 : 24.99;
+  gtag('event', 'conversion', {
+    'send_to': 'AW-18020160060/U-zGCOHA4okcELyk15BD',
+    'value': conversionValue,
+    'currency': 'USD',
+    'transaction_id': sessionId || ''
+  });
+
   if (data.plan === "security_vpn") {
     // Pro plan
     document.getElementById("pro-license-key").textContent = data.key;
