@@ -35,17 +35,19 @@
 ## API Routes
 - `POST /api/checkout` — create Stripe Checkout session (params: `plan`)
 - `POST /api/license` — validate + bind device (params: `key`, `device_id`)
-- `GET /api/license/lookup?session_id=` — retrieve license after checkout
-- `POST /api/vpn/create` — create Outline access key (params: `key`)
-- `POST /api/vpn/get` — retrieve existing VPN key (params: `key`)
+- `GET /api/license/lookup?session_id=` — retrieve license key + plan after checkout (no VPN URL returned)
+- `POST /api/vpn/create` — create Outline access key (params: `key`, `device_id`)
+- `POST /api/vpn/get` — retrieve existing VPN key (params: `key`, `device_id` — 403 on mismatch)
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
-- `GET /api/vpn/status` — Outline server health
+- `GET /api/vpn/status` — health only (`{"status":"online|offline"}` — no node details)
 - `GET /api/health` — API health check
 
 ## Stripe Integration
 - Checkout: `POST /api/checkout` — creates Stripe Checkout session with plan metadata
 - Webhook events handled: `checkout.session.completed`, `invoice.payment_succeeded`, `invoice.payment_failed`, `customer.subscription.deleted`, `customer.subscription.updated`
 - Webhook route MUST be before `express.json()` middleware (needs raw body for signature verification)
+- Webhook returns 500 on processing errors (Stripe retries with exponential backoff up to 72h)
+- `invoice.payment_failed` revokes Outline VPN key on suspension (not just on deletion)
 
 ## Security Rules
 - Never log license keys, VPN access URLs, or Stripe secrets
