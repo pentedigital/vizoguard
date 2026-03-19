@@ -55,18 +55,28 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           console.error(`Invalid or missing plan in checkout session ${session.id}: ${plan}`);
           break;
         }
-        const licenseKey = generateKey();
         const expiresAt = new Date();
         expiresAt.setFullYear(expiresAt.getFullYear() + 1);
 
-        stmts.insert.run({
-          key: licenseKey,
-          email,
-          plan,
-          customer: session.customer || null,
-          subscription: session.subscription || null,
-          expires_at: expiresAt.toISOString(),
-        });
+        // Retry key generation on UNIQUE constraint collision (max 3 attempts)
+        let licenseKey;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          licenseKey = generateKey();
+          try {
+            stmts.insert.run({
+              key: licenseKey,
+              email,
+              plan,
+              customer: session.customer || null,
+              subscription: session.subscription || null,
+              expires_at: expiresAt.toISOString(),
+            });
+            break;
+          } catch (insertErr) {
+            if (attempt === 2 || !insertErr.message.includes("UNIQUE")) throw insertErr;
+            console.warn(`Key collision on attempt ${attempt + 1}, retrying`);
+          }
+        }
 
         console.log(`License created for ${email} (plan: ${plan})`);
 
@@ -123,6 +133,24 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (!subId) break;
 
         stmts.updateStatus.run("suspended", subId);
+
+        // Revoke Outline VPN key on suspension to prevent continued access
+        const suspendedLicense = stmts.findBySubscription.get(subId);
+        if (suspendedLicense && suspendedLicense.outline_key_id) {
+          try {
+            let revokeApiUrl = null;
+            if (suspendedLicense.vpn_node_id) {
+              const node = stmts.findNodeById.get(suspendedLicense.vpn_node_id);
+              if (node) revokeApiUrl = node.api_url;
+            }
+            await outline.deleteAccessKey(suspendedLicense.outline_key_id, revokeApiUrl);
+            stmts.clearOutlineKey.run(suspendedLicense.id);
+            console.log(`Outline key revoked on suspension for ${subId}`);
+          } catch (err) {
+            console.error("Failed to revoke Outline key on suspension:", err.message);
+          }
+        }
+
         console.log(`Payment failed for subscription ${subId}, status set to suspended`);
         break;
       }
@@ -170,8 +198,8 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     }
   } catch (err) {
     console.error(`Error processing ${event.type}:`, err);
-    // Return 200 to prevent Stripe retry loops; error is logged above
-    return res.json({ received: true });
+    // Return 500 so Stripe retries on real failures (exponential backoff, 72h window)
+    return res.status(500).json({ error: "Internal processing error" });
   }
 
   res.json({ received: true });

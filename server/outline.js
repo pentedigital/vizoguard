@@ -14,7 +14,11 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
       port: url.port,
       path: url.pathname + url.search,
       method,
-      rejectUnauthorized: false, // Outline uses self-signed cert; URL contains secret prefix for auth
+      // SECURITY: rejectUnauthorized bypassed ONLY for self-signed Outline server certs.
+      // The API URL contains a secret prefix that serves as authentication.
+      // vpn_nodes.api_url must NEVER be user-settable — compromise of that table
+      // would allow redirecting management calls to an attacker-controlled server.
+      rejectUnauthorized: false,
       headers: {},
     };
 

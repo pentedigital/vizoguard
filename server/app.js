@@ -22,10 +22,15 @@ app.use("/api/webhook", webhookRouter);
 // Global middleware
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({
-  origin: [
-    "https://vizoguard.com",
-    "https://www.vizoguard.com",
-  ],
+  origin: (origin, callback) => {
+    // Allow vizoguard.com origins + requests with no Origin header (Electron app, server-to-server)
+    const allowed = ["https://vizoguard.com", "https://www.vizoguard.com"];
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
 }));
 app.use(express.json({ limit: "16kb" }));
 

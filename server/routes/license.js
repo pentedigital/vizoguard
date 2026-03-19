@@ -94,12 +94,15 @@ router.get("/lookup", async (req, res) => {
       return res.json({ pending: true });
     }
 
+    if (!session.subscription) {
+      console.warn(`Lookup: session ${session_id} has no subscription ID — using customer fallback`);
+    }
+
     res.json({
       key: license.key,
       email: license.email,
       plan: license.plan,
       expires: license.expires_at,
-      access_url: license.outline_access_key || null,
     });
   } catch (err) {
     console.error("License lookup error:", err.message);

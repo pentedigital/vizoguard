@@ -15,7 +15,7 @@ function escapeHtml(s) {
 }
 
 async function sendLicenseEmail(email, licenseKey, plan, accessUrl) {
-  const appUrl = process.env.APP_URL || "https://vizoguard.com";
+  const appUrl = escapeHtml(process.env.APP_URL || "https://vizoguard.com");
   const isBasic = plan === "vpn";
   const safeKey = escapeHtml(licenseKey);
   const safeAccessUrl = accessUrl ? escapeHtml(accessUrl) : null;

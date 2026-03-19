@@ -73,9 +73,16 @@ router.post("/create", requireVpnLicense, async (req, res) => {
   }
 });
 
-// POST /api/vpn/get — retrieve existing access key
+// POST /api/vpn/get — retrieve existing access key (requires device binding)
 router.post("/get", requireVpnLicense, (req, res) => {
   const { license } = req;
+  const { device_id } = req.body;
+
+  // Require device_id verification before returning VPN credentials
+  if (license.device_id && (!device_id || device_id !== license.device_id)) {
+    return res.status(403).json({ error: "Device mismatch" });
+  }
+
   if (!license.outline_access_key) {
     return res.status(404).json({ error: "No VPN key provisioned. Call /api/vpn/create first." });
   }
@@ -101,28 +108,21 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
   }
 });
 
-// GET /api/vpn/status — all nodes status
+// GET /api/vpn/status — public health check (no infrastructure details)
 router.get("/status", async (_req, res) => {
   try {
     const nodes = stmts.listActiveNodes.all();
     if (nodes.length === 0) {
-      // Fallback: check default server
-      const server = await outline.getServer();
-      return res.json({ status: "online", name: server.name, version: server.version, nodes: 1 });
+      await outline.getServer();
+      return res.json({ status: "online" });
     }
 
     const results = await Promise.allSettled(
-      nodes.map(async (n) => {
-        const server = await outline.getServer(n.api_url);
-        const keyCount = stmts.nodeKeyCount.get(n.id);
-        return { id: n.id, region: n.region, name: n.name, status: "online", keys: keyCount.count };
-      })
+      nodes.map((n) => outline.getServer(n.api_url))
     );
 
-    const online = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
-    const offline = results.filter((r) => r.status === "rejected").length;
-
-    res.json({ status: online.length > 0 ? "online" : "offline", nodes: online, offline });
+    const onlineCount = results.filter((r) => r.status === "fulfilled").length;
+    res.json({ status: onlineCount > 0 ? "online" : "offline" });
   } catch {
     res.json({ status: "offline" });
   }
