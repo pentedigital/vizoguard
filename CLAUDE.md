@@ -11,9 +11,10 @@
 
 ## Live Site
 - https://vizoguard.com/ — landing page, setup guide, privacy/terms
+- https://vizoguard.com/ar/ — Arabic landing page (full Arabic SEO: meta, OG, JSON-LD)
 - Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: index, setup, privacy, terms, thank-you (security page removed)
+- Pages: index, ar/index, setup, privacy, terms, thank-you (security page removed)
 - Analytics: Google Ads conversion tracking (gtag.js, ID: AW-18020160060) on all pages; purchase conversion fires on thank-you page
 
 ## Database
@@ -79,7 +80,18 @@
 - Git credentials stored in `/root/.git-credentials`
 - `gh` CLI must be installed manually (`apt install gh`) and authed via `gh auth login`
 
+## i18n (Multilingual)
+- Engine: `public/js/i18n.js` — client-side, loads JSON translations via `data-i18n` attributes
+- Translations: `public/locales/en.json`, `public/locales/ar.json`
+- RTL styles: `public/css/rtl.css` (loaded dynamically when Arabic is active)
+- Arabic page: `public/ar/index.html` — standalone with Arabic meta/OG/JSON-LD for SEO
+- Language switcher in nav (EN / عربي) — redirects between `/` and `/ar/`
+- hreflang tags on both EN and AR pages cross-link for Google
+- Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED` array in `i18n.js`, create `/public/<code>/index.html`
+
 ## Gotchas
+- When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to both `locales/en.json` and `locales/ar.json`
+- FAQ answers use `data-i18n-html` attribute for safe HTML rendering (only `<strong>`, `<em>`, `<a>`, `<br>` allowed)
 - GitHub Actions SSH deploy fails (Hostinger blocks GitHub runner IPs) — use `gh run download` + manual copy to `/var/www/vizoguard/downloads/`
 - Docker host network mode bypasses UFW — use iptables directly for Outline port restrictions
 - nginx `add_header` in a `location` block replaces parent headers — use `include /etc/nginx/snippets/security-headers.conf` in every location

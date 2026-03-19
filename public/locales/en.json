@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "Vizoguard — AI Security & VPN",
+    "description": "Vizoguard combines AI-powered threat detection with encrypted VPN. Block phishing, malware, and trackers in real time. Basic VPN $24.99/yr or Pro security suite $99.99/yr. Mac, Windows, iOS, Android."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "AI security. Private VPN. One app.",
+    "subtitle": "Blocks threats before they load. Encrypts everything you send. Mac, Windows, iOS, Android.",
+    "cta": "Get started",
+    "cta2": "Learn more"
+  },
+  "features": {
+    "heading": "Features",
+    "threat_title": "Real-time threat blocking",
+    "threat_desc": "Stops malicious URLs before your browser loads them.",
+    "phishing_title": "Phishing detection",
+    "phishing_desc": "Works on brand-new domains. No signature updates needed.",
+    "vpn_title": "Encrypted VPN",
+    "vpn_desc": "All traffic encrypted. No logs. No tracking.",
+    "monitor_title": "Connection monitoring",
+    "monitor_desc": "See every app talking to the internet in real time.",
+    "heal_title": "Self-healing protection",
+    "heal_desc": "Restores itself automatically if tampered with.",
+    "platform_title": "Every platform",
+    "platform_desc": "Desktop: full security app. Mobile: encrypted VPN.",
+    "platform_link": "Setup guide"
+  },
+  "pricing": {
+    "heading": "Pick your plan.",
+    "subheading": "Cancel anytime. Discount codes accepted.",
+    "basic_label": "Basic",
+    "basic_price_dollar": "$24",
+    "basic_price_cents": ".99",
+    "basic_period": "per year",
+    "basic_desc": "Encrypted VPN. No logs. All platforms.",
+    "basic_f1": "Encrypted VPN",
+    "basic_f2": "100 GB/month",
+    "basic_f3": "Mac, Windows, iOS, Android",
+    "basic_f4": "Zero-logging policy",
+    "basic_f5": "Cancel anytime",
+    "basic_cta": "Get Basic",
+    "pro_tag": "Popular",
+    "pro_label": "Pro",
+    "pro_price_dollar": "$99",
+    "pro_price_cents": ".99",
+    "pro_period": "per year",
+    "pro_desc": "AI security + VPN. Blocks threats before they load.",
+    "pro_f1": "Everything in Basic",
+    "pro_f2": "Real-time threat blocking",
+    "pro_f3": "AI phishing detection",
+    "pro_f4": "Connection monitoring",
+    "pro_f5": "Self-healing protection",
+    "pro_f6": "Desktop app",
+    "pro_cta": "Get Pro"
+  },
+  "steps": {
+    "heading": "Three steps. Sixty seconds.",
+    "s1_title": "Subscribe",
+    "s1_desc": "Pick your plan. Your license key arrives instantly by email.",
+    "s2_title": "Install",
+    "s2_desc": "Download the app and enter your license key.",
+    "s3_title": "Done",
+    "s3_desc": "Vizoguard runs in the background. You just browse."
+  },
+  "faq": {
+    "heading": "FAQ",
+    "q1": "What's the difference between Basic and Pro?",
+    "a1": "<strong>Basic</strong> ($24.99/yr) is an encrypted VPN with 100 GB/month on all platforms via the Outline app. <strong>Pro</strong> ($99.99/yr) adds AI threat blocking, phishing detection, connection monitoring, and a self-healing immune system via the Vizoguard desktop app — plus VPN.",
+    "q2": "How does the VPN work?",
+    "a2": "After subscribing, tap \"Connect with Outline\" on the thank-you page. The Outline app opens and imports your VPN automatically. No copy-paste needed. Pro users also get VPN built into the Vizoguard desktop app.",
+    "q3": "How many devices?",
+    "a3": "<strong>Basic:</strong> Use your VPN on any device via the Outline app (100 GB/month shared). <strong>Pro:</strong> One license binds to one device on first activation. Contact support@vizoguard.com to transfer.",
+    "q4": "Can I cancel?",
+    "a4": "Anytime. Protection continues until the end of your paid period. Cancel from Stripe or email support.",
+    "q5": "What platforms?",
+    "a5": "VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. Security app: macOS 12+ and Windows 10/11.",
+    "q6": "Does it work offline?",
+    "a6": "Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet."
+  },
+  "footer": {
+    "copyright": "© 2026 Vizoguard",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  }
+}

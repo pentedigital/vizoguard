@@ -1,21 +1,27 @@
-const CACHE_NAME = 'vg-v12';
+const CACHE_NAME = 'vg-v14';
 
 const APP_SHELL = [
   '/',
+  '/ar/',
   '/css/style.css',
+  '/css/rtl.css',
   '/js/main.js',
+  '/js/i18n.js',
+  '/locales/en.json',
+  '/locales/ar.json',
   '/setup.html',
   '/privacy.html',
   '/terms.html',
   '/manifest.json'
 ];
 
-// Install: cache the app shell
+// Install: cache the app shell, then skip waiting
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 // Activate: clean old caches immediately
@@ -49,12 +55,14 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML pages (ensures updates are immediate)
-  if (url.pathname === '/' || url.pathname.endsWith('.html')) {
+  if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname.endsWith('.html')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
           return response;
         })
         .catch(() => caches.match(request))
@@ -63,12 +71,14 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Stale-while-revalidate for static assets (CSS/JS/images)
-  if (/\.(css|js|png|svg|ico|woff2?)$/.test(url.pathname)) {
+  if (/\.(css|js|json|png|svg|ico|woff2?)$/.test(url.pathname)) {
     event.respondWith(
       caches.match(request).then((cached) => {
         const fetchPromise = fetch(request).then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
           return response;
         }).catch(() => cached);
         return cached || fetchPromise;

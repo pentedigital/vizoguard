@@ -1,0 +1,123 @@
+/* ── RTL overrides for Arabic ──────────────── */
+
+/* Global text alignment */
+[dir="rtl"] body {
+  text-align: right;
+}
+
+/* Header */
+[dir="rtl"] header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] nav {
+  flex-direction: row-reverse;
+}
+
+/* Hero — centered, no change needed except text alignment already center */
+
+/* Features grid — inherits fine, text alignment from body */
+
+/* Pricing */
+[dir="rtl"] .pricing-amount {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .pricing-list li {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .pricing-list li::before {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .pricing-tag {
+  right: auto;
+  left: 16px;
+}
+
+/* Steps */
+[dir="rtl"] .step {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* FAQ */
+[dir="rtl"] .faq-question {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+/* Language switcher */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+[dir="rtl"] .lang-switcher {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+.lang-switcher button {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.lang-switcher button:hover {
+  color: var(--text);
+}
+
+.lang-switcher button.active-lang {
+  color: var(--accent);
+  background: rgba(255, 107, 43, 0.1);
+}
+
+.lang-switcher .lang-sep {
+  color: var(--border);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+/* Skip nav RTL */
+[dir="rtl"] .skip-nav {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* Legal pages */
+[dir="rtl"] .legal ul {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+/* Small phone RTL adjustments */
+@media (max-width: 480px) {
+  [dir="rtl"] header {
+    flex-direction: column;
+  }
+
+  [dir="rtl"] nav {
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  [dir="rtl"] .pricing-tag {
+    left: 12px;
+    right: auto;
+  }
+}

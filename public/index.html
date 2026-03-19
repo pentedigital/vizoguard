@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
@@ -17,6 +17,11 @@
   <meta name="author" content="Vizoguard">
   <link rel="canonical" href="https://vizoguard.com/">
 
+  <!-- hreflang for multilingual SEO -->
+  <link rel="alternate" hreflang="en" href="https://vizoguard.com/">
+  <link rel="alternate" hreflang="ar" href="https://vizoguard.com/ar/">
+  <link rel="alternate" hreflang="x-default" href="https://vizoguard.com/">
+
   <!-- Open Graph -->
   <meta property="og:title" content="Vizoguard — AI Security & VPN">
   <meta property="og:description" content="AI-powered threat detection + encrypted VPN. Block phishing, malware, and trackers. From $24.99/year.">
@@ -27,6 +32,7 @@
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_AR">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
@@ -45,6 +51,7 @@
     "description": "AI-powered security suite with real-time threat detection, phishing protection, connection monitoring, and encrypted VPN.",
     "url": "https://vizoguard.com",
     "image": "https://vizoguard.com/icons/icon-512.png",
+    "inLanguage": "en",
     "author": {
       "@type": "Organization",
       "name": "Vizoguard",
@@ -153,50 +160,55 @@
 <header>
   <a href="/" class="logo">Vizo<span>guard</span></a>
   <nav>
-    <a href="#features">Features</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="mailto:support@vizoguard.com">Contact</a>
+    <a href="#features" data-i18n="nav.features">Features</a>
+    <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+    <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    <a href="mailto:support@vizoguard.com" data-i18n="nav.contact">Contact</a>
+    <div class="lang-switcher">
+      <button data-lang-switch="en" onclick="switchLang('en')" aria-label="English">EN</button>
+      <span class="lang-sep">|</span>
+      <button data-lang-switch="ar" onclick="switchLang('ar')" aria-label="العربية">عربي</button>
+    </div>
   </nav>
 </header>
 
 <section class="hero">
-  <h1>AI security. Private VPN. One app.</h1>
-  <p>Blocks threats before they load. Encrypts everything you send. Mac, Windows, iOS, Android.</p>
+  <h1 data-i18n="hero.title">AI security. Private VPN. One app.</h1>
+  <p data-i18n="hero.subtitle">Blocks threats before they load. Encrypts everything you send. Mac, Windows, iOS, Android.</p>
   <div class="hero-buttons">
-    <a href="#pricing" class="btn">Get started</a>
-    <a href="#features" class="btn btn-secondary">Learn more</a>
+    <a href="#pricing" class="btn" data-i18n="hero.cta">Get started</a>
+    <a href="#features" class="btn btn-secondary" data-i18n="hero.cta2">Learn more</a>
   </div>
 </section>
 
 <div class="divider"></div>
 
 <section class="features" id="features">
-  <h2>Features</h2>
+  <h2 data-i18n="features.heading">Features</h2>
   <div class="features-grid">
     <div class="feature animate-up delay-1">
-      <h3>Real-time threat blocking</h3>
-      <p>Stops malicious URLs before your browser loads them.</p>
+      <h3 data-i18n="features.threat_title">Real-time threat blocking</h3>
+      <p data-i18n="features.threat_desc">Stops malicious URLs before your browser loads them.</p>
     </div>
     <div class="feature animate-up delay-2">
-      <h3>Phishing detection</h3>
-      <p>Works on brand-new domains. No signature updates needed.</p>
+      <h3 data-i18n="features.phishing_title">Phishing detection</h3>
+      <p data-i18n="features.phishing_desc">Works on brand-new domains. No signature updates needed.</p>
     </div>
     <div class="feature animate-up delay-3">
-      <h3>Encrypted VPN</h3>
-      <p>All traffic encrypted. No logs. No tracking.</p>
+      <h3 data-i18n="features.vpn_title">Encrypted VPN</h3>
+      <p data-i18n="features.vpn_desc">All traffic encrypted. No logs. No tracking.</p>
     </div>
     <div class="feature animate-up delay-4">
-      <h3>Connection monitoring</h3>
-      <p>See every app talking to the internet in real time.</p>
+      <h3 data-i18n="features.monitor_title">Connection monitoring</h3>
+      <p data-i18n="features.monitor_desc">See every app talking to the internet in real time.</p>
     </div>
     <div class="feature animate-up delay-5">
-      <h3>Self-healing protection</h3>
-      <p>Restores itself automatically if tampered with.</p>
+      <h3 data-i18n="features.heal_title">Self-healing protection</h3>
+      <p data-i18n="features.heal_desc">Restores itself automatically if tampered with.</p>
     </div>
     <div class="feature animate-up delay-6">
-      <h3>Every platform</h3>
-      <p>Desktop: full security app. Mobile: encrypted VPN. <a href="/setup.html">Setup guide</a></p>
+      <h3 data-i18n="features.platform_title">Every platform</h3>
+      <p><span data-i18n="features.platform_desc">Desktop: full security app. Mobile: encrypted VPN.</span> <a href="/setup.html" data-i18n="features.platform_link">Setup guide</a></p>
     </div>
   </div>
 </section>
@@ -204,42 +216,42 @@
 <div class="divider"></div>
 
 <section class="pricing" id="pricing">
-  <h2>Pick your plan.</h2>
-  <p>Cancel anytime. Discount codes accepted.</p>
+  <h2 data-i18n="pricing.heading">Pick your plan.</h2>
+  <p data-i18n="pricing.subheading">Cancel anytime. Discount codes accepted.</p>
   <div class="pricing-grid">
     <div class="pricing-card">
-      <div class="pricing-label">Basic</div>
+      <div class="pricing-label" data-i18n="pricing.basic_label">Basic</div>
       <div class="pricing-amount">
-        <span class="dollar">$24</span><span class="cents">.99</span>
+        <span class="dollar" data-i18n="pricing.basic_price_dollar">$24</span><span class="cents" data-i18n="pricing.basic_price_cents">.99</span>
       </div>
-      <div class="pricing-period">per year</div>
-      <p class="pricing-desc">Encrypted VPN. No logs. All platforms.</p>
+      <div class="pricing-period" data-i18n="pricing.basic_period">per year</div>
+      <p class="pricing-desc" data-i18n="pricing.basic_desc">Encrypted VPN. No logs. All platforms.</p>
       <ul class="pricing-list">
-        <li>Encrypted VPN</li>
-        <li>100 GB/month</li>
-        <li>Mac, Windows, iOS, Android</li>
-        <li>Zero-logging policy</li>
-        <li>Cancel anytime</li>
+        <li data-i18n="pricing.basic_f1">Encrypted VPN</li>
+        <li data-i18n="pricing.basic_f2">100 GB/month</li>
+        <li data-i18n="pricing.basic_f3">Mac, Windows, iOS, Android</li>
+        <li data-i18n="pricing.basic_f4">Zero-logging policy</li>
+        <li data-i18n="pricing.basic_f5">Cancel anytime</li>
       </ul>
-      <button class="btn btn-secondary" onclick="startCheckout('vpn')">Get Basic</button>
+      <button class="btn btn-secondary" onclick="startCheckout('vpn')" data-i18n="pricing.basic_cta">Get Basic</button>
     </div>
     <div class="pricing-card featured">
-      <div class="pricing-tag">Popular</div>
-      <div class="pricing-label">Pro</div>
+      <div class="pricing-tag" data-i18n="pricing.pro_tag">Popular</div>
+      <div class="pricing-label" data-i18n="pricing.pro_label">Pro</div>
       <div class="pricing-amount">
-        <span class="dollar">$99</span><span class="cents">.99</span>
+        <span class="dollar" data-i18n="pricing.pro_price_dollar">$99</span><span class="cents" data-i18n="pricing.pro_price_cents">.99</span>
       </div>
-      <div class="pricing-period">per year</div>
-      <p class="pricing-desc">AI security + VPN. Blocks threats before they load.</p>
+      <div class="pricing-period" data-i18n="pricing.pro_period">per year</div>
+      <p class="pricing-desc" data-i18n="pricing.pro_desc">AI security + VPN. Blocks threats before they load.</p>
       <ul class="pricing-list">
-        <li>Everything in Basic</li>
-        <li>Real-time threat blocking</li>
-        <li>AI phishing detection</li>
-        <li>Connection monitoring</li>
-        <li>Self-healing protection</li>
-        <li>Desktop app</li>
+        <li data-i18n="pricing.pro_f1">Everything in Basic</li>
+        <li data-i18n="pricing.pro_f2">Real-time threat blocking</li>
+        <li data-i18n="pricing.pro_f3">AI phishing detection</li>
+        <li data-i18n="pricing.pro_f4">Connection monitoring</li>
+        <li data-i18n="pricing.pro_f5">Self-healing protection</li>
+        <li data-i18n="pricing.pro_f6">Desktop app</li>
       </ul>
-      <button class="btn" onclick="startCheckout('security_vpn')">Get Pro</button>
+      <button class="btn" onclick="startCheckout('security_vpn')" data-i18n="pricing.pro_cta">Get Pro</button>
     </div>
   </div>
 </section>
@@ -247,27 +259,27 @@
 <div class="divider"></div>
 
 <section class="steps-section" id="how-it-works">
-  <h2>Three steps. Sixty seconds.</h2>
+  <h2 data-i18n="steps.heading">Three steps. Sixty seconds.</h2>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <h3>Subscribe</h3>
-        <p>Pick your plan. Your license key arrives instantly by email.</p>
+        <h3 data-i18n="steps.s1_title">Subscribe</h3>
+        <p data-i18n="steps.s1_desc">Pick your plan. Your license key arrives instantly by email.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div>
-        <h3>Install</h3>
-        <p>Download the app and enter your license key.</p>
+        <h3 data-i18n="steps.s2_title">Install</h3>
+        <p data-i18n="steps.s2_desc">Download the app and enter your license key.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div>
-        <h3>Done</h3>
-        <p>Vizoguard runs in the background. You just browse.</p>
+        <h3 data-i18n="steps.s3_title">Done</h3>
+        <p data-i18n="steps.s3_desc">Vizoguard runs in the background. You just browse.</p>
       </div>
     </div>
   </div>
@@ -276,41 +288,41 @@
 <div class="divider"></div>
 
 <section class="faq" id="faq">
-  <h2>FAQ</h2>
+  <h2 data-i18n="faq.heading">FAQ</h2>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">What's the difference between Basic and Pro?</button>
-    <div class="faq-answer"><p><strong>Basic</strong> ($24.99/yr) is an encrypted VPN with 100 GB/month on all platforms via the Outline app. <strong>Pro</strong> ($99.99/yr) adds AI threat blocking, phishing detection, connection monitoring, and a self-healing immune system via the Vizoguard desktop app — plus VPN.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q1">What's the difference between Basic and Pro?</button>
+    <div class="faq-answer"><p data-i18n="faq.a1" data-i18n-html><strong>Basic</strong> ($24.99/yr) is an encrypted VPN with 100 GB/month on all platforms via the Outline app. <strong>Pro</strong> ($99.99/yr) adds AI threat blocking, phishing detection, connection monitoring, and a self-healing immune system via the Vizoguard desktop app — plus VPN.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">How does the VPN work?</button>
-    <div class="faq-answer"><p>After subscribing, tap "Connect with Outline" on the thank-you page. The Outline app opens and imports your VPN automatically. No copy-paste needed. Pro users also get VPN built into the Vizoguard desktop app.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q2">How does the VPN work?</button>
+    <div class="faq-answer"><p data-i18n="faq.a2" data-i18n-html>After subscribing, tap "Connect with Outline" on the thank-you page. The Outline app opens and imports your VPN automatically. No copy-paste needed. Pro users also get VPN built into the Vizoguard desktop app.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">How many devices?</button>
-    <div class="faq-answer"><p><strong>Basic:</strong> Use your VPN on any device via the Outline app (100 GB/month shared). <strong>Pro:</strong> One license binds to one device on first activation. Contact support@vizoguard.com to transfer.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q3">How many devices?</button>
+    <div class="faq-answer"><p data-i18n="faq.a3" data-i18n-html><strong>Basic:</strong> Use your VPN on any device via the Outline app (100 GB/month shared). <strong>Pro:</strong> One license binds to one device on first activation. Contact support@vizoguard.com to transfer.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">Can I cancel?</button>
-    <div class="faq-answer"><p>Anytime. Protection continues until the end of your paid period. Cancel from Stripe or email support.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q4">Can I cancel?</button>
+    <div class="faq-answer"><p data-i18n="faq.a4">Anytime. Protection continues until the end of your paid period. Cancel from Stripe or email support.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">What platforms?</button>
-    <div class="faq-answer"><p>VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. Security app: macOS 12+ and Windows 10/11.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q5">What platforms?</button>
+    <div class="faq-answer"><p data-i18n="faq.a5">VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. Security app: macOS 12+ and Windows 10/11.</p></div>
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">Does it work offline?</button>
-    <div class="faq-answer"><p>Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet.</p></div>
+    <button class="faq-question" aria-expanded="false" data-i18n="faq.q6">Does it work offline?</button>
+    <div class="faq-answer"><p data-i18n="faq.a6">Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet.</p></div>
   </div>
 </section>
 
 <footer>
-  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+  <p><span data-i18n="footer.copyright">&copy; 2026 Vizoguard</span> &nbsp;&middot;&nbsp; <a href="/privacy.html" data-i18n="footer.privacy">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html" data-i18n="footer.terms">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
 </footer>
 
 <script>
@@ -318,6 +330,7 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
 </script>
+<script src="/js/i18n.js"></script>
 <script src="/js/main.js"></script>
 </body>
 </html>
