@@ -90,7 +90,14 @@
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
-- CSP lives in `/etc/nginx/snippets/security-headers.conf` — `script-src` and `connect-src` are locked to specific domains; `img-src` uses `https:` wildcard because Google Ads tracking pixels come from country-specific TLDs (google.ae, google.co.uk, etc.) that CSP can't wildcard
+- CSP lives in `/etc/nginx/snippets/security-headers.conf` — `script-src` and `connect-src` locked to specific domains; `img-src` lists explicit Google country TLDs for Ads tracking pixels (CSP can't wildcard across TLDs like google.ae, google.co.uk)
+- Stripe Checkout iframe generates CSP "report-only" warnings in console — these are Stripe's internal policy, not ours, but monitor if Stripe changes from report-only to enforced
+- `<link rel=preload>` warnings from Stripe Checkout are from their iframe, not our HTML — verify with `grep -r "preload" public/` if unsure
+
+## nginx Config (Version Controlled)
+- Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
+- Deploy: `cp nginx/security-headers.conf /etc/nginx/snippets/ && cp nginx/vizoguard.conf /etc/nginx/sites-available/vizoguard && nginx -t && systemctl reload nginx`
+- **Before any CSP change**: test with Google Ads + GTM + Stripe Checkout in browser DevTools console — CSP errors break conversion tracking silently
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
