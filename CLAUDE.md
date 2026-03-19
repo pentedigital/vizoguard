@@ -90,6 +90,7 @@
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
+- CSP lives in `/etc/nginx/snippets/security-headers.conf` — must include all external script/connect domains (googletagmanager.com, google-analytics.com, cdn.jsdelivr.net, checkout.stripe.com, fonts)
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
