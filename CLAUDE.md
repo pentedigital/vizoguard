@@ -98,6 +98,7 @@
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
 - Deploy: `cp nginx/security-headers.conf /etc/nginx/snippets/ && cp nginx/vizoguard.conf /etc/nginx/sites-available/vizoguard && nginx -t && systemctl reload nginx`
 - **Before any CSP change**: test with Google Ads + GTM + Stripe Checkout in browser DevTools console — CSP errors break conversion tracking silently
+- **TODO**: automated CSP/tracking validation — a hook or CI job that checks for CSP violations after nginx config changes (currently manual browser-only testing)
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
