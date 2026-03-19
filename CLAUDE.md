@@ -35,7 +35,7 @@
 ## API Routes
 - `POST /api/checkout` — create Stripe Checkout session (params: `plan`)
 - `POST /api/license` — validate + bind device (params: `key`, `device_id`)
-- `GET /api/license/lookup?session_id=` — retrieve license key + plan after checkout (no VPN URL returned)
+- `GET /api/license/lookup?session_id=` — retrieve license + VPN URL after checkout (gated by Stripe session_id, not device_id)
 - `POST /api/vpn/create` — create Outline access key (params: `key`, `device_id`)
 - `POST /api/vpn/get` — retrieve existing VPN key (params: `key`, `device_id` — 403 on mismatch)
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
