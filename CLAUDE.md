@@ -111,6 +111,7 @@
 - Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
 - `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
 - Bump `CACHE_NAME` version in `public/sw.js` after changing CSS/JS/HTML — otherwise returning visitors get stale cached content
+- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all HTML pages when updating CSS/JS (currently `?v=18`)
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
