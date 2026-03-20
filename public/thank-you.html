@@ -8,6 +8,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,6 +90,12 @@
       </ol>
 
       <p style="margin-top: 16px;"><a href="/setup.html" id="basic-setup-link" style="color: var(--teal);">Need help? Visit our setup guide</a></p>
+
+      <div class="upsell-box">
+        <h3>Want AI threat protection too?</h3>
+        <p>Upgrade to Pro and get real-time phishing detection, malware blocking, and self-healing protection — all on top of your VPN.</p>
+        <a href="/#pricing" class="btn" style="font-size: 0.8125rem; height: 40px; padding: 0 20px;">See Pro plan — $99.99/yr</a>
+      </div>
     </div>
   </div>
 
@@ -120,6 +127,19 @@
     </div>
 
     <p style="margin-top: 16px;"><a href="/setup.html" id="pro-setup-link" style="color: var(--teal);">Need help? Visit our setup guide</a></p>
+  </div>
+
+  <!-- Referral box (shown after success) -->
+  <div id="referral-box" style="display: none;">
+    <div class="referral-box">
+      <h3>Know someone who needs this?</h3>
+      <p>Share Vizoguard with a friend — help them stay protected too.</p>
+      <div class="share-buttons">
+        <a class="share-btn" id="share-twitter" href="#" target="_blank" rel="noopener">Twitter/X</a>
+        <a class="share-btn" id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <button class="share-btn" onclick="navigator.clipboard.writeText('https://vizoguard.com').then(function(){this.textContent='Copied!'}.bind(this))">Copy link</button>
+      </div>
+    </div>
   </div>
 
   <!-- Pending state -->
@@ -200,13 +220,24 @@ function showSuccess(data) {
   document.getElementById("loading").style.display = "none";
   vpnAccessUrl = data.access_url || null;
 
-  // Google Ads purchase conversion
+  // Google Ads purchase conversion + enhanced conversions
   var conversionValue = data.plan === "security_vpn" ? 99.99 : 24.99;
+  var planLabel = data.plan === "security_vpn" ? "Pro" : "Basic";
+  gtag('set', 'user_data', { 'email': data.email || '' });
   gtag('event', 'conversion', {
     'send_to': 'AW-18020160060/U-zGCOHA4okcELyk15BD',
     'value': conversionValue,
     'currency': 'USD',
-    'transaction_id': sessionId || ''
+    'transaction_id': sessionId || '',
+    'new_customer': true
+  });
+
+  // GA4 purchase event
+  gtag('event', 'purchase', {
+    'transaction_id': sessionId || '',
+    'value': conversionValue,
+    'currency': 'USD',
+    'items': [{ 'item_name': 'Vizoguard ' + planLabel, 'price': conversionValue, 'quantity': 1 }]
   });
 
   if (data.plan === "security_vpn") {
@@ -231,6 +262,13 @@ function showSuccess(data) {
     document.getElementById("basic-setup-link").href = "/setup.html" + (vpnAccessUrl ? "?key=" + encodeURIComponent(vpnAccessUrl) : "");
     document.getElementById("success-basic").style.display = "block";
   }
+
+  // Show referral box + set share links
+  document.getElementById("referral-box").style.display = "block";
+  var shareText = encodeURIComponent("Just set up Vizoguard — AI security + VPN for $24.99/yr. Worth checking out:");
+  var shareUrl = encodeURIComponent("https://vizoguard.com");
+  document.getElementById("share-twitter").href = "https://x.com/intent/tweet?text=" + shareText + "&url=" + shareUrl;
+  document.getElementById("share-whatsapp").href = "https://wa.me/?text=" + shareText + "%20" + shareUrl;
 }
 
 // Poll for license

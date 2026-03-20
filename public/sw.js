@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v14';
+const CACHE_NAME = 'vg-v16';
 
 const APP_SHELL = [
   '/',

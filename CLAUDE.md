@@ -15,7 +15,7 @@
 - Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
 - Legal entity: PRIME360 HOLDING LTD (Malta)
 - Pages: index, ar/index, setup, privacy, terms, thank-you (security page removed)
-- Analytics: Google Ads conversion tracking (gtag.js, ID: AW-18020160060) on all pages; purchase conversion fires on thank-you page
+- Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
 - `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id
@@ -88,6 +88,16 @@
 - Language switcher in nav (EN / عربي) — redirects between `/` and `/ar/`
 - hreflang tags on both EN and AR pages cross-link for Google
 - Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED` array in `i18n.js`, create `/public/<code>/index.html`
+
+## CRO (Conversion Optimization)
+- Urgency banner: countdown timer (ends March 25, 2026) — update `end` date in inline script on index.html + ar/index.html
+- Social proof bar: rating + guarantee + zero-logs — below hero on both EN/AR
+- Per-day price anchoring: "$2.08/month" / "$8.33/month" on pricing cards
+- 30-day money-back guarantee badge under pricing section
+- Sticky mobile CTA: appears after scrolling past pricing (768px breakpoint)
+- Checkout loading state: prevents double-click, shows "Redirecting..." spinner
+- Thank-you page: Basic→Pro upsell box + referral sharing (Twitter/X, WhatsApp, copy link)
+- All CRO elements exist on both EN and AR pages
 
 ## Gotchas
 - When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to both `locales/en.json` and `locales/ar.json`

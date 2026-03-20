@@ -8,6 +8,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,6 +158,10 @@
 <body>
 <a href="#pricing" class="skip-nav">Skip to pricing</a>
 
+<div class="urgency-banner" id="urgency-banner">
+  Launch pricing — <span id="countdown-text">ends in 5 days</span>. Lock in $24.99/yr before it's gone.
+</div>
+
 <header>
   <a href="/" class="logo">Vizo<span>guard</span></a>
   <nav>
@@ -180,6 +185,16 @@
     <a href="#features" class="btn btn-secondary" data-i18n="hero.cta2">Learn more</a>
   </div>
 </section>
+
+<div class="social-proof">
+  <div class="social-proof-inner">
+    <div class="proof-stat"><span class="num">4.9/5</span><span class="label">User rating</span></div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat"><span class="num">30-day</span><span class="label">Money-back guarantee</span></div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat"><span class="num">Zero</span><span class="label">Logs policy</span></div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -225,6 +240,7 @@
         <span class="dollar" data-i18n="pricing.basic_price_dollar">$24</span><span class="cents" data-i18n="pricing.basic_price_cents">.99</span>
       </div>
       <div class="pricing-period" data-i18n="pricing.basic_period">per year</div>
+      <div class="price-daily">That's just $2.08/month</div>
       <p class="pricing-desc" data-i18n="pricing.basic_desc">Encrypted VPN. No logs. All platforms.</p>
       <ul class="pricing-list">
         <li data-i18n="pricing.basic_f1">Encrypted VPN</li>
@@ -242,6 +258,7 @@
         <span class="dollar" data-i18n="pricing.pro_price_dollar">$99</span><span class="cents" data-i18n="pricing.pro_price_cents">.99</span>
       </div>
       <div class="pricing-period" data-i18n="pricing.pro_period">per year</div>
+      <div class="price-daily">That's just $8.33/month</div>
       <p class="pricing-desc" data-i18n="pricing.pro_desc">AI security + VPN. Blocks threats before they load.</p>
       <ul class="pricing-list">
         <li data-i18n="pricing.pro_f1">Everything in Basic</li>
@@ -253,6 +270,10 @@
       </ul>
       <button class="btn" onclick="startCheckout('security_vpn')" data-i18n="pricing.pro_cta">Get Pro</button>
     </div>
+  </div>
+  <div class="guarantee">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    30-day money-back guarantee. No questions asked.
   </div>
 </section>
 
@@ -332,5 +353,37 @@ if ('serviceWorker' in navigator) {
 </script>
 <script src="/js/i18n.js"></script>
 <script src="/js/main.js"></script>
+
+<div class="sticky-cta" id="sticky-cta">
+  <div class="sticky-cta-inner">
+    <button class="btn btn-secondary" onclick="startCheckout('vpn')">Basic $24.99/yr</button>
+    <button class="btn" onclick="startCheckout('security_vpn')">Pro $99.99/yr</button>
+  </div>
+</div>
+
+<script>
+// Countdown timer — ends March 25 2026
+(function(){
+  var end = new Date('2026-03-25T23:59:59').getTime();
+  function update(){
+    var now = Date.now(), diff = end - now;
+    if(diff <= 0){ document.getElementById('countdown-text').textContent = 'ending today!'; return; }
+    var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
+    document.getElementById('countdown-text').textContent = 'ends in ' + d + 'd ' + h + 'h';
+  }
+  update();
+  setInterval(update, 60000);
+
+  // Show sticky CTA only after scrolling past pricing
+  var sticky = document.getElementById('sticky-cta');
+  var pricing = document.getElementById('pricing');
+  if(sticky && pricing){
+    window.addEventListener('scroll', function(){
+      var rect = pricing.getBoundingClientRect();
+      sticky.style.display = (rect.bottom < 0) ? 'block' : '';
+    }, {passive: true});
+  }
+})();
+</script>
 </body>
 </html>

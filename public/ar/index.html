@@ -8,6 +8,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,6 +160,10 @@
 <body>
 <a href="#pricing" class="skip-nav">انتقل إلى الأسعار</a>
 
+<div class="urgency-banner" id="urgency-banner">
+  سعر الإطلاق — <span id="countdown-text">ينتهي خلال 5 أيام</span>. احجز 24.99$/سنة قبل انتهاء العرض.
+</div>
+
 <header>
   <a href="/ar/" class="logo">Vizo<span>guard</span></a>
   <nav>
@@ -182,6 +187,16 @@
     <a href="#features" class="btn btn-secondary" data-i18n="hero.cta2">اعرف المزيد</a>
   </div>
 </section>
+
+<div class="social-proof">
+  <div class="social-proof-inner">
+    <div class="proof-stat"><span class="num">4.9/5</span><span class="label">تقييم المستخدمين</span></div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat"><span class="num">30 يوم</span><span class="label">ضمان استرداد الأموال</span></div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat"><span class="num">صفر</span><span class="label">سياسة السجلات</span></div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -227,6 +242,7 @@
         <span class="dollar" data-i18n="pricing.basic_price_dollar">$24</span><span class="cents" data-i18n="pricing.basic_price_cents">.99</span>
       </div>
       <div class="pricing-period" data-i18n="pricing.basic_period">سنوياً</div>
+      <div class="price-daily">أي فقط 2.08$/شهرياً</div>
       <p class="pricing-desc" data-i18n="pricing.basic_desc">VPN مشفر. بدون سجلات. جميع المنصات.</p>
       <ul class="pricing-list">
         <li data-i18n="pricing.basic_f1">شبكة VPN مشفرة</li>
@@ -244,6 +260,7 @@
         <span class="dollar" data-i18n="pricing.pro_price_dollar">$99</span><span class="cents" data-i18n="pricing.pro_price_cents">.99</span>
       </div>
       <div class="pricing-period" data-i18n="pricing.pro_period">سنوياً</div>
+      <div class="price-daily">أي فقط 8.33$/شهرياً</div>
       <p class="pricing-desc" data-i18n="pricing.pro_desc">أمان بالذكاء الاصطناعي + VPN. يحجب التهديدات قبل تحميلها.</p>
       <ul class="pricing-list">
         <li data-i18n="pricing.pro_f1">كل مميزات الأساسية</li>
@@ -255,6 +272,10 @@
       </ul>
       <button class="btn" onclick="startCheckout('security_vpn')" data-i18n="pricing.pro_cta">احصل على الاحترافية</button>
     </div>
+  </div>
+  <div class="guarantee">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    ضمان استرداد الأموال خلال 30 يوماً. بدون أي أسئلة.
   </div>
 </section>
 
@@ -334,5 +355,35 @@ if ('serviceWorker' in navigator) {
 </script>
 <script src="/js/i18n.js"></script>
 <script src="/js/main.js"></script>
+
+<div class="sticky-cta" id="sticky-cta">
+  <div class="sticky-cta-inner">
+    <button class="btn btn-secondary" onclick="startCheckout('vpn')">الأساسية 24.99$/سنة</button>
+    <button class="btn" onclick="startCheckout('security_vpn')">الاحترافية 99.99$/سنة</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var end = new Date('2026-03-25T23:59:59').getTime();
+  function update(){
+    var now = Date.now(), diff = end - now;
+    if(diff <= 0){ document.getElementById('countdown-text').textContent = 'ينتهي اليوم!'; return; }
+    var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
+    document.getElementById('countdown-text').textContent = 'ينتهي خلال ' + d + ' يوم و ' + h + ' ساعة';
+  }
+  update();
+  setInterval(update, 60000);
+
+  var sticky = document.getElementById('sticky-cta');
+  var pricing = document.getElementById('pricing');
+  if(sticky && pricing){
+    window.addEventListener('scroll', function(){
+      var rect = pricing.getBoundingClientRect();
+      sticky.style.display = (rect.bottom < 0) ? 'block' : '';
+    }, {passive: true});
+  }
+})();
+</script>
 </body>
 </html>

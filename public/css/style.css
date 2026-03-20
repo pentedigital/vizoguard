@@ -616,6 +616,190 @@ noscript .animate-up { opacity: 1; transform: none; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── Urgency banner ──────────── */
+.urgency-banner {
+  background: linear-gradient(90deg, var(--accent), #ff8f5a);
+  color: #000;
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  letter-spacing: 0.01em;
+}
+.urgency-banner span { font-weight: 700; }
+.urgency-banner + header { top: 36px; }
+.urgency-banner ~ * .hero { padding-top: 196px; }
+
+/* ── Social proof ────────────── */
+.social-proof {
+  text-align: center;
+  padding: 32px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.social-proof-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.proof-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.proof-stat .num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.proof-stat .label {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.proof-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+
+/* ── Guarantee badge ─────────── */
+.guarantee {
+  text-align: center;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--teal);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.guarantee svg { flex-shrink: 0; }
+
+/* ── Sticky mobile CTA ───────── */
+.sticky-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+}
+.sticky-cta-inner {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.sticky-cta .btn { flex: 1; height: 44px; font-size: 0.8125rem; padding: 0 16px; }
+
+/* ── Button loading state ────── */
+.btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+.btn.loading::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 8px;
+}
+
+/* ── Thank-you extras ────────── */
+.referral-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 32px;
+  text-align: center;
+}
+.referral-box h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.referral-box p {
+  font-size: 0.8125rem;
+  color: var(--text-2);
+  margin-bottom: 16px;
+}
+.share-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ice);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.share-btn:hover { border-color: var(--teal); text-decoration: none; color: var(--ice); }
+
+.upsell-box {
+  background: linear-gradient(135deg, rgba(255, 107, 43, 0.08), rgba(0, 229, 160, 0.06));
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  text-align: center;
+}
+.upsell-box h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.upsell-box p {
+  font-size: 0.8125rem;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+/* ── Per-day price callout ───── */
+.price-daily {
+  font-size: 0.75rem;
+  color: var(--teal);
+  font-weight: 500;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
 /* ── Responsive ───────────────── */
 
 /* Tablet landscape / small desktop */
@@ -680,6 +864,14 @@ noscript .animate-up { opacity: 1; transform: none; }
   .license-key { font-size: 1.1rem; }
 
   footer { padding: 36px 20px; }
+}
+
+/* Sticky CTA visible on mobile */
+@media (max-width: 768px) {
+  .sticky-cta { display: block; }
+  footer { padding-bottom: 80px; }
+  .urgency-banner { font-size: 0.75rem; padding: 8px 16px; }
+  .urgency-banner ~ * .hero { padding-top: 160px; }
 }
 
 /* Small phone */
