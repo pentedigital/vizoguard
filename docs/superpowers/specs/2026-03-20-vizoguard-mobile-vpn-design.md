@@ -10,7 +10,7 @@
 ## 1. Product Overview
 
 ### What
-Native mobile VPN apps that connect to the existing Vizoguard Outline VPN infrastructure. Single-screen UI with a big connect/disconnect button. Zero backend changes.
+Native mobile VPN apps that connect to the existing Vizoguard Outline VPN infrastructure. Single-screen UI with a big connect/disconnect button. One minor backend change (email template deep link).
 
 ### Philosophy: "Zero-Thinking VPN"
 - One screen, one button
@@ -91,18 +91,30 @@ All endpoints already exist and are production-tested.
 ```
 POST /api/license
   Request:  { key: string, device_id: string }
-  Response: { status, plan, expires_at, email }
-  Errors:   404 (invalid key), 403 (device mismatch), 400 (suspended/expired)
+  Response: { valid: true, status: string, expires: ISO8601 }
+  Errors:   404 (invalid key)
+            403 (device mismatch — body: { error, status: "device_mismatch" })
+            403 (expired — body: { error, status: "expired" })
+            403 (suspended — body: { error, status: "suspended" })
+            400 (missing/malformed input)
+  Notes:    Response does NOT include plan or email. Mobile must distinguish
+            403 errors by parsing the JSON body `status` field, not HTTP code.
 
 POST /api/vpn/create
   Request:  { key: string, device_id: string }
   Response: { access_url: "ss://..." }
-  Errors:   403 (not authorized), 409 (already exists)
+  Errors:   403 (license invalid/expired/suspended/wrong plan)
+            400 (missing input)
+  Notes:    Idempotent — if key already exists, returns existing access_url (200).
+            device_id is passed but not validated on this endpoint.
+            VPN middleware rejects plans other than "vpn" or "security_vpn".
 
 POST /api/vpn/get
   Request:  { key: string, device_id: string }
   Response: { access_url: "ss://..." }
-  Errors:   403 (device mismatch), 404 (no key)
+  Errors:   403 (device mismatch, license invalid/expired/suspended)
+            404 (no VPN key provisioned)
+            400 (missing input)
 
 GET /api/vpn/status
   Response: { status: "online" | "offline" }
@@ -110,6 +122,19 @@ GET /api/vpn/status
 GET /api/health
   Response: { status: "ok", timestamp: ISO8601 }
 ```
+
+### Plan Value Mapping
+
+| API value | Display name | Price |
+|-----------|-------------|-------|
+| `"vpn"` | Basic | $24.99/yr |
+| `"security_vpn"` | Pro | $99.99/yr |
+
+Note: `POST /api/license` does not return `plan`. The mobile app cannot determine the plan from this endpoint alone. Plan info is only available in the Stripe checkout flow and the license confirmation email.
+
+### Pro Plan VPN Constraint (Critical)
+
+The VPN middleware requires that `security_vpn` (Pro) users have an existing `device_id` binding before VPN access is granted. This means **Pro users must activate their desktop app before mobile VPN works.** The mobile app should handle the 403 error "Please activate your desktop app first" with a clear message and link to download the desktop app.
 
 ### Rate Limits (Existing)
 - API general: 30 req/min
@@ -198,8 +223,8 @@ vizoguard-android/
 | Background license check | BGTaskScheduler (24h) | WorkManager (24h) |
 | Auto-connect | NEOnDemandRule | BootReceiver + foreground service |
 | Kill switch | includeAllNetworks flag | DISALLOW_NON_VPN (VpnService.Builder) |
-| Deep links | Universal Links (`vizoguard://`) | App Links (intent-filter) |
-| QR scanning | AVCaptureSession | ML Kit / CameraX |
+| Deep links | Universal Links (`vizoguard-vpn://`) | App Links (intent-filter) |
+| QR scanning | AVCaptureSession | ZXing + CameraX (GMS-free) |
 | Notifications | UNUserNotificationCenter | NotificationCompat (foreground service) |
 | Device reboot | NEOnDemandRule (automatic) | BOOT_COMPLETED BroadcastReceiver |
 
@@ -244,17 +269,20 @@ Four methods, covering every user journey:
 
 ### 6a. Deep Link (Primary — purchased on phone)
 - Thank-you page shows "Open in Vizoguard" button
-- URL: `vizoguard://activate?key=VIZO-XXXX-XXXX-XXXX-XXXX`
+- URL scheme: `vizoguard-vpn://activate?key=VIZO-XXXX-XXXX-XXXX-XXXX`
+  - Uses `vizoguard-vpn://` (not `vizoguard://`) to avoid conflict with desktop Electron app
+  - iOS: also register as Universal Link via `https://vizoguard.com/.well-known/apple-app-site-association`
+  - Android: also register as App Link via `https://vizoguard.com/.well-known/assetlinks.json`
 - App receives key, activates automatically
 - Fallback: if app not installed, link goes to App Store / Play Store
 
 ### 6b. QR Code Scan (Cross-device — purchased on desktop)
 - Thank-you page already shows QR code (existing feature)
 - Mobile app has built-in QR scanner on Activate screen
-- QR encodes: `vizoguard://activate?key=VIZO-...`
+- QR encodes: `vizoguard-vpn://activate?key=VIZO-...`
 
 ### 6c. Email Magic Link (Async — setting up later)
-- License confirmation email includes `vizoguard://activate?key=...` link
+- License confirmation email includes `vizoguard-vpn://activate?key=...` link
 - User taps from phone email app → app opens and activates
 - Requires: update email template in `server/email.js` to include mobile deep link
 
@@ -295,7 +323,11 @@ RECONNECTING ──fail(60s)+kill_switch──→ BLOCKED
 RECONNECTING ──fail(60s)+no_kill_switch──→ ERROR
 BLOCKED ──user_override──→ LICENSED
 ERROR ──retry──→ CONNECTING
+CONNECTED ──license_expired──→ ERROR ("Your plan has expired")
+CONNECTED ──license_suspended──→ ERROR ("Payment issue")
 ```
+
+When a background license check discovers the license is invalid while connected, the tunnel is torn down immediately and the user sees the appropriate error with an action button.
 
 ### License Check Triggers
 - App comes to foreground
@@ -315,12 +347,14 @@ ERROR ──retry──→ CONNECTING
 ### Cached Data
 | Data | Storage | Persists Across Reinstall |
 |------|---------|--------------------------|
-| License key | Keychain / Keystore | Yes |
-| License status + expiry | Keychain / EncryptedPrefs | Yes |
-| VPN credentials (`ss://`) | Keychain / Keystore | Yes |
-| Device UUID | Keychain / Keystore | Yes |
+| License key | Keychain / Keystore | iOS: Yes, Android: No* |
+| License status + expiry | Keychain / EncryptedPrefs | iOS: Yes, Android: No* |
+| VPN credentials (`ss://`) | Keychain / Keystore | iOS: Yes, Android: No* |
+| Device UUID | Keychain / Keystore | iOS: Yes, Android: No* |
 | Settings (auto-connect, kill switch) | UserDefaults / SharedPrefs | No |
-| Last known good server | Keychain / EncryptedPrefs | Yes |
+| Last known good server | Keychain / EncryptedPrefs | iOS: Yes, Android: No* |
+
+*Android: EncryptedSharedPreferences data is deleted on app uninstall. Android Keystore keys persist but the encrypted data they protect does not. On Android reinstall, the user must re-activate with their license key. This is acceptable for v1 — the key is in their email.
 
 ### Grace Period
 - License expiry is checked locally: `expires_at + 7 days`
@@ -383,7 +417,7 @@ Bottom sheet accessible from gear icon on main screen.
 - License key (masked: `VIZO-••••-••••-••••-R8N5`)
 - Plan: Basic / Pro
 - Expires: date
-- Sign out (clears all cached data, returns to Activate screen)
+- Sign out: disconnects VPN if active, clears all cached data (license, VPN key, device UUID), does NOT call `/api/vpn/delete` (key remains server-side for re-activation), returns to Activate screen
 
 ---
 
@@ -470,10 +504,10 @@ These features are explicitly deferred:
 
 ## 15. Backend Changes Required
 
-**None for v1.**
+One minor change:
+- **Email template update** (`server/email.js`): Add `vizoguard-vpn://activate?key=...` deep link to the license confirmation email. One-line addition to existing email body — not a new endpoint or schema change.
 
-The only change that touches the existing codebase:
-- **Email template update** (`server/email.js`): Add `vizoguard://activate?key=...` deep link to the license confirmation email. This is a one-line addition to the existing email body — not a new endpoint or schema change.
+No new API endpoints, no database changes, no infrastructure changes.
 
 ---
 
