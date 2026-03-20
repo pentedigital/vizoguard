@@ -71,7 +71,7 @@ Non-technical, privacy-focused individuals who want VPN protection without compl
 | Huawei APK | Same Android build, no GMS | `vizoguard.com/downloads/` | Same as Android |
 
 ### Key Constraint
-Mobile apps are **separate repos**. They do not touch `vizoguard/` (backend) or `vizoguard-app/` (desktop). Backend remains completely untouched.
+Mobile apps are **separate repos**. They do not touch `vizoguard/` (backend) or `vizoguard-app/` (desktop). Backend requires only a minor email template update (see Section 15).
 
 ### Shared Across All Platforms
 - Same backend API endpoints
@@ -82,7 +82,7 @@ Mobile apps are **separate repos**. They do not touch `vizoguard/` (backend) or 
 
 ---
 
-## 3. API Contract (No Backend Changes)
+## 3. API Contract (Existing Endpoints)
 
 All endpoints already exist and are production-tested.
 
@@ -477,7 +477,7 @@ Bottom sheet accessible from gear icon on main screen.
 
 ### Android
 - **Minimum:** API 26 (Android 8.0)
-- **Dependencies:** outline-sdk (Android lib), Retrofit or Ktor, ML Kit (QR), WorkManager
+- **Dependencies:** outline-sdk (Android lib), Retrofit or Ktor, ZXing (QR), WorkManager
 - **Permissions:** INTERNET, FOREGROUND_SERVICE, BIND_VPN_SERVICE, RECEIVE_BOOT_COMPLETED, CAMERA (QR)
 - **Huawei:** No GMS dependency — all Google-specific APIs have fallbacks
 
