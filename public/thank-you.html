@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
@@ -137,7 +137,7 @@
       <div class="share-buttons">
         <a class="share-btn" id="share-twitter" href="#" target="_blank" rel="noopener">Twitter/X</a>
         <a class="share-btn" id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
-        <button class="share-btn" onclick="navigator.clipboard.writeText('https://vizoguard.com').then(function(){this.textContent='Copied!'}.bind(this))">Copy link</button>
+        <button class="share-btn" onclick="(function(btn){navigator.clipboard.writeText('https://vizoguard.com').then(function(){btn.textContent='Copied!';setTimeout(function(){btn.textContent='Copy link'},2000)})})(this)">Copy link</button>
       </div>
     </div>
   </div>
@@ -186,8 +186,9 @@ function connectVPN(e) {
   window.location.href = vpnAccessUrl;
 
   // Fallback: if nothing happened after 1.5s, redirect to Outline download
-  setTimeout(() => {
-    const ua = navigator.userAgent.toLowerCase();
+  // Cancel if window loses focus (means Outline app opened successfully)
+  var fallback = setTimeout(function() {
+    var ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad/.test(ua)) {
       window.location.href = "https://apps.apple.com/app/outline-app/id1356177741";
     } else if (/android/.test(ua)) {
@@ -196,6 +197,10 @@ function connectVPN(e) {
       window.location.href = "https://getoutline.org/get-started/";
     }
   }, 1500);
+  window.addEventListener('blur', function onBlur() {
+    clearTimeout(fallback);
+    window.removeEventListener('blur', onBlur);
+  }, { once: true });
 }
 
 function copyKey() {
@@ -265,10 +270,10 @@ function showSuccess(data) {
 
   // Show referral box + set share links
   document.getElementById("referral-box").style.display = "block";
-  var shareText = encodeURIComponent("Just set up Vizoguard — AI security + VPN for $24.99/yr. Worth checking out:");
-  var shareUrl = encodeURIComponent("https://vizoguard.com");
-  document.getElementById("share-twitter").href = "https://x.com/intent/tweet?text=" + shareText + "&url=" + shareUrl;
-  document.getElementById("share-whatsapp").href = "https://wa.me/?text=" + shareText + "%20" + shareUrl;
+  var shareMsg = "Just set up Vizoguard — AI security + VPN for $24.99/yr. Worth checking out:";
+  var shareUrl = "https://vizoguard.com";
+  document.getElementById("share-twitter").href = "https://x.com/intent/tweet?text=" + encodeURIComponent(shareMsg) + "&url=" + encodeURIComponent(shareUrl);
+  document.getElementById("share-whatsapp").href = "https://wa.me/?text=" + encodeURIComponent(shareMsg + " " + shareUrl);
 }
 
 // Poll for license

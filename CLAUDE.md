@@ -91,13 +91,15 @@
 
 ## CRO (Conversion Optimization)
 - Urgency banner: countdown timer (ends March 25, 2026) — update `end` date in inline script on index.html + ar/index.html
+- Urgency date lives in TWO inline `<script>` blocks (EN + AR) — must update both or countdown is inconsistent
 - Social proof bar: rating + guarantee + zero-logs — below hero on both EN/AR
 - Per-day price anchoring: "$2.08/month" / "$8.33/month" on pricing cards
 - 30-day money-back guarantee badge under pricing section
-- Sticky mobile CTA: appears after scrolling past pricing (768px breakpoint)
-- Checkout loading state: prevents double-click, shows "Redirecting..." spinner
+- Sticky mobile CTA: appears after scrolling past pricing — only on ≤768px via JS `innerWidth` check; CSS `display:none` is the default
+- Checkout loading state: prevents double-click, shows "Redirecting..." spinner; `pageshow` event resets on bfcache Back
 - Thank-you page: Basic→Pro upsell box + referral sharing (Twitter/X, WhatsApp, copy link)
-- All CRO elements exist on both EN and AR pages
+- VPN deep-link on thank-you page uses `window.blur` to cancel the download fallback if Outline opens successfully
+- All CRO elements exist on both EN and AR pages with full responsive overrides at 1024/768/480px
 
 ## Gotchas
 - When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to both `locales/en.json` and `locales/ar.json`
@@ -115,6 +117,8 @@
 - CSP lives in `/etc/nginx/snippets/security-headers.conf` — `script-src` and `connect-src` locked to specific domains; `img-src` lists explicit Google country TLDs for Ads tracking pixels (CSP can't wildcard across TLDs like google.ae, google.co.uk)
 - Stripe Checkout iframe generates CSP "report-only" warnings in console — these are Stripe's internal policy, not ours, but monitor if Stripe changes from report-only to enforced
 - `<link rel=preload>` warnings from Stripe Checkout are from their iframe, not our HTML — verify with `grep -r "preload" public/` if unsure
+- Lang-switcher base styles are in `style.css` (not `rtl.css`) — `rtl.css` only has the `[dir="rtl"]` margin override
+- Responsive breakpoints: 1024px (tablet landscape), 768px (tablet/phone + sticky CTA), 480px (small phone) — all CRO elements have overrides at each breakpoint
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo

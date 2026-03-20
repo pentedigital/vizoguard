@@ -20,7 +20,6 @@
 
 /* Pricing */
 [dir="rtl"] .pricing-amount {
-  flex-direction: row-reverse;
   justify-content: flex-end;
 }
 
@@ -46,49 +45,36 @@
 
 /* FAQ */
 [dir="rtl"] .faq-question {
-  text-align: right;
   flex-direction: row-reverse;
 }
 
-/* Language switcher */
-.lang-switcher {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 8px;
-}
-
+/* Language switcher RTL */
 [dir="rtl"] .lang-switcher {
   margin-left: 0;
   margin-right: 8px;
 }
 
-.lang-switcher button {
-  background: none;
-  border: none;
-  color: var(--text-3);
-  font-family: var(--font);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
+/* Guarantee badge RTL */
+[dir="rtl"] .guarantee {
+  flex-direction: row-reverse;
 }
 
-.lang-switcher button:hover {
-  color: var(--text);
+/* Loading spinner RTL */
+[dir="rtl"] .btn.loading::after {
+  margin-left: 0;
+  margin-right: 8px;
 }
 
-.lang-switcher button.active-lang {
-  color: var(--accent);
-  background: rgba(255, 107, 43, 0.1);
+/* Price daily RTL */
+[dir="rtl"] .price-daily {
+  text-align: right;
 }
 
-.lang-switcher .lang-sep {
-  color: var(--border);
-  font-size: 0.75rem;
-  user-select: none;
+/* Social proof — centered, works in both directions */
+
+/* Sticky CTA RTL */
+[dir="rtl"] .sticky-cta-inner {
+  flex-direction: row-reverse;
 }
 
 /* Skip nav RTL */

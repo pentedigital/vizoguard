@@ -47,6 +47,10 @@ function _resetBtns(btns){
   _checkoutBusy = false;
   btns.forEach(function(b){ b.classList.remove('loading'); b.textContent = b.dataset.origText || b.textContent; });
 }
+// Reset checkout state when user navigates back (bfcache)
+window.addEventListener('pageshow', function(e){
+  if(e.persisted){ _resetBtns(document.querySelectorAll('.btn.loading')); }
+});
 
 // ── FAQ accordion ────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {

@@ -93,6 +93,29 @@ nav a {
 
 nav a:hover { color: var(--text); text-decoration: none; }
 
+/* ── Language switcher ────────── */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+.lang-switcher button {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.lang-switcher button:hover { color: var(--text); }
+.lang-switcher button.active-lang { color: var(--accent); background: rgba(255, 107, 43, 0.1); }
+.lang-switcher .lang-sep { color: var(--border); font-size: 0.75rem; user-select: none; }
+
 /* ── Hero ─────────────────────── */
 .hero {
   text-align: center;
@@ -430,7 +453,7 @@ nav a:hover { color: var(--text); text-decoration: none; }
   font-size: 0.9375rem;
   font-weight: 500;
   padding: 20px 0;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -632,8 +655,8 @@ noscript .animate-up { opacity: 1; transform: none; }
   letter-spacing: 0.01em;
 }
 .urgency-banner span { font-weight: 700; }
-.urgency-banner + header { top: 36px; }
-.urgency-banner ~ * .hero { padding-top: 196px; }
+.urgency-banner + header { top: 40px; }
+.urgency-banner ~ .hero { padding-top: 200px; }
 
 /* ── Social proof ────────────── */
 .social-proof {
@@ -809,6 +832,7 @@ noscript .animate-up { opacity: 1; transform: none; }
 
   .features-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 32px; }
   .hero { padding: 140px 24px 100px; }
+  .urgency-banner ~ .hero { padding-top: 180px; }
 }
 
 /* Tablet portrait / large phone */
@@ -863,15 +887,24 @@ noscript .animate-up { opacity: 1; transform: none; }
   .license-box { padding: 24px 20px; }
   .license-key { font-size: 1.1rem; }
 
-  footer { padding: 36px 20px; }
-}
-
-/* Sticky CTA visible on mobile */
-@media (max-width: 768px) {
+  footer { padding: 36px 20px 80px; }
   .sticky-cta { display: block; }
-  footer { padding-bottom: 80px; }
   .urgency-banner { font-size: 0.75rem; padding: 8px 16px; }
-  .urgency-banner ~ * .hero { padding-top: 160px; }
+  .urgency-banner + header { top: 36px; }
+  .urgency-banner ~ .hero { padding-top: 164px; }
+
+  .social-proof { padding: 24px 20px; }
+  .social-proof-inner { gap: 20px; }
+  .proof-stat .num { font-size: 1.25rem; }
+  .proof-stat .label { font-size: 0.6875rem; }
+  .proof-divider { height: 24px; }
+
+  .guarantee { font-size: 0.75rem; margin-top: 24px; }
+
+  .referral-box { padding: 20px 16px; }
+  .upsell-box { padding: 20px 16px; }
+  .share-buttons { flex-direction: column; align-items: center; }
+  .share-btn { width: 100%; max-width: 280px; justify-content: center; }
 }
 
 /* Small phone */
@@ -912,4 +945,43 @@ noscript .animate-up { opacity: 1; transform: none; }
   .divider { padding: 0 16px; }
 
   footer p { font-size: 0.6875rem; }
+
+  /* Urgency banner — small phone */
+  .urgency-banner {
+    font-size: 0.6875rem;
+    padding: 6px 12px;
+    line-height: 1.4;
+  }
+  .urgency-banner + header { top: 32px; }
+  .urgency-banner ~ .hero { padding-top: 150px; }
+
+  /* Header stacks vertically — needs more space with banner */
+  header {
+    padding-top: calc(12px + env(safe-area-inset-top, 0));
+  }
+
+  /* Social proof — stack on tiny screens */
+  .social-proof { padding: 20px 16px; }
+  .social-proof-inner { gap: 16px; }
+  .proof-divider { display: none; }
+  .proof-stat .num { font-size: 1.125rem; }
+  .proof-stat .label { font-size: 0.625rem; }
+
+  /* Guarantee */
+  .guarantee { font-size: 0.6875rem; gap: 6px; margin-top: 20px; flex-wrap: wrap; }
+
+  /* Price daily */
+  .price-daily { font-size: 0.6875rem; }
+
+  /* Sticky CTA — tighter on small phones */
+  .sticky-cta { padding: 10px 12px; }
+  .sticky-cta .btn { height: 40px; font-size: 0.75rem; padding: 0 10px; border-radius: 20px; }
+
+  /* Thank-you extras */
+  .referral-box { padding: 16px 12px; margin-top: 24px; }
+  .referral-box h3 { font-size: 0.875rem; }
+  .referral-box p { font-size: 0.75rem; }
+  .upsell-box { padding: 16px 12px; margin-top: 20px; }
+  .upsell-box h3 { font-size: 0.875rem; }
+  .upsell-box p { font-size: 0.75rem; }
 }

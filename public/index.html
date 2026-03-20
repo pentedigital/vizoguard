@@ -365,20 +365,25 @@ if ('serviceWorker' in navigator) {
 // Countdown timer — ends March 25 2026
 (function(){
   var end = new Date('2026-03-25T23:59:59').getTime();
+  var timer = setInterval(update, 60000);
   function update(){
     var now = Date.now(), diff = end - now;
-    if(diff <= 0){ document.getElementById('countdown-text').textContent = 'ending today!'; return; }
+    if(diff <= 0){
+      document.getElementById('countdown-text').textContent = 'ending today!';
+      clearInterval(timer);
+      return;
+    }
     var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
     document.getElementById('countdown-text').textContent = 'ends in ' + d + 'd ' + h + 'h';
   }
   update();
-  setInterval(update, 60000);
 
-  // Show sticky CTA only after scrolling past pricing
+  // Show sticky CTA only after scrolling past pricing (mobile only)
   var sticky = document.getElementById('sticky-cta');
   var pricing = document.getElementById('pricing');
   if(sticky && pricing){
     window.addEventListener('scroll', function(){
+      if(window.innerWidth > 768){ sticky.style.display = ''; return; }
       var rect = pricing.getBoundingClientRect();
       sticky.style.display = (rect.bottom < 0) ? 'block' : '';
     }, {passive: true});

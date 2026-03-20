@@ -366,19 +366,25 @@ if ('serviceWorker' in navigator) {
 <script>
 (function(){
   var end = new Date('2026-03-25T23:59:59').getTime();
+  var timer = setInterval(update, 60000);
   function update(){
     var now = Date.now(), diff = end - now;
-    if(diff <= 0){ document.getElementById('countdown-text').textContent = 'ينتهي اليوم!'; return; }
+    if(diff <= 0){
+      document.getElementById('countdown-text').textContent = 'ينتهي اليوم!';
+      clearInterval(timer);
+      return;
+    }
     var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
-    document.getElementById('countdown-text').textContent = 'ينتهي خلال ' + d + ' يوم و ' + h + ' ساعة';
+    var dayWord = d <= 2 ? 'يوم' : 'أيام';
+    document.getElementById('countdown-text').textContent = 'ينتهي خلال ' + d + ' ' + dayWord + ' و ' + h + ' ساعة';
   }
   update();
-  setInterval(update, 60000);
 
   var sticky = document.getElementById('sticky-cta');
   var pricing = document.getElementById('pricing');
   if(sticky && pricing){
     window.addEventListener('scroll', function(){
+      if(window.innerWidth > 768){ sticky.style.display = ''; return; }
       var rect = pricing.getBoundingClientRect();
       sticky.style.display = (rect.bottom < 0) ? 'block' : '';
     }, {passive: true});
