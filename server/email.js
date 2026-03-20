@@ -71,6 +71,7 @@ Questions? Reply to this email.
     <div style="background: #111827; border: 1px solid #00e5a0; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
       <p style="color: #8a93a6; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px;">Your License Key</p>
       <p style="font-size: 20px; font-weight: 700; color: #f0f2f5; letter-spacing: 2px; margin: 0; font-family: monospace;">${safeKey}</p>
+      <p style="margin-top: 12px;"><a href="vizoguard-vpn://activate?key=${safeKey}" style="color: #ff6b2b; font-size: 13px;">Open in Vizoguard VPN app</a></p>
     </div>
 
     ${downloadHtml}
