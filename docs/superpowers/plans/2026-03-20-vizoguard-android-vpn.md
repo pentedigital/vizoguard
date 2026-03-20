@@ -88,7 +88,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-dependencyResolution {
+dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
@@ -104,6 +104,7 @@ plugins {
     id("com.android.application") version "8.7.3" apply false
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.0" apply false
 }
 ```
 
@@ -121,6 +122,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -165,6 +167,9 @@ dependencies {
     implementation("io.ktor:ktor-client-android:3.0.3")
     implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     // Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
@@ -226,6 +231,7 @@ dependencies {
         <service
             android:name=".vpn.ShadowsocksService"
             android:permission="android.permission.BIND_VPN_SERVICE"
+            android:foregroundServiceType="specialUse"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
@@ -521,8 +527,16 @@ class InMemoryPrefs : SharedPreferences {
 }
 ```
 
-- [ ] **Step 4: Implement DeviceId**
+- [ ] **Step 4: Add device ID methods to SecureStore and implement DeviceId**
 
+Add to `SecureStore`:
+```kotlin
+    fun saveDeviceId(id: String) = prefs.edit().putString(KEY_DEVICE_ID, id).apply()
+    fun getDeviceId(): String? = prefs.getString(KEY_DEVICE_ID, null)
+```
+And add `private const val KEY_DEVICE_ID = "device_uuid"` to the companion object.
+
+Then create `DeviceId.kt`:
 ```kotlin
 package com.vizoguard.vpn.license
 
@@ -530,20 +544,16 @@ import android.content.Context
 import java.util.UUID
 
 object DeviceId {
-    private const val KEY = "device_uuid"
-
     fun get(context: Context): String {
         val store = SecureStore.create(context)
-        val existing = store.prefs.getString(KEY, null)
+        val existing = store.getDeviceId()
         if (existing != null) return existing
         val uuid = UUID.randomUUID().toString()
-        store.prefs.edit().putString(KEY, uuid).apply()
+        store.saveDeviceId(uuid)
         return uuid
     }
 }
 ```
-
-Note: DeviceId needs `prefs` exposed — either add a package-private accessor to SecureStore or use a separate SharedPreferences file for device ID. For simplicity, use the same EncryptedSharedPreferences instance.
 
 - [ ] **Step 5: Run tests — verify they pass**
 
@@ -629,7 +639,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable data class LicenseResponse(val valid: Boolean, val status: String, val expires: String)
-@Serializable data class VpnResponse(val accessUrl: String)
+@Serializable data class VpnResponse(@SerialName("access_url") val accessUrl: String)
 @Serializable data class ErrorResponse(val error: String, val status: String = "")
 @Serializable data class HealthResponse(val status: String)
 
@@ -713,11 +723,7 @@ class ApiClient(private val baseUrl: String = "https://vizoguard.com/api") {
         private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
         fun parseLicenseResponse(body: String): LicenseResponse = json.decodeFromString(body)
-        fun parseVpnResponse(body: String): VpnResponse {
-            // Backend returns "access_url", we map to "accessUrl"
-            val mapped = body.replace("\"access_url\"", "\"accessUrl\"")
-            return json.decodeFromString(mapped)
-        }
+        fun parseVpnResponse(body: String): VpnResponse = json.decodeFromString(body)
         fun parseErrorResponse(body: String): ErrorResponse = json.decodeFromString(body)
         fun parseHealthResponse(body: String): HealthResponse = json.decodeFromString(body)
     }
@@ -1012,10 +1018,19 @@ data class VpnStatus(
     val connectedSince: Long? = null
 )
 
-class VpnManager(private val context: Context) {
+class VpnManager(private val context: Context, private val scope: kotlinx.coroutines.CoroutineScope) {
 
     private val _status = MutableStateFlow(VpnStatus())
     val status: StateFlow<VpnStatus> = _status
+
+    init {
+        // Observe service state changes and map to VpnStatus
+        scope.launch {
+            ShadowsocksService.serviceState.collect { state ->
+                updateState(state)
+            }
+        }
+    }
 
     fun updateState(state: VpnState, errorMessage: String? = null) {
         _status.value = VpnStatus(
@@ -1114,7 +1129,15 @@ import com.vizoguard.vpn.R
 class ShadowsocksService : VpnService() {
 
     private var tunFd: ParcelFileDescriptor? = null
-    private var tunnel: Any? = null // tun2socks OutlineTunnel reference
+    private var tunnel: outline.shadowsocks.Tun2socks.OutlineTunnel? = null
+
+    companion object {
+        private const val CHANNEL_ID = "vpn_status"
+        private const val NOTIFICATION_ID = 1
+
+        /** Shared state flow — VpnManager observes this to update UI */
+        val serviceState = kotlinx.coroutines.flow.MutableStateFlow(VpnState.IDLE)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -1160,13 +1183,14 @@ class ShadowsocksService : VpnService() {
                 return
             }
 
-            // TODO: Initialize tun2socks tunnel with tunFd.fd
-            // tunnel = Tun2socks.connectSocksTunnel(tunFd!!.fd, host, port, true)
+            // Start Shadowsocks tunnel via tun2socks
+            // The AAR exposes: Tun2socks.connectSocksTunnel(fd, host, port, udpEnabled)
+            tunnel = outline.shadowsocks.Tun2socks.connectSocksTunnel(
+                tunFd!!.fd.toLong(), host, port.toLong(), true
+            )
 
             updateNotification("Connected — Protected")
-
-            // Notify VpnManager of success
-            // This would be done via a broadcast or shared state
+            serviceState.value = VpnState.CONNECTED
         } catch (e: Exception) {
             disconnect()
         }
@@ -1174,7 +1198,7 @@ class ShadowsocksService : VpnService() {
 
     private fun disconnect() {
         try {
-            // TODO: tunnel?.disconnect()
+            tunnel?.disconnect()
             tunFd?.close()
             tunFd = null
             tunnel = null
@@ -1185,6 +1209,7 @@ class ShadowsocksService : VpnService() {
 
     override fun onDestroy() {
         disconnect()
+        serviceState.value = VpnState.LICENSED
         super.onDestroy()
     }
 
@@ -1223,10 +1248,6 @@ class ShadowsocksService : VpnService() {
             .notify(NOTIFICATION_ID, buildNotification(text))
     }
 
-    companion object {
-        private const val CHANNEL_ID = "vpn_status"
-        private const val NOTIFICATION_ID = 1
-    }
 }
 ```
 
@@ -2087,9 +2108,9 @@ class MainActivity : ComponentActivity() {
         if (uri.scheme == "vizoguard-vpn" && uri.host == "activate") {
             val key = uri.getQueryParameter("key")
             if (key != null && LicenseManager.isValidKeyFormat(key)) {
-                // Will be picked up by AppState on next composition
-                // For now, store as pending activation
-                intent.putExtra("pending_key", key)
+                // Activate immediately via the ViewModel
+                val appState = androidx.lifecycle.ViewModelProvider(this)[AppState::class.java]
+                appState.activate(key)
             }
         }
     }
@@ -2180,11 +2201,16 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
         val store = SecureStore.create(context)
-        if (store.getAutoConnect() && store.getVpnAccessUrl() != null) {
-            // Start ShadowsocksService to auto-connect
+        val accessUrl = store.getVpnAccessUrl()
+        if (store.getAutoConnect() && accessUrl != null) {
+            val config = com.vizoguard.vpn.vpn.VpnManager.parseShadowsocksUrl(accessUrl) ?: return
             val vpnIntent = Intent(context, com.vizoguard.vpn.vpn.ShadowsocksService::class.java).apply {
                 action = com.vizoguard.vpn.vpn.VpnManager.ACTION_CONNECT
-                // TODO: pass cached VPN config
+                putExtra(com.vizoguard.vpn.vpn.VpnManager.EXTRA_HOST, config.host)
+                putExtra(com.vizoguard.vpn.vpn.VpnManager.EXTRA_PORT, config.port)
+                putExtra(com.vizoguard.vpn.vpn.VpnManager.EXTRA_METHOD, config.method)
+                putExtra(com.vizoguard.vpn.vpn.VpnManager.EXTRA_PASSWORD, config.password)
+                putExtra(com.vizoguard.vpn.vpn.VpnManager.EXTRA_KILL_SWITCH, store.getKillSwitch())
             }
             context.startForegroundService(vpnIntent)
         }
