@@ -70,7 +70,7 @@
   },
   "faq": {
     "heading": "Preguntas frecuentes",
-    "q1": "\u00bfCual es la diferencia entre Basic y Pro?",
+    "q1": "\u00bfCuál es la diferencia entre Basic y Pro?",
     "a1": "<strong>Basic</strong> ($24.99/ano) es un VPN cifrado con 100 GB/mes en todas las plataformas via la app Outline. <strong>Pro</strong> ($99.99/ano) agrega bloqueo de amenazas con IA, deteccion de phishing, monitoreo de conexiones y proteccion autorreparable via la app Vizoguard \u2014 mas VPN.",
     "q2": "\u00bfComo funciona el VPN?",
     "a2": "Despues de suscribirte, haz clic en \u00ab Conectar con Outline \u00bb en la pagina de agradecimiento. La app Outline se abre e importa tu VPN automaticamente. Sin copiar y pegar. Los usuarios Pro tambien obtienen VPN integrado en la app Vizoguard.",
@@ -81,7 +81,23 @@
     "q5": "\u00bfQue plataformas?",
     "a5": "VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. App de seguridad: macOS 12+ y Windows 10/11.",
     "q6": "\u00bfFunciona sin conexion?",
-    "a6": "Las funciones de seguridad funcionan sin conexion con datos de amenazas en cache. La licencia se verifica cada 24 horas con un periodo de gracia de 7 dias. El VPN requiere Internet."
+    "a6": "Las funciones de seguridad funcionan sin conexion con datos de amenazas en cache. La licencia se verifica cada 24 horas con un periodo de gracia de 7 dias. El VPN requiere Internet.",
+    "q7": "\u00bfQué es Vizoguard?",
+    "a7": "Vizoguard es una suite de ciberseguridad con IA desarrollada por PRIME360 HOLDING LTD (Malta) que bloquea phishing, malware y rastreadores en tiempo real, además de incluir un VPN cifrado con 100 GB/mes. Disponible en Mac, Windows, iOS y Android desde $24.99/año.",
+    "q8": "\u00bfEs Vizoguard seguro y legítimo?",
+    "a8": "Sí. Vizoguard aplica una política estricta de cero registros, utiliza detección de amenazas con IA y ofrece una garantía de devolución de 30 días. Desarrollado por PRIME360 HOLDING LTD en Malta. Calificación 4.9/5.",
+    "q9": "\u00bfCuánto cuesta Vizoguard?",
+    "a9": "Vizoguard Basic (VPN cifrado) cuesta $24.99/año. Vizoguard Pro (seguridad IA + VPN) cuesta $99.99/año. Ambos planes incluyen garantía de devolución de 30 días y aceptan tarjetas de crédito vía Stripe.",
+    "q10": "\u00bfVizoguard ofrece prueba gratuita?",
+    "a10": "Vizoguard no ofrece prueba gratuita, pero ambos planes incluyen una garantía de devolución de 30 días. Si no estás satisfecho, puedes cancelar y recibir un reembolso completo dentro de los 30 días.",
+    "q11": "\u00bfVizoguard bloquea sitios de phishing?",
+    "a11": "Sí. Vizoguard Pro usa detección de phishing con IA que funciona con dominios nuevos — sin actualizaciones de firmas. Bloquea URLs maliciosas antes de que tu navegador las cargue.",
+    "q12": "\u00bfVizoguard incluye antivirus?",
+    "a12": "Vizoguard no es un antivirus tradicional. Es una suite de seguridad IA que bloquea amenazas a nivel de red — sitios de phishing, descargas de malware y rastreadores — antes de que lleguen a tu dispositivo.",
+    "q13": "\u00bfEs Vizoguard mejor que un VPN normal?",
+    "a13": "Los VPN normales solo cifran tu tráfico. Vizoguard Pro agrega detección de amenazas con IA, bloqueo de phishing, monitoreo de conexiones y protección autorreparable además del VPN cifrado.",
+    "q14": "\u00bfEn qué países funciona Vizoguard VPN?",
+    "a14": "Vizoguard VPN funciona en todo el mundo. Usa el protocolo Shadowsocks diseñado para evadir restricciones de red. Disponible en Mac, Windows, iOS, Android, Linux, ChromeOS."
   },
   "social": {
     "rating_num": "4.9/5",

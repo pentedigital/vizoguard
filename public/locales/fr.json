@@ -64,7 +64,7 @@
     "s1_title": "Abonnez-vous",
     "s1_desc": "Choisissez votre forfait. Votre cle de licence arrive instantanement par email.",
     "s2_title": "Installez",
-    "s2_desc": "Telechargez l'app et entrez votre cle de licence.",
+    "s2_desc": "Téléchargez l'app et entrez votre clé de licence.",
     "s3_title": "C'est fait",
     "s3_desc": "Vizoguard fonctionne en arriere-plan. Naviguez tranquillement."
   },
@@ -81,7 +81,23 @@
     "q5": "Quelles plateformes ?",
     "a5": "VPN : Mac, Windows, iOS, Android, Linux, ChromeOS. App de securite : macOS 12+ et Windows 10/11.",
     "q6": "Ca fonctionne hors ligne ?",
-    "a6": "Les fonctionnalites de securite fonctionnent hors ligne avec les donnees de menaces en cache. La licence est verifiee toutes les 24 heures avec une periode de grace de 7 jours. Le VPN necessite une connexion Internet."
+    "a6": "Les fonctionnalites de securite fonctionnent hors ligne avec les donnees de menaces en cache. La licence est verifiee toutes les 24 heures avec une periode de grace de 7 jours. Le VPN necessite une connexion Internet.",
+    "q7": "Qu'est-ce que Vizoguard ?",
+    "a7": "Vizoguard est une suite de cybersécurité IA développée par PRIME360 HOLDING LTD (Malte) qui bloque le phishing, les malwares et les trackers en temps réel, avec un VPN chiffré de 100 Go/mois inclus. Disponible sur Mac, Windows, iOS et Android à partir de $24.99/an.",
+    "q8": "Vizoguard est-il sûr et légitime ?",
+    "a8": "Oui. Vizoguard applique une politique stricte zéro journal, utilise la détection des menaces par IA et offre une garantie satisfait ou remboursé de 30 jours. Développé par PRIME360 HOLDING LTD à Malte. Noté 4.9/5.",
+    "q9": "Combien coûte Vizoguard ?",
+    "a9": "Vizoguard Basic (VPN chiffré) coûte $24.99/an. Vizoguard Pro (sécurité IA + VPN) coûte $99.99/an. Les deux forfaits incluent une garantie satisfait ou remboursé de 30 jours.",
+    "q10": "Vizoguard offre-t-il un essai gratuit ?",
+    "a10": "Vizoguard ne propose pas d'essai gratuit, mais les deux forfaits incluent une garantie satisfait ou remboursé de 30 jours. Si vous n'êtes pas satisfait, vous pouvez annuler et obtenir un remboursement complet dans les 30 jours.",
+    "q11": "Vizoguard bloque-t-il les sites de phishing ?",
+    "a11": "Oui. Vizoguard Pro utilise la détection du phishing par IA qui fonctionne sur les nouveaux domaines — aucune mise à jour de signatures requise. Il bloque les URL malveillantes avant que votre navigateur ne les charge.",
+    "q12": "Vizoguard inclut-il un antivirus ?",
+    "a12": "Vizoguard n'est pas un antivirus traditionnel. C'est une suite de sécurité IA qui bloque les menaces au niveau réseau — sites de phishing, téléchargements de malwares et trackers — avant qu'ils n'atteignent votre appareil.",
+    "q13": "Vizoguard est-il mieux qu'un VPN classique ?",
+    "a13": "Les VPN classiques ne font que chiffrer votre trafic. Vizoguard Pro ajoute la détection des menaces par IA, le blocage du phishing, la surveillance des connexions et la protection auto-réparatrice en plus du VPN chiffré.",
+    "q14": "Dans quels pays Vizoguard VPN fonctionne-t-il ?",
+    "a14": "Vizoguard VPN fonctionne dans le monde entier. Il utilise le protocole Shadowsocks conçu pour contourner les restrictions réseau. Disponible sur Mac, Windows, iOS, Android, Linux, ChromeOS."
   },
   "social": {
     "rating_num": "4.9/5",

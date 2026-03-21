@@ -124,6 +124,15 @@
 - `<link rel=preload>` warnings from Stripe Checkout are from their iframe, not our HTML — verify with `grep -r "preload" public/` if unsure
 - Lang-switcher is a dropdown (`nav.lang-switcher` in `style.css`) — `rtl.css` has RTL overrides for dropdown position and padding
 - Responsive breakpoints: 1024px (tablet landscape), 768px (tablet/phone + sticky CTA), 480px (small phone) — all CRO elements have overrides at each breakpoint
+- VPN key creation uses CAS pattern (`UPDATE SET outline_key_id='pending' WHERE outline_key_id IS NULL`) to prevent race in PM2 cluster — always roll back 'pending' in catch block
+- Webhook `checkout.session.completed` responds to Stripe immediately (`res.json`) then provisions Outline async — do NOT add blocking work before the response
+- Webhook UNIQUE constraint on `stripe_subscription_id` is caught and returns 200 (not 500) to prevent Stripe retry loops in cluster mode
+- `stmts` in db.js must include all prepared statements — never call `db.prepare()` inside route handlers (perf + consistency)
+- PM2 cluster: rate limiters are per-process (in-memory store) — effective limit = max × instance count; nginx `limit_req_zone` is the authoritative limiter
+- PM2 cluster: logs include `[i${INSTANCE}]` prefix from `process.env.NODE_APP_INSTANCE` — preserve this in all console.log/error calls
+- `/api/license/lookup` intentionally does NOT return `access_url` — VPN credentials only via `/api/vpn/get` with device_id verification
+- `device_id` format validation: `/^[a-zA-Z0-9\-]{16,64}$/` — enforced on POST /api/license only
+- Adding a new language requires updating 7+ locations (see i18n section) — use `i18n-reviewer` subagent after changes
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
