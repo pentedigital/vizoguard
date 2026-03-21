@@ -95,6 +95,10 @@
 - hreflang tags on all 7 pages cross-link for Google (en, ar, hi, fr, es, tr, ru, x-default)
 - Each page has 5 JSON-LD schemas: SoftwareApplication, Organization, FAQPage (6 Q&A), HowTo (3 steps), BreadcrumbList
 - Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED`+`LANG_PATHS`+`LANG_LABELS` in `i18n.js`, create `/public/<code>/index.html`, update hreflang+og:locale:alternate+switcher on ALL existing pages, add to sw.js APP_SHELL
+- Tier 1 translated pages: free-vpn, best-vpn-2026, vpn-download, secure-vpn, vpn-for-privacy, 3 comparisons, features, ai-threat-protection (10 pages × 6 langs = 60 pages)
+- Translated SEO pages do NOT have language switcher — deferred to future optimization
+- Internal links in translated pages: use `/<lang>/` prefix for Tier 1 pages, English URLs for untranslated pages (blog, pricing, download)
+- Each translated page needs: correct `lang`/`dir`, canonical to self, `og:locale`, 8 hreflang tags, translated JSON-LD schemas with `inLanguage`
 
 ## CRO (Conversion Optimization)
 - Urgency banner: countdown timer (ends April 4, 2026) — update `end` date in ALL 7 language page inline scripts
@@ -142,6 +146,11 @@
 - `invoice.payment_succeeded` also calls `updateStatus("active")` to reactivate suspended licenses after payment recovery
 - Pricing changes touch 7 locale JSONs + 7 HTML pages + JSON-LD schemas (priceValidUntil) + sitemap — use `i18n-reviewer` + `seo-reviewer` subagents after changes
 - Countdown date must use UTC (`Z` suffix) and match across ALL 7 landing page scripts — banner auto-hides after expiry via `urgency-banner style.display=none`
+- Subagents need explicit `Write`, `Read`, `Edit`, `Bash` permissions in `settings.local.json` — descriptive text like "Allow subagents writing..." doesn't work, must use exact tool names
+- When creating many pages via subagents, batch by page (6 languages per batch) not by language — avoids git conflicts
+- Post-discount JS date check pattern: `if (new Date() > new Date('2026-04-04T23:59:59Z'))` — used on pricing.html, thank-you.html, and all 7 landing pages
+- SEO page creation templates: `free-vpn.html` for core SEO, `what-is-vpn.html` for blog, `vizoguard-vs-nordvpn.html` for comparisons
+- VPN route `license` variable was scoped inside `try{}` making it invisible in `catch{}` — found and fixed by test suite (Phase 4)
 
 ## SEO Pages
 - Core SEO: `public/free-vpn.html`, `public/best-vpn-2026.html`, `public/vpn-download.html`, `public/secure-vpn.html`, `public/vpn-for-privacy.html` — 900px seo-page layout, 2500-3000 words each
