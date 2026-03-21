@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v29';
+const CACHE_NAME = 'vg-v30';
 
 const APP_SHELL = [
   '/',
@@ -24,6 +24,23 @@ const APP_SHELL = [
   '/compare/vizoguard-vs-nordvpn.html',
   '/compare/vizoguard-vs-expressvpn.html',
   '/blog/what-is-vpn.html',
+  '/free-vpn.html',
+  '/best-vpn-2026.html',
+  '/vpn-download.html',
+  '/secure-vpn.html',
+  '/vpn-for-privacy.html',
+  '/blog/how-does-vpn-work.html',
+  '/blog/vpn-vs-proxy.html',
+  '/blog/vpn-vs-antivirus.html',
+  '/blog/public-wifi-security.html',
+  '/blog/what-is-malware.html',
+  '/blog/how-to-block-phishing.html',
+  '/blog/do-you-need-a-vpn.html',
+  '/blog/is-vpn-safe.html',
+  '/blog/hide-ip-address.html',
+  '/compare/vizoguard-vs-protonvpn.html',
+  '/compare/vizoguard-vs-surfshark.html',
+  '/compare/vizoguard-vs-cyberghost.html',
   '/setup.html',
   '/privacy.html',
   '/terms.html',
