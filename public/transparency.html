@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vizoguard Transparency: What We Collect and What We Don't | Vizoguard</title>
+  <meta name="description" content="Vizoguard's no-logs transparency report. We do not store IP addresses, browsing history, or connection timestamps. See exactly what data we collect and why.">
+  <meta name="keywords" content="vizoguard no logs, vpn transparency, vizoguard privacy, no log vpn, vpn data collection">
+  <meta name="author" content="Vizoguard">
+  <link rel="canonical" href="https://vizoguard.com/transparency">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vizoguard Transparency: What We Collect and What We Don't | Vizoguard">
+  <meta property="og:description" content="Vizoguard's no-logs transparency report. We do not store IP addresses, browsing history, or connection timestamps. See exactly what data we collect and why.">
+  <meta property="og:url" content="https://vizoguard.com/transparency">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Vizoguard">
+  <meta property="og:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Vizoguard Transparency: What We Collect and What We Don't | Vizoguard">
+  <meta name="twitter:description" content="Vizoguard's no-logs transparency report. We do not store IP addresses, browsing history, or connection timestamps. See exactly what data we collect and why.">
+  <meta name="twitter:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Structured Data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Vizoguard Transparency: What We Collect and What We Don't",
+    "description": "Vizoguard's no-logs transparency report. We do not store IP addresses, browsing history, or connection timestamps. See exactly what data we collect and why.",
+    "author": { "@type": "Organization", "name": "Vizoguard", "url": "https://vizoguard.com" },
+    "publisher": { "@type": "Organization", "name": "Vizoguard", "logo": { "@type": "ImageObject", "url": "https://vizoguard.com/icons/icon-512.png" } },
+    "datePublished": "2026-03-21",
+    "dateModified": "2026-03-21",
+    "mainEntityOfPage": "https://vizoguard.com/transparency",
+    "image": "https://vizoguard.com/icons/icon-512.png"
+  }
+  </script>
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Vizoguard", "item": "https://vizoguard.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Transparency", "item": "https://vizoguard.com/transparency" }
+    ]
+  }
+  </script>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00e5a0">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css?v=20">
+  <style>
+    .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
+    .seo-page h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .seo-page h2 { color: var(--text); font-size: 1.4rem; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .seo-page h3 { color: var(--text); font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; }
+    .seo-page p, .seo-page li { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; }
+    .seo-page ul, .seo-page ol { padding-left: 20px; margin: 12px 0; }
+    .seo-page li { margin-bottom: 6px; }
+
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-3); margin-bottom: 12px; }
+    .breadcrumb a { color: var(--text-3); }
+    .breadcrumb a:hover { color: var(--text); }
+
+    .verdict-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 24px 0 40px;
+    }
+    .verdict-box h3 { color: var(--teal); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .verdict-box p { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+    /* No-collect list */
+    .no-collect-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0 32px;
+    }
+    .no-collect-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--surface);
+    }
+    .no-collect-list .check-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 229, 160, 0.12);
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .no-collect-list .item-content strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .no-collect-list .item-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
+
+    /* Do-collect list */
+    .do-collect-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0 32px;
+    }
+    .do-collect-list li {
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--surface);
+    }
+    .do-collect-list li strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .do-collect-list li span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
+
+    /* Tech spec rows */
+    .spec-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0 32px;
+    }
+    .spec-list li {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+    .spec-list li:last-child { border-bottom: none; }
+    .spec-list li strong { color: var(--text); }
+
+    /* Roadmap list */
+    .roadmap-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0 32px;
+    }
+    .roadmap-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--surface);
+    }
+    .roadmap-list .status-badge {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 2px;
+    }
+    .status-planned { background: rgba(0,229,160,0.12); color: var(--teal); }
+    .status-evaluating { background: rgba(255,200,80,0.12); color: #ffc850; }
+    .roadmap-list .item-content strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .roadmap-list .item-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
+
+    .commitment-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin: 24px 0 40px;
+    }
+    .commitment-box p { color: var(--text-2); font-size: 0.95rem; line-height: 1.75; margin: 0; }
+    .commitment-box a { color: var(--teal); }
+
+    @media (max-width: 768px) {
+      .seo-page { padding: 80px 16px 40px; }
+      .seo-page h1 { font-size: 1.5rem; }
+      .seo-page h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+  <nav>
+    <a href="/#features">Features</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="mailto:support@vizoguard.com">Contact</a>
+  </nav>
+</header>
+
+<main class="seo-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Vizoguard</a> &rsaquo; Transparency
+  </nav>
+
+  <h1>Vizoguard Transparency: What We Collect and What We Don't</h1>
+
+  <p>Most VPN providers claim to have a "no-logs policy." Very few explain what that means in concrete terms. This page does. It lists every category of data we do not collect, every piece of data we do collect, and the specific reason we collect it. If something is not on the "do collect" list, we don't have it.</p>
+
+  <p>We are a small team. We don't have a marketing department writing this. This is what we actually do.</p>
+
+  <div class="verdict-box">
+    <h3>The short version</h3>
+    <p>We never see your IP address, browsing history, DNS queries, or connection timestamps. We know your email, your plan, and one device ID per Pro license. That is it. Your traffic is encrypted end-to-end and we cannot read it even if we wanted to.</p>
+  </div>
+
+
+  <!-- ===== SECTION 1 ===== -->
+  <h2>What We Do NOT Collect</h2>
+
+  <p>Each item below represents a category that many VPN providers quietly log. We do not. Not in compressed form, not in aggregated form, not temporarily.</p>
+
+  <ul class="no-collect-list">
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>IP addresses</strong>
+        <span>We never see or store your real IP address. When you connect through Vizoguard, your origin IP is not written to any log, database, or temporary file on our server. Not even for a second. Our Outline VPN server processes your connection but discards origin addressing immediately — it is never surfaced to application code.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>Browsing history</strong>
+        <span>No record of websites you visit is created or retained at any point. Your traffic is encrypted before it reaches our server. We cannot see the URLs, domains, or content of what you access. There is no "request log" on our end.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>Connection timestamps</strong>
+        <span>We do not log when you connect to or disconnect from the VPN. There are no session records. If you were connected on a specific date at a specific time, we have no way of confirming or denying that — because it was never recorded.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>DNS queries</strong>
+        <span>Your DNS lookups are encrypted through the VPN tunnel. We do not operate a separate DNS resolver that logs queries. The domains you look up are not recorded anywhere on our infrastructure.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>Bandwidth usage per session</strong>
+        <span>We do not track how much data you transfer in any given session or cumulatively. There is no per-user bandwidth meter running on our server. We monitor total server load for infrastructure health, but this is not tied to individual accounts.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>Traffic content</strong>
+        <span>Your data is encrypted end-to-end using AES-256-GCM or ChaCha20-Poly1305 before it leaves your device. Even if we wanted to inspect your traffic, we cannot — we don't hold the decryption keys for your session payload. We encrypt; we don't analyze.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon">&#10003;</div>
+      <div class="item-content">
+        <strong>Device identifiers beyond license binding</strong>
+        <span>We do not fingerprint your hardware. We do not collect your device name, OS version, screen resolution, CPU details, installed apps, or any other device attribute. The only device information we store is a single device ID per Pro license — which you provide — solely to enforce the one-device limit on that plan. Basic plan does not store any device identifier at all.</span>
+      </div>
+    </li>
+  </ul>
+
+
+  <!-- ===== SECTION 2 ===== -->
+  <h2>What We DO Collect (and Why)</h2>
+
+  <p>We collect the minimum required to run a subscription VPN business. Here is the complete list, with the exact reason each item exists.</p>
+
+  <ul class="do-collect-list">
+    <li>
+      <strong>Email address</strong>
+      <span>Required to deliver your license key after purchase and to send renewal notices before your subscription expires. Stored in our SQLite database on our VPS in Malta. We do not share it with third parties. We do not send marketing email. You can reach us at <a href="mailto:privacy@vizoguard.com" style="color:var(--teal)">privacy@vizoguard.com</a> to request deletion.</span>
+    </li>
+    <li>
+      <strong>License key + device binding (Pro plan only)</strong>
+      <span>Each Pro license allows one bound device. When you activate your license, the device ID you provide is stored alongside your license key to prevent key sharing. This is a single opaque string — we do not know what kind of device it is or who manufactured it. Basic plan users have no device binding and no device ID is stored.</span>
+    </li>
+    <li>
+      <strong>Stripe customer ID and subscription ID</strong>
+      <span>When you purchase through Stripe, we receive a Stripe customer ID and subscription ID. These are stored so we can manage billing — process renewals, handle cancellations, and respond to payment failures. We never see your full card number. Card data lives entirely within Stripe's systems and never passes through ours.</span>
+    </li>
+    <li>
+      <strong>Plan type and expiry date</strong>
+      <span>We store whether your license is Basic or Pro and when it expires. This is what our server checks when you connect — to verify your subscription is active and to apply the correct feature set. Without this we could not run a subscription service.</span>
+    </li>
+    <li>
+      <strong>Connection history (desktop app only — stored locally, not on our servers)</strong>
+      <span>The Vizoguard desktop application keeps a local log of your connection history — times you connected, duration, and basic stats. This log exists only on your device. It is never transmitted to our servers. You can delete it at any time from within the app. We have no access to it.</span>
+    </li>
+  </ul>
+
+
+  <!-- ===== SECTION 3 ===== -->
+  <h2>How Our VPN Works</h2>
+
+  <p>Understanding what we can and cannot see requires understanding the technical setup. We are not running a conventional VPN.</p>
+
+  <ul class="spec-list">
+    <li><strong>Protocol: Shadowsocks (not OpenVPN or WireGuard)</strong> — Shadowsocks disguises your traffic as regular HTTPS. To a network observer, your VPN connection looks like ordinary encrypted web traffic. This makes it significantly harder to detect or block in restrictive network environments.</li>
+    <li><strong>Encryption: AES-256-GCM or ChaCha20-Poly1305</strong> — Both are widely regarded as secure. ChaCha20-Poly1305 is the preferred cipher on devices where AES hardware acceleration is unavailable (older Android devices, for example). The encryption key is generated per-connection and derived from your access key — not stored on our server.</li>
+    <li><strong>Infrastructure: one well-secured server</strong> — We don't run 6,000 servers across 94 countries. We run one server, managed directly by our team, on a VPS with 200 GB NVMe, 16 TB bandwidth, and 16 GB RAM. We know exactly what is running on it. We are not leasing rented infrastructure in 60 jurisdictions with uneven security practices.</li>
+    <li><strong>No traffic inspection</strong> — Our server's role is to receive your encrypted connection, forward it to the destination, and return the response — all encrypted. It does not unpack, examine, or log the contents of your requests. It cannot. The payload arrives encrypted and leaves encrypted.</li>
+  </ul>
+
+
+  <!-- ===== SECTION 4 ===== -->
+  <h2>How Our AI Threat Detection Works (Pro)</h2>
+
+  <p>Vizoguard Pro includes an AI-powered threat detection layer. Given that it analyzes your browsing behavior, the natural question is: does it send data about what you visit to our servers? The answer is no — and here is exactly why.</p>
+
+  <ul class="spec-list">
+    <li><strong>URL analysis runs on your device, not our servers</strong> — When you navigate to a URL, the threat analysis happens locally in the desktop application. Your URL is evaluated by the on-device model. It is not uploaded to our API for remote analysis.</li>
+    <li><strong>8 analysis vectors run client-side</strong> — The detection engine examines signals such as domain age, URL structure, certificate properties, and pattern matching against known threat signatures. All 8 vectors execute in-process on your machine.</li>
+    <li><strong>Threat decisions are made locally</strong> — The app decides locally whether to allow or block a connection. We do not receive a report of what you tried to visit or what was blocked. The threat decision is yours — not a query sent to our servers.</li>
+    <li><strong>Blocklist updates are a static file download</strong> — The only server communication the threat detection system makes is periodically downloading an updated blocklist. This is a one-way transfer: we push a file, your device fetches it. We do not know which devices downloaded it or when.</li>
+  </ul>
+
+
+  <!-- ===== SECTION 5 ===== -->
+  <h2>What We're Working On</h2>
+
+  <p>We are honest about what we haven't done yet and what we are planning.</p>
+
+  <ul class="roadmap-list">
+    <li>
+      <div class="status-badge status-planned">Planned</div>
+      <div class="item-content">
+        <strong>Third-party audit</strong>
+        <span>We are a small team. We have not yet commissioned an independent audit of our no-logs claims or codebase. We know this is the gold standard — Mullvad and ProtonVPN have done it, and it matters. We are actively evaluating audit firms. When it happens, the results will be published here without redaction.</span>
+      </div>
+    </li>
+    <li>
+      <div class="status-badge status-evaluating">Evaluating</div>
+      <div class="item-content">
+        <strong>Open-source client components</strong>
+        <span>We are evaluating which parts of the desktop and Android clients can be open-sourced. Our preference is to open-source the VPN connection layer and threat detection core so the community can verify our no-inspection claim directly. This is under active internal discussion.</span>
+      </div>
+    </li>
+    <li>
+      <div class="status-badge status-planned">Planned</div>
+      <div class="item-content">
+        <strong>Warrant canary</strong>
+        <span>A warrant canary is a regularly updated statement confirming that we have not received any secret government orders, subpoenas, or National Security Letters requiring us to hand over user data without disclosure. We plan to publish one on this page. As of March 2026, we have received no such orders — but we want to make that statement a formal, dated commitment going forward.</span>
+      </div>
+    </li>
+  </ul>
+
+
+  <!-- ===== SECTION 6 ===== -->
+  <h2>Our Commitment</h2>
+
+  <div class="commitment-box">
+    <p>We're a small team at PRIME360 HOLDING LTD in Malta (EU). We built Vizoguard because we believe security software should be affordable and honest — not a race to the lowest price funded by selling user data, and not a premium product priced out of reach for most people.</p>
+    <p style="margin-top: 14px;">We make money from subscriptions. That means our incentives are aligned with yours: if our product doesn't actually protect your privacy, you cancel. We don't have a fallback revenue stream that involves your browsing data. We don't serve ads. We don't have investors demanding we monetize your behavior.</p>
+    <p style="margin-top: 14px;">If you have specific questions about our data practices that this page doesn't answer, email <a href="mailto:privacy@vizoguard.com">privacy@vizoguard.com</a>. We will respond, not a bot.</p>
+  </div>
+
+
+  <!-- Related -->
+  <div style="margin-top:3em; padding-top:2em; border-top:1px solid var(--border,#2a2a3e);">
+    <h3>Related</h3>
+    <ul style="list-style:none; padding:0;">
+      <li style="margin-bottom:0.5em;"><a href="/privacy.html" style="color:var(--teal);">Privacy Policy</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/vpn-for-privacy" style="color:var(--teal);">VPN for Privacy: What Actually Protects You</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/features" style="color:var(--teal);">All Vizoguard Features</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+</footer>
+
+<script src="/js/main.js?v=20"></script>
+</body>
+</html>
