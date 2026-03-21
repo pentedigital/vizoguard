@@ -15,6 +15,8 @@
 - https://vizoguard.com/hi/ — Hindi landing page (full Hindi SEO)
 - https://vizoguard.com/fr/ — French landing page (full French SEO)
 - https://vizoguard.com/es/ — Spanish landing page (full Spanish SEO)
+- https://vizoguard.com/tr/ — Turkish landing page (full Turkish SEO)
+- https://vizoguard.com/ru/ — Russian landing page (full Russian SEO)
 - Pricing: Basic $24.99/yr (regular $49.99, 50% launch discount) and Pro $99.99/yr (regular $149.99, 33% launch discount)
 - Launch discount countdown ends April 4, 2026 — update date in ALL 7 landing page inline scripts + schema priceValidUntil
 - Legal entity: PRIME360 HOLDING LTD (Malta)
@@ -54,6 +56,9 @@
 - Webhook route MUST be before `express.json()` middleware (needs raw body for signature verification)
 - Webhook returns 500 on processing errors (Stripe retries with exponential backoff up to 72h)
 - `invoice.payment_failed` revokes Outline VPN key on suspension (not just on deletion)
+- Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
+- Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `updateStatus` only for terminal states
+- Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes
 
 ## Security Rules
 - Never log license keys, VPN access URLs, or Stripe secrets
@@ -110,7 +115,7 @@
 - Sticky mobile CTA: appears after scrolling past pricing — only on ≤768px via JS `innerWidth` check; CSS `display:none` is the default
 - Checkout loading state: prevents double-click, shows "Redirecting..." spinner; `pageshow` event resets on bfcache Back
 - Thank-you page: Basic→Pro upsell box + referral sharing (Twitter/X, WhatsApp, copy link)
-- VPN deep-link on thank-you page uses `window.blur` to cancel the download fallback if Outline opens successfully
+- VPN deep-link on thank-you page uses `visibilitychange` + `blur` to cancel the download fallback if Outline opens successfully
 - All CRO elements exist on all 7 language pages with full responsive overrides at 1024/768/480px
 
 ## Gotchas
@@ -163,8 +168,8 @@
 - Post-discount: JS date-check on pricing.html, thank-you.html, and all 7 landing pages auto-hides urgency/discount elements after April 4 2026, updates prices to $49.99/$149.99
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
-- Sitemap: 98 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v33'`
+- Sitemap: 99 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v34'`
 
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
