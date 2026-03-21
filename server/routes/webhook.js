@@ -33,12 +33,12 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     return res.status(400).send("Webhook signature verification failed");
   }
 
-  // Event-level idempotency — skip already-processed events
-  if (stmts.eventExists.get(event.id)) {
+  // Event-level idempotency — atomic insert to prevent cluster TOCTOU race
+  const eventInsert = stmts.insertEvent.run(event.id, event.type);
+  if (eventInsert.changes === 0) {
     console.log(`[i${INSTANCE}] Duplicate event ${event.id}, skipping`);
     return res.json({ received: true });
   }
-  stmts.insertEvent.run(event.id, event.type);
 
   try {
     switch (event.type) {
@@ -242,7 +242,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           updResult = stmts.updateStatus.run("cancelled", sub.id);
           console.log(`[i${INSTANCE}] Subscription set to cancel at period end: ${sub.id}`);
         } else if (sub.status === "active") {
-          updResult = stmts.updateStatus.run("active", sub.id);
+          updResult = stmts.reactivateStatus.run("active", sub.id);
           console.log(`[i${INSTANCE}] Subscription reactivated: ${sub.id}`);
         } else if (sub.status === "past_due" || sub.status === "unpaid") {
           updResult = stmts.updateStatus.run("suspended", sub.id);

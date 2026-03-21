@@ -76,6 +76,9 @@ db.exec(`
   );
 `);
 
+// Prune processed events older than 7 days (beyond Stripe's 72h retry window)
+db.prepare("DELETE FROM processed_events WHERE processed_at < datetime('now', '-7 days')").run();
+
 // Add composite index for bestNode query performance
 db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_node_status ON licenses(vpn_node_id, status)");
 
@@ -106,7 +109,7 @@ const stmts = {
   reactivateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ? AND status NOT IN ('expired')"),
 
   // Stale pending cleanup
-  resetStalePending: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE outline_key_id = 'pending' AND last_check < datetime('now', '-5 minutes')"),
+  resetStalePending: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE outline_key_id = 'pending' AND (last_check < datetime('now', '-5 minutes') OR (last_check IS NULL AND created_at < datetime('now', '-5 minutes')))"),
 
   // VPN nodes
   insertNode: db.prepare("INSERT INTO vpn_nodes (region, name, host, api_url, max_keys) VALUES (@region, @name, @host, @api_url, @max_keys)"),

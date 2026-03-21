@@ -97,6 +97,7 @@ router.post("/create", requireVpnLicense, async (req, res) => {
     } catch (dbErr) {
       // Compensate: revoke the key we just created to avoid orphan (#4)
       await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
+      result = undefined; // prevent outer catch from double-deleting
       throw dbErr;
     }
 
@@ -145,8 +146,13 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
     }
 
     const { apiUrl } = getNodeApiUrl(license);
-    await outline.deleteAccessKey(license.outline_key_id, apiUrl);
-    stmts.clearOutlineKey.run(license.id);
+    try {
+      await outline.deleteAccessKey(license.outline_key_id, apiUrl);
+    } catch (delErr) {
+      console.error(`[i${INSTANCE}] Outline delete failed:`, delErr.message);
+    } finally {
+      stmts.clearOutlineKey.run(license.id);
+    }
 
     console.log(`[i${INSTANCE}] VPN key deleted via API: licenseId=${license.id}`);
     res.json({ success: true });
