@@ -212,21 +212,39 @@ function connectVPN(e) {
       window.location.href = "https://getoutline.org/get-started/";
     }
   }, 1500);
-  window.addEventListener('blur', function onBlur() {
+  // Use both blur and visibilitychange for cross-platform reliability (iOS Safari needs visibilitychange)
+  function cancelFallback() {
     clearTimeout(fallback);
-    window.removeEventListener('blur', onBlur);
-  }, { once: true });
+    window.removeEventListener('blur', cancelFallback);
+    document.removeEventListener('visibilitychange', onVisChange);
+  }
+  function onVisChange() { if (document.hidden) cancelFallback(); }
+  window.addEventListener('blur', cancelFallback, { once: true });
+  document.addEventListener('visibilitychange', onVisChange);
 }
 
 function copyKey() {
   if (!vpnAccessUrl) return;
-  navigator.clipboard.writeText(vpnAccessUrl).then(() => {
+  const showCopied = () => {
     const btns = document.querySelectorAll('.copy-btn');
     btns.forEach(b => { b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy access key', 2000); });
-  }).catch(() => {
-    // Fallback: select text
-    prompt("Copy your access key:", vpnAccessUrl);
-  });
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(vpnAccessUrl).then(showCopied).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy() {
+    var ta = document.createElement('textarea');
+    ta.value = vpnAccessUrl;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); showCopied(); } catch(e) {}
+    document.body.removeChild(ta);
+  }
 }
 
 function showQR(canvasId, text) {

@@ -537,16 +537,17 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <script>
-// Countdown timer — ends March 25 2026
+// Countdown timer — ends April 4 2026
 (function(){
   var end = new Date('2026-04-04T23:59:59Z').getTime();
   var timer = setInterval(update, 60000);
   function update(){
     var now = Date.now(), diff = end - now;
     if(diff <= 0){
-      document.getElementById('countdown-text').textContent = 'ending today!';
       clearInterval(timer);
-      document.getElementById("urgency-banner").style.display="none"; return;
+      var banner = document.getElementById("urgency-banner");
+      if(banner) banner.style.display="none";
+      return;
     }
     var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
     document.getElementById('countdown-text').textContent = 'ends in ' + d + 'd ' + h + 'h';
@@ -557,11 +558,14 @@ if ('serviceWorker' in navigator) {
   var sticky = document.getElementById('sticky-cta');
   var pricing = document.getElementById('pricing');
   if(sticky && pricing){
-    window.addEventListener('scroll', function(){
+    function checkSticky(){
       if(window.innerWidth > 768){ sticky.style.display = ''; return; }
       var rect = pricing.getBoundingClientRect();
       sticky.style.display = (rect.bottom < 0) ? 'block' : '';
-    }, {passive: true});
+    }
+    window.addEventListener('scroll', checkSticky, {passive: true});
+    window.addEventListener('resize', checkSticky, {passive: true});
+    checkSticky();
   }
 })();
 </script>

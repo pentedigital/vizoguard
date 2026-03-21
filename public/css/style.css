@@ -984,7 +984,7 @@ noscript .animate-up { opacity: 1; transform: none; }
   .license-key { font-size: 1.1rem; }
 
   footer { padding: 36px 20px 80px; }
-  .sticky-cta { display: block; }
+  /* sticky-cta visibility controlled by JS scroll handler — do not force display:block here */
   .urgency-banner { font-size: 0.75rem; padding: 8px 16px; }
   .urgency-banner + header { top: 36px; }
   .urgency-banner ~ .hero { padding-top: 164px; }

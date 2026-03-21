@@ -146,14 +146,16 @@
   }
 
   function loadAndApply(lang) {
-    if (cache[lang]) {
+    if (cache[lang] && cache[lang] !== '__loading__') {
       applyTranslations(cache[lang]);
       setDirection(lang);
       updateLangSwitcher(lang);
       localStorage.setItem("vg_lang", lang);
       return;
     }
+    if (cache[lang] === '__loading__') return; // already fetching
 
+    cache[lang] = '__loading__'; // prevent duplicate in-flight fetches
     fetch("/locales/" + lang + ".json")
       .then(function (res) { return res.json(); })
       .then(function (data) {
@@ -164,6 +166,7 @@
         localStorage.setItem("vg_lang", lang);
       })
       .catch(function (err) {
+        delete cache[lang]; // clear sentinel so user can retry
         console.error("i18n: failed to load " + lang, err);
         if (lang !== "en") { loadAndApply("en"); }
       });
