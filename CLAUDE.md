@@ -152,8 +152,10 @@
 - All SEO pages: Article + FAQPage + BreadcrumbList JSON-LD schemas, same header/footer/analytics as landing pages
 - CRO: Pricing page has testimonials (placeholder), trust badges, 11 FAQ questions, post-discount state after April 4 2026
 - Post-discount: JS date-check on pricing.html, thank-you.html, and all 7 landing pages auto-hides urgency/discount elements after April 4 2026, updates prices to $49.99/$149.99
-- Sitemap: 38 URLs in `public/sitemap.xml` (clean URLs, no .html extension)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v32'`
+- International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
+- Arabic pages load `/css/rtl.css` for RTL layout
+- Sitemap: 98 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v33'`
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
