@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { db, stmts } = require("../db");
 const outline = require("../outline");
+const { vpnKeysCreatedTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
@@ -97,6 +98,7 @@ router.post("/create", requireVpnLicense, async (req, res) => {
 
     console.log(`[i${INSTANCE}] VPN key created via API: licenseId=${license.id} nodeId=${nodeId || 'default'}`);
     res.json({ access_url: result.accessUrl });
+    vpnKeysCreatedTotal.inc({ plan: license.plan });
   } catch (err) {
     // Roll back CAS sentinel so user can retry (C1 fix)
     stmts.resetOutlineClaim.run(license.id);

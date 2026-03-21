@@ -5,6 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 const { sendLicenseEmail } = require("../email");
 const outline = require("../outline");
+const { webhookEventsTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
@@ -124,6 +125,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         await sendLicenseEmail(email, licenseKey, plan, accessUrl).catch((emailErr) => {
           console.error(`[i${INSTANCE}] Failed to send license email:`, emailErr);
         });
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         return; // Already responded above
       }
 
@@ -150,6 +152,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const renewResult = stmts.updateStatus.run("active", subId);
         if (renewResult.changes > 0) console.log(`[i${INSTANCE}] Subscription reactivated on renewal: ${subId}`);
         console.log(`[i${INSTANCE}] Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
       }
 
@@ -179,6 +182,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         }
 
         console.log(`[i${INSTANCE}] Payment failed for subscription ${subId}, status set to suspended`);
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
       }
 
@@ -205,6 +209,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         }
 
         console.log(`[i${INSTANCE}] Subscription expired: ${sub.id}`);
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
       }
 
@@ -226,6 +231,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (updResult && updResult.changes === 0) {
           console.warn(`[i${INSTANCE}] subscription.updated: no license for ${sub.id}`);
         }
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
       }
 
@@ -234,6 +240,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     }
   } catch (err) {
     console.error(`[i${INSTANCE}] Error processing ${event.type}:`, err);
+    webhookEventsTotal.inc({ event_type: event?.type || 'unknown', result: 'error' });
     if (!res.headersSent) {
       return res.status(500).json({ error: "Internal processing error" });
     }

@@ -14,6 +14,8 @@ const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
 const vpnRouter = require("./routes/vpn");
 
+const { register, metricsMiddleware, stripeCheckoutTotal } = require('./metrics');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
@@ -39,6 +41,8 @@ app.use(cors({
   },
 }));
 app.use(express.json({ limit: "16kb" }));
+
+app.use(metricsMiddleware);
 
 // Request logging (no secrets)
 app.use((req, res, next) => {
@@ -92,6 +96,7 @@ app.post("/api/checkout", checkoutLimiter, async (req, res) => {
     };
     const session = await stripe.checkout.sessions.create(sessionOpts);
     res.json({ url: session.url });
+    stripeCheckoutTotal.inc({ plan });
   } catch (err) {
     console.error("Checkout error:", err.message);
     res.status(500).json({ error: "Failed to create checkout session" });
@@ -107,6 +112,12 @@ app.get("/api/pricing", (_req, res) => {
     basic: { price: isDiscountActive ? 24.99 : 49.99, regular: 49.99 },
     pro: { price: isDiscountActive ? 99.99 : 149.99, regular: 149.99 },
   });
+});
+
+// Prometheus metrics endpoint (blocked externally by nginx)
+app.get('/metrics', async (_req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
 });
 
 // Health check

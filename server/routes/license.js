@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
+const { licenseValidationsTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
@@ -21,18 +22,22 @@ router.post("/", (req, res) => {
 
   const license = stmts.findByKey.get(key);
   if (!license) {
+    licenseValidationsTotal.inc({ result: 'invalid' });
     return res.status(404).json({ valid: false, error: "License not found" });
   }
 
   if (license.status === "expired") {
+    licenseValidationsTotal.inc({ result: 'expired' });
     return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
   }
 
   if (license.status === "suspended") {
+    licenseValidationsTotal.inc({ result: 'suspended' });
     return res.status(403).json({ valid: false, error: "Payment failed — please update your payment method at vizoguard.com", status: "suspended" });
   }
 
   if (license.expires_at && new Date(license.expires_at) < new Date()) {
+    licenseValidationsTotal.inc({ result: 'expired' });
     return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
   }
 
@@ -66,6 +71,7 @@ router.post("/", (req, res) => {
   if (!fresh) return res.status(404).json({ valid: false, error: "License not found" });
   stmts.updateLastCheck.run(fresh.id);
 
+  licenseValidationsTotal.inc({ result: 'valid' });
   res.json({
     valid: true,
     status: fresh.status,
