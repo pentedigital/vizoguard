@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vizoguard Features: AI Security + VPN in One App | Vizoguard</title>
+  <meta name="description" content="Explore Vizoguard's features — AI threat detection, phishing protection, connection monitoring, self-healing security, and encrypted VPN in one app.">
+  <meta name="keywords" content="vizoguard features, ai security features, vpn features, threat detection, phishing protection">
+  <meta name="author" content="Vizoguard">
+  <link rel="canonical" href="https://vizoguard.com/features">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vizoguard Features: AI Security + VPN in One App | Vizoguard">
+  <meta property="og:description" content="Explore Vizoguard's features — AI threat detection, phishing protection, connection monitoring, self-healing security, and encrypted VPN in one app.">
+  <meta property="og:url" content="https://vizoguard.com/features">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Vizoguard">
+  <meta property="og:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Vizoguard Features: AI Security + VPN in One App | Vizoguard">
+  <meta name="twitter:description" content="Explore Vizoguard's features — AI threat detection, phishing protection, connection monitoring, self-healing security, and encrypted VPN in one app.">
+  <meta name="twitter:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Structured Data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Vizoguard Features: AI Security + VPN in One App",
+    "description": "Explore Vizoguard's features — AI threat detection, phishing protection, connection monitoring, self-healing security, and encrypted VPN in one app.",
+    "author": { "@type": "Organization", "name": "Vizoguard", "url": "https://vizoguard.com" },
+    "publisher": { "@type": "Organization", "name": "Vizoguard", "logo": { "@type": "ImageObject", "url": "https://vizoguard.com/icons/icon-512.png" } },
+    "datePublished": "2026-03-21",
+    "dateModified": "2026-03-21",
+    "mainEntityOfPage": "https://vizoguard.com/features",
+    "image": "https://vizoguard.com/icons/icon-512.png"
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is AI threat detection in Vizoguard?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard's AI threat detection analyzes URLs and domain metadata in real time — before your browser loads the page. It does not rely on a static blocklist. Instead, it evaluates signals like domain age, certificate patterns, hosting history, and behavioral indicators to assign a risk score. Connections above the threshold are blocked immediately, with an explanation shown to the user."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is Vizoguard's phishing protection different from browser warnings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Browser safe-browsing warnings rely on databases that are updated periodically — typically hours to days after a phishing site is first reported. Vizoguard analyzes the domain itself at connection time, catching brand-new phishing domains that have not yet been indexed by any blocklist. This is especially important for spear-phishing attacks that use freshly registered lookalike domains."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does connection monitoring show?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Connection monitoring gives you a live feed of every application on your device that is making network requests — including the destination host, protocol, data volume, and risk classification. You can see whether a background process is phoning home, which apps are most active, and whether any connection has been flagged as suspicious. The view updates in real time without requiring a page refresh."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does self-healing protection mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Self-healing means Vizoguard monitors its own process integrity and restores itself if any component is modified or killed. If malware attempts to disable the security agent — a common evasion technique — the system detects the change and re-launches the affected component automatically. This is part of Vizoguard's biological immune system architecture, which treats persistent protection the same way the body treats immune defense: always on, self-repairing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What VPN protocol does Vizoguard use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard uses the Shadowsocks protocol with AES-256-GCM or ChaCha20-IETF-Poly1305 encryption, depending on your device's hardware capabilities. Shadowsocks was originally developed to resist deep packet inspection (DPI) and traffic fingerprinting, making it particularly effective in environments with restrictive network policies. All VPN traffic is routed through Vizoguard's dedicated server infrastructure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Vizoguard keep logs of my VPN traffic?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Vizoguard does not log your browsing activity, connection timestamps, DNS queries, or IP addresses associated with your session. Encryption keys are generated per-device and are never stored on Vizoguard's servers in a form that could be used to reconstruct your traffic. This is what zero-logging means in practice — not just a policy statement, but a system design that makes retroactive surveillance technically infeasible."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which platforms does Vizoguard support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard is currently available for macOS, Windows, and Android. The desktop apps are built with Electron and include the full AI security stack. The Android app provides encrypted VPN access. iOS support is in development and expected to follow the Android release. Each platform app shares the same backend infrastructure and license system, so one subscription covers all your devices."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between Basic and Pro?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard Basic ($24.99/yr) includes encrypted VPN access with zero logging — solid privacy protection at under $2.10/month. Vizoguard Pro ($99.99/yr) adds the full AI security suite: real-time threat detection, phishing protection, connection monitoring, self-healing protection, and priority support. Pro is designed for users who want a complete security layer on top of their VPN, not just traffic encryption."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I try Vizoguard before buying?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard offers a 30-day money-back guarantee on all plans. If you are not satisfied for any reason within the first 30 days, you can request a full refund with no questions asked. This applies to both Basic and Pro plans."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Vizoguard suitable for corporate or team use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The current plans are designed for individual users. Each license supports one device binding at a time. Team and multi-seat licensing is on the product roadmap. If you are evaluating Vizoguard for an organization, contact support@vizoguard.com to discuss options."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Vizoguard", "item": "https://vizoguard.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Features", "item": "https://vizoguard.com/features" }
+    ]
+  }
+  </script>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00e5a0">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css?v=20">
+  <style>
+    .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
+    .seo-page h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .seo-page h2 { color: var(--text); font-size: 1.4rem; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .seo-page h3 { color: var(--text); font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; }
+    .seo-page p, .seo-page li { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; }
+    .seo-page ul, .seo-page ol { padding-left: 20px; margin: 12px 0; }
+    .seo-page li { margin-bottom: 6px; }
+
+    .verdict-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 24px 0 40px;
+    }
+    .verdict-box h3 { color: var(--teal); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .verdict-box p { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 24px 0 40px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+    }
+    .feature-card .feature-label {
+      color: var(--teal);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .feature-card strong { color: var(--text); font-size: 0.95rem; display: block; margin-bottom: 6px; }
+    .feature-card p { color: var(--text-2); font-size: 0.875rem; line-height: 1.6; margin: 0; }
+
+    .compare-table-wrap { overflow-x: auto; margin: 24px 0 40px; -webkit-overflow-scrolling: touch; }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      min-width: 480px;
+    }
+    .compare-table thead th {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    .compare-table thead th:first-child { border-radius: 8px 0 0 0; }
+    .compare-table thead th:last-child { border-radius: 0 8px 0 0; }
+    .compare-table tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+    .compare-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .compare-table tbody td:first-child { color: var(--text); font-weight: 500; }
+    .check { color: var(--teal); }
+    .cross { color: var(--red, #ff5555); }
+    .highlight-col { background: rgba(0, 229, 160, 0.04); }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      margin: 32px 0 48px;
+      flex-wrap: wrap;
+    }
+    .cta-row .btn { padding: 14px 32px; font-size: 0.95rem; }
+
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-3); margin-bottom: 12px; }
+    .breadcrumb a { color: var(--text-3); }
+    .breadcrumb a:hover { color: var(--text); }
+
+    .platform-list { list-style: none; padding: 0; margin: 16px 0; }
+    .platform-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: var(--surface);
+    }
+    .platform-badge {
+      flex-shrink: 0;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .badge-ready { background: rgba(0, 229, 160, 0.12); color: var(--teal); }
+    .badge-soon { background: rgba(255,255,255,0.06); color: var(--text-3); }
+    .platform-content strong { color: var(--text); display: block; margin-bottom: 4px; }
+    .platform-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
+
+    .faq { margin: 24px 0 40px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-question:hover { background: rgba(255,255,255,0.03); }
+    .faq-question::after { content: '+'; font-size: 1.2rem; color: var(--teal); flex-shrink: 0; transition: transform 0.2s; }
+    .faq-item.open .faq-question::after { transform: rotate(45deg); }
+    .faq-answer { display: none; padding: 0 20px 18px; }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-answer p { color: var(--text-2); font-size: 0.9rem; line-height: 1.7; margin: 12px 0 0; }
+
+    @media (max-width: 768px) {
+      .seo-page { padding: 80px 16px 40px; }
+      .seo-page h1 { font-size: 1.5rem; }
+      .seo-page h2 { font-size: 1.2rem; }
+      .cta-row { flex-direction: column; }
+      .cta-row .btn { width: 100%; text-align: center; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+  <nav>
+    <a href="/#features">Features</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="mailto:support@vizoguard.com">Contact</a>
+  </nav>
+</header>
+
+<main class="seo-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Vizoguard</a> &rsaquo; Features
+  </nav>
+
+  <h1>Vizoguard Features: AI Security + VPN in One App</h1>
+
+  <p>Most security software does one thing: it either protects your connection with a VPN, or it scans files for malware. Vizoguard does both — and goes further by adding real-time AI threat detection that operates at the network layer, before threats reach your browser or your files. This page covers every feature in detail: what it does, how it works, and why it matters.</p>
+
+  <p>If you want the short version: Vizoguard is a desktop and mobile security app that combines an <a href="/ai-threat-protection" style="color:var(--teal);">AI-powered threat detection engine</a> with an <a href="/secure-vpn" style="color:var(--teal);">encrypted VPN</a> in a single subscription. You install one app, not four.</p>
+
+  <div class="verdict-box">
+    <h3>Feature Summary</h3>
+    <p>Vizoguard Pro includes AI threat detection, phishing protection, real-time connection monitoring, self-healing protection, and encrypted VPN. Vizoguard Basic includes encrypted VPN with zero logging. Both plans include a 30-day money-back guarantee.</p>
+  </div>
+
+  <!-- ===== SECTION 1: AI Threat Detection ===== -->
+  <h2>AI Threat Detection</h2>
+
+  <p>Traditional antivirus software works by comparing files against a database of known malware signatures. This approach has two fundamental weaknesses: it is reactive (the threat must already exist and be catalogued), and it only catches what reaches your device. Vizoguard's AI threat detection works differently — it operates at the network layer, analyzing outbound connections before any content is loaded.</p>
+
+  <p>When your browser or an application attempts to connect to a remote host, Vizoguard intercepts the request and runs it through a multi-signal analysis pipeline:</p>
+
+  <ul>
+    <li><strong>Domain age and registration data</strong> — phishing domains are often registered days or hours before use; newly registered domains receive elevated scrutiny.</li>
+    <li><strong>Certificate patterns</strong> — the structure of an SSL certificate reveals whether the domain was set up for a legitimate long-term service or spun up quickly.</li>
+    <li><strong>Hosting infrastructure signals</strong> — known bulletproof hosting ranges, fast-flux DNS, and shared infrastructure with previously flagged domains all factor into the risk score.</li>
+    <li><strong>URL structure analysis</strong> — lookalike patterns, excessive subdomains, and obfuscated paths are scored against known attack patterns.</li>
+    <li><strong>Behavioral context</strong> — requests that arrive immediately after clicking an email link are weighted differently from direct navigation.</li>
+  </ul>
+
+  <p>If the combined risk score exceeds the threshold, the connection is blocked and you see a clear explanation in the app. If the request is ambiguous, Vizoguard flags it for your review rather than silently allowing or blocking it. The entire analysis runs in under 50 milliseconds on average — fast enough to be invisible during normal browsing.</p>
+
+  <p>This is what distinguishes network-layer AI detection from browser extensions or signature-based scanners. The AI does not need to wait for a file to download or a page to render. It makes a decision at the connection level, which is the earliest possible intervention point.</p>
+
+  <!-- ===== SECTION 2: Phishing Protection ===== -->
+  <h2>Phishing Protection</h2>
+
+  <p>Phishing remains the leading initial attack vector in data breaches — not because users are careless, but because modern phishing attacks are sophisticated. Attackers register domains that look nearly identical to their targets, use valid SSL certificates (which no longer signal trustworthiness), and time their campaigns to avoid blocklist detection windows.</p>
+
+  <p>Browser-level safe browsing warnings and traditional email filters rely on blocklists — databases of known bad domains. These lists are updated periodically, but the gap between when a phishing domain goes live and when it appears on a blocklist can be hours to days. That window is exactly when attacks cause damage.</p>
+
+  <p>Vizoguard's phishing protection does not depend on whether a domain is on a list. It analyzes the domain itself at connection time using the same signals as the AI threat detection engine, with additional features tuned specifically for impersonation detection:</p>
+
+  <ul>
+    <li><strong>Brand lookalike scoring</strong> — domains that closely resemble well-known brands (paypa1.com, micosoft.net, arnazon.com) are caught regardless of whether they appear on any list.</li>
+    <li><strong>Zero-day phishing domains</strong> — domains registered within the past 24–72 hours are flagged with high priority, since legitimate businesses rarely launch production services on brand-new domains.</li>
+    <li><strong>Login page context detection</strong> — when a flagged domain serves a login form, the risk score is escalated automatically.</li>
+    <li><strong>Redirect chain analysis</strong> — multi-hop redirect chains that terminate on newly registered domains are a classic phishing delivery pattern and are caught early in the chain.</li>
+  </ul>
+
+  <p>In practical terms, this means Vizoguard protects against phishing campaigns that would sail through your browser's warnings, your email filter, and any blocklist-based tool you have installed. It is particularly effective against targeted spear-phishing attacks that use fresh infrastructure specifically to avoid detection.</p>
+
+  <p>For more detail on how the threat detection engine works, see the <a href="/ai-threat-protection" style="color:var(--teal);">AI threat protection page</a>.</p>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'features',plan:'pro'})">Get Pro — $99.99/yr</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'features',plan:'basic'})">Get Basic — $24.99/yr</a>
+  </div>
+
+  <!-- ===== SECTION 3: Connection Monitoring ===== -->
+  <h2>Connection Monitoring</h2>
+
+  <p>Your device is constantly making network connections — most of which you never see. Browsers load resources from dozens of domains per page. Applications check for updates, send telemetry, and sync data in the background. Some of that is expected behavior. Some of it is not.</p>
+
+  <p>Vizoguard's connection monitoring gives you a real-time view of every active network connection on your device, organized by application. For each connection you can see:</p>
+
+  <ul>
+    <li>The application that initiated the request</li>
+    <li>The destination host and IP address</li>
+    <li>The protocol and port</li>
+    <li>Data volume transferred (bytes in and out)</li>
+    <li>Risk classification assigned by the AI engine</li>
+    <li>Whether the connection is currently active or recently closed</li>
+  </ul>
+
+  <p>The display updates in real time without requiring manual refresh. Connections flagged as suspicious are highlighted automatically, and you can drill into any connection to see the full analysis that produced the risk rating.</p>
+
+  <p>This is useful in several practical scenarios. If an application you installed recently starts contacting unfamiliar hosts, you will see it immediately. If a browser extension is exfiltrating data to a third-party server, it shows up in the connection list alongside its risk score. If your device is already compromised and something is reaching out to a command-and-control server, connection monitoring makes that visible before the threat engine blocks it — giving you context, not just an alert.</p>
+
+  <p>Connection monitoring is available in Vizoguard Pro. It complements the AI detection engine rather than replacing it: detection blocks threats automatically, while monitoring gives you the transparency to understand what is happening on your device at any given moment.</p>
+
+  <!-- ===== SECTION 4: Self-Healing Protection ===== -->
+  <h2>Self-Healing Protection</h2>
+
+  <p>A security tool that can be disabled is only as reliable as the attacker's willingness to leave it running. Process termination is one of the first steps in most malware playbooks: kill the antivirus, disable the firewall, then proceed. Traditional security software relies on OS-level protections and service restart policies to defend against this, but these defenses can be bypassed.</p>
+
+  <p>Vizoguard uses a self-healing architecture inspired by biological immune systems. The key principles:</p>
+
+  <ul>
+    <li><strong>Persistent process monitoring</strong> — a lightweight watchdog process monitors the integrity of the main security agent. If the agent is killed, modified, or tampered with, the watchdog detects the change and re-launches the affected component.</li>
+    <li><strong>Mutual verification</strong> — the agent and watchdog verify each other's integrity on a short interval. Neither component trusts the other unconditionally, and both must pass integrity checks for the system to consider itself healthy.</li>
+    <li><strong>File integrity checks</strong> — core application files are hashed at install time and periodically re-verified. Changes to protected files trigger an alert and a restore-from-known-good operation.</li>
+    <li><strong>Tamper notifications</strong> — any attempted interference with the security stack generates a notification, giving you visibility into attacks that were caught and repelled.</li>
+  </ul>
+
+  <p>Self-healing is not a guarantee against all attacks — a sufficiently privileged attacker can disable any software. But it raises the bar significantly above the baseline of most security tools, which rely on static protections that malware routinely bypasses. For the majority of real-world threats — malware that escalates privileges to disable defenses, ransomware that kills security processes before encrypting files — self-healing protection means the window during which an attacker operates undetected is much shorter.</p>
+
+  <p>This feature is part of Vizoguard's ongoing immune system architecture, which models security behavior on how biological immune systems respond to threats: detection, escalation, repair, and memory of past attacks. It is available in Vizoguard Pro.</p>
+
+  <!-- ===== SECTION 5: Encrypted VPN ===== -->
+  <h2>Encrypted VPN</h2>
+
+  <p>Vizoguard's VPN component provides encrypted tunneling for all device traffic using the Shadowsocks protocol with AES-256-GCM or ChaCha20-IETF-Poly1305 cipher suites. These are among the strongest encryption algorithms in current use — the same standards used by major enterprise security platforms and financial institutions.</p>
+
+  <p>Shadowsocks was chosen deliberately over more common VPN protocols like OpenVPN or WireGuard. While WireGuard is excellent for raw performance, its traffic pattern is easily identified and blocked by deep packet inspection (DPI) systems. Shadowsocks is designed to be traffic-obfuscation resistant — its encrypted stream is difficult to distinguish from ordinary HTTPS traffic, making it reliable in environments where VPN protocols are actively blocked.</p>
+
+  <h3>What the VPN covers</h3>
+
+  <ul>
+    <li>All TCP and UDP traffic from your device is routed through the encrypted tunnel</li>
+    <li>Your real IP address is hidden from every website and service you connect to</li>
+    <li>Your ISP sees only encrypted traffic going to Vizoguard's server — not the destinations you visit</li>
+    <li>DNS queries are resolved through the encrypted tunnel, preventing DNS leaks</li>
+    <li>A kill switch cuts your internet connection if the VPN drops, preventing accidental exposure</li>
+  </ul>
+
+  <h3>Infrastructure</h3>
+
+  <p>Vizoguard operates its own VPN infrastructure — dedicated servers running the Outline (Shadowbox) server stack. This matters because it means your traffic passes through infrastructure that Vizoguard controls, not through a third-party VPN provider where the zero-logging claim depends entirely on trusting that provider's internal practices. Vizoguard's infrastructure is purpose-built to minimize data retention, with no logging hooks in the server stack by design.</p>
+
+  <p>For a detailed comparison of how this stacks up against major VPN providers, see the <a href="/secure-vpn" style="color:var(--teal);">secure VPN overview</a>.</p>
+
+  <div class="cta-row">
+    <a href="/download" class="btn" onclick="gtag('event','seo_cta',{page:'features',plan:'pro'})">Download Vizoguard</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'features',plan:'basic'})">View Pricing</a>
+  </div>
+
+  <!-- ===== SECTION 6: Zero-Logging Policy ===== -->
+  <h2>Zero-Logging Policy</h2>
+
+  <p>Many VPN providers claim to have a no-logs policy. Vizoguard's zero-logging policy is grounded in technical design, not just a terms of service claim.</p>
+
+  <p>Here is what Vizoguard does not log:</p>
+
+  <ul>
+    <li>Your browsing history or DNS queries</li>
+    <li>The websites or services you connect to</li>
+    <li>Your connection timestamps or session durations</li>
+    <li>Your originating IP address</li>
+    <li>Data volume per session or per destination</li>
+  </ul>
+
+  <p>Here is how the technical architecture enforces this:</p>
+
+  <h3>Device-bound encryption keys</h3>
+
+  <p>Your VPN access credentials are generated specifically for your device at provisioning time. The credentials are transmitted to your device and stored locally. Vizoguard's servers do not retain the encryption keys in a form that could be used to decrypt your historical traffic — because no traffic logs exist to decrypt in the first place.</p>
+
+  <h3>No session metadata</h3>
+
+  <p>The Outline server stack that powers Vizoguard's VPN infrastructure runs without connection logging enabled. There is no database of "user X connected at time Y from IP Z." Billing and licensing are handled by a separate system that knows only whether your subscription is active — not what you did with it.</p>
+
+  <h3>What Vizoguard does retain</h3>
+
+  <p>Being transparent about what is retained matters as much as stating what is not. Vizoguard retains: your email address (for licensing and support), your payment records via Stripe (for billing), and your license key bound to your device identifier (to enforce one active device per license). None of these constitute traffic or browsing data.</p>
+
+  <p>For the full privacy terms, see the <a href="/privacy.html" style="color:var(--teal);">Privacy Policy</a>.</p>
+
+  <!-- ===== SECTION 7: Platform Support ===== -->
+  <h2>Platform Support</h2>
+
+  <p>Vizoguard is built as a cross-platform product. The desktop apps (macOS and Windows) are Electron-based and include the full AI security stack. The Android app provides encrypted VPN access. iOS support is in active development.</p>
+
+  <ul class="platform-list">
+    <li>
+      <span class="platform-badge badge-ready">Available</span>
+      <div class="platform-content">
+        <strong>macOS</strong>
+        <span>Full AI security suite including threat detection, phishing protection, connection monitoring, and self-healing. Compatible with macOS 11 (Big Sur) and later on both Intel and Apple Silicon.</span>
+      </div>
+    </li>
+    <li>
+      <span class="platform-badge badge-ready">Available</span>
+      <div class="platform-content">
+        <strong>Windows</strong>
+        <span>Full AI security suite. Compatible with Windows 10 and Windows 11. Includes system tray integration and background protection mode.</span>
+      </div>
+    </li>
+    <li>
+      <span class="platform-badge badge-ready">Available</span>
+      <div class="platform-content">
+        <strong>Android</strong>
+        <span>Encrypted VPN access using the Shadowsocks protocol. Built with Kotlin and Jetpack Compose. Compatible with Android 8.0 and later.</span>
+      </div>
+    </li>
+    <li>
+      <span class="platform-badge badge-soon">Coming Soon</span>
+      <div class="platform-content">
+        <strong>iOS</strong>
+        <span>iOS support is in development. When released, it will include encrypted VPN access consistent with the Android client. Existing subscribers will receive iOS access at no additional cost.</span>
+      </div>
+    </li>
+  </ul>
+
+  <p>All platforms use the same backend infrastructure and licensing system. One Vizoguard subscription covers all your devices. You can download the app and get started at the <a href="/download" style="color:var(--teal);">download page</a>.</p>
+
+  <!-- ===== SECTION 8: Pricing Overview ===== -->
+  <h2>Pricing Overview</h2>
+
+  <p>Vizoguard offers two plans designed for different use cases. Both plans include the encrypted VPN and zero-logging policy. The difference is the AI security layer.</p>
+
+  <div class="compare-table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Basic — $24.99/yr</th>
+          <th class="highlight-col">Pro — $99.99/yr</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Encrypted VPN (Shadowsocks)</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>AES-256 / ChaCha20 encryption</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Zero-logging policy</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Kill switch</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>AI threat detection</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Phishing protection</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Connection monitoring</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Self-healing protection</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Mac + Windows + Android</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>Priority support</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>30-day money-back guarantee</td>
+          <td><span class="check">&#10003;</span></td>
+          <td class="highlight-col"><span class="check">&#10003;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Basic is the right choice if your primary need is private, encrypted browsing — you want to hide your IP, protect yourself on public Wi-Fi, and keep your ISP from seeing your traffic. At $24.99/yr ($2.08/month), it is one of the most affordable fully private VPNs available.</p>
+
+  <p>Pro is the right choice if you want comprehensive protection — not just traffic encryption, but active defense against threats before they reach your browser. The AI security features in Pro are what differentiate Vizoguard from VPN-only products. If you use the internet for work, handle sensitive information, or want a single security tool that replaces your VPN, antivirus, and browser extension stack, Pro is built for that use case.</p>
+
+  <p>Both plans cover all your devices under one license. See the full <a href="/pricing" style="color:var(--teal);">pricing page</a> for current promotional rates.</p>
+
+  <p>For a broader comparison of how Vizoguard fits relative to traditional security software, the <a href="/blog/vpn-vs-antivirus" style="color:var(--teal);">VPN vs Antivirus guide</a> explains when each approach makes sense and when they are complementary.</p>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'features',plan:'pro'})">Get Pro — $99.99/yr</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'features',plan:'basic'})">Get Basic — $24.99/yr</a>
+  </div>
+
+  <!-- ===== SECTION 9: FAQ ===== -->
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq">
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is AI threat detection in Vizoguard?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard's AI threat detection analyzes URLs and domain metadata in real time — before your browser loads the page. It does not rely on a static blocklist. Instead, it evaluates signals like domain age, certificate patterns, hosting history, and behavioral indicators to assign a risk score. Connections above the threshold are blocked immediately, with an explanation shown to the user.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">How is Vizoguard's phishing protection different from browser warnings?</button>
+      <div class="faq-answer" role="region">
+        <p>Browser safe-browsing warnings rely on databases that are updated periodically — typically hours to days after a phishing site is first reported. Vizoguard analyzes the domain itself at connection time, catching brand-new phishing domains that have not yet been indexed by any blocklist. This is especially important for spear-phishing attacks that use freshly registered lookalike domains.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What does connection monitoring show?</button>
+      <div class="faq-answer" role="region">
+        <p>Connection monitoring gives you a live feed of every application on your device that is making network requests — including the destination host, protocol, data volume, and risk classification. You can see whether a background process is phoning home, which apps are most active, and whether any connection has been flagged as suspicious. The view updates in real time without requiring a page refresh.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What does self-healing protection mean?</button>
+      <div class="faq-answer" role="region">
+        <p>Self-healing means Vizoguard monitors its own process integrity and restores itself if any component is modified or killed. If malware attempts to disable the security agent — a common evasion technique — the system detects the change and re-launches the affected component automatically. This is part of Vizoguard's biological immune system architecture, which treats persistent protection the same way the body treats immune defense: always on, self-repairing.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What VPN protocol does Vizoguard use?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard uses the Shadowsocks protocol with AES-256-GCM or ChaCha20-IETF-Poly1305 encryption, depending on your device's hardware capabilities. Shadowsocks was originally developed to resist deep packet inspection (DPI) and traffic fingerprinting, making it particularly effective in environments with restrictive network policies. All VPN traffic is routed through Vizoguard's dedicated server infrastructure.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Does Vizoguard keep logs of my VPN traffic?</button>
+      <div class="faq-answer" role="region">
+        <p>No. Vizoguard does not log your browsing activity, connection timestamps, DNS queries, or IP addresses associated with your session. Encryption keys are generated per-device and are never stored on Vizoguard's servers in a form that could be used to reconstruct your traffic. This is what zero-logging means in practice — not just a policy statement, but a system design that makes retroactive surveillance technically infeasible.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Which platforms does Vizoguard support?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard is currently available for macOS, Windows, and Android. The desktop apps include the full AI security stack. The Android app provides encrypted VPN access. iOS support is in development and expected to follow the Android release. One subscription covers all your devices.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is the difference between Basic and Pro?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard Basic ($24.99/yr) includes encrypted VPN access with zero logging. Vizoguard Pro ($99.99/yr) adds the full AI security suite: real-time threat detection, phishing protection, connection monitoring, self-healing protection, and priority support. Pro is designed for users who want active defense against threats, not just traffic encryption.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Can I try Vizoguard before buying?</button>
+      <div class="faq-answer" role="region">
+        <p>Yes. Vizoguard offers a 30-day money-back guarantee on all plans. If you are not satisfied for any reason within the first 30 days, you can request a full refund with no questions asked. This applies to both Basic and Pro plans.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Is Vizoguard suitable for corporate or team use?</button>
+      <div class="faq-answer" role="region">
+        <p>The current plans are designed for individual users. Each license supports one device binding at a time. Team and multi-seat licensing is on the product roadmap. If you are evaluating Vizoguard for an organization, contact <a href="mailto:support@vizoguard.com" style="color:var(--teal);">support@vizoguard.com</a> to discuss options.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'features',plan:'pro'})">Get Pro — $99.99/yr</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'features',plan:'basic'})">Get Basic — $24.99/yr</a>
+  </div>
+
+  <!-- Related -->
+  <div style="margin-top:3em; padding-top:2em; border-top:1px solid var(--border,#2a2a3e);">
+    <h3>Related</h3>
+    <ul style="list-style:none; padding:0;">
+      <li style="margin-bottom:0.5em;"><a href="/pricing" style="color:var(--teal);">Vizoguard Pricing &amp; Plans</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/ai-threat-protection" style="color:var(--teal);">AI Threat Protection — How It Works</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/secure-vpn" style="color:var(--teal);">Secure VPN — Shadowsocks + Zero Logging</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/download" style="color:var(--teal);">Download Vizoguard</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/blog/vpn-vs-antivirus" style="color:var(--teal);">VPN vs Antivirus — Which Do You Need?</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+</footer>
+
+<script src="/js/main.js?v=20"></script>
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      // Toggle clicked
+      if (!isOpen) {
+        item.classList.add('open');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+</body>
+</html>
