@@ -529,7 +529,7 @@ nav a:hover { color: var(--text); text-decoration: none; }
 }
 
 .faq-item.open .faq-answer {
-  max-height: 300px;
+  max-height: 2000px;
 }
 
 .faq-answer p {

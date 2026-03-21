@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v33';
+const CACHE_NAME = 'vg-v34';
 
 const APP_SHELL = [
   '/',
@@ -48,6 +48,7 @@ const APP_SHELL = [
   '/press.html',
   '/blog/vpn-glossary.html',
   '/setup.html',
+  '/thank-you.html',
   '/privacy.html',
   '/terms.html',
   '/manifest.json'

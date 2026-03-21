@@ -49,7 +49,7 @@ const stripeCheckoutTotal = new client.Counter({
 function metricsMiddleware(req, res, next) {
   const start = process.hrtime.bigint();
   res.on('finish', () => {
-    const route = req.route ? req.route.path : req.path;
+    const route = req.route ? req.route.path : (res.statusCode === 404 ? 'unmatched' : req.path);
     const normalizedRoute = route.replace(/\?.*$/, '');
     httpRequestsTotal.inc({ method: req.method, route: normalizedRoute, status: res.statusCode });
     const duration = Number(process.hrtime.bigint() - start) / 1e9;
