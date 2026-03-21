@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v31';
+const CACHE_NAME = 'vg-v32';
 
 const APP_SHELL = [
   '/',
@@ -41,6 +41,10 @@ const APP_SHELL = [
   '/compare/vizoguard-vs-protonvpn.html',
   '/compare/vizoguard-vs-surfshark.html',
   '/compare/vizoguard-vs-cyberghost.html',
+  '/features.html',
+  '/ai-threat-protection.html',
+  '/vpn-for-streaming.html',
+  '/vpn-for-torrenting.html',
   '/press.html',
   '/blog/vpn-glossary.html',
   '/setup.html',
