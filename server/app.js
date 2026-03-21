@@ -130,6 +130,10 @@ app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Vizoguard API listening on 127.0.0.1:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, "127.0.0.1", () => {
+    console.log(`Vizoguard API listening on 127.0.0.1:${PORT}`);
+  });
+}
+
+module.exports = app;
