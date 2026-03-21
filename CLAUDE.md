@@ -157,6 +157,18 @@
 - Sitemap: 98 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
 - Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v33'`
 
+## Backend Tests
+- Framework: `node:test` + `node:assert/strict` (built-in, no install)
+- Run: `cd server && npm test` or `node --test **/*.test.js`
+- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (11), `routes/vpn.test.js` (10), `outline.test.js` (6), `app.test.js` (4) — 40 tests total
+- All tests mock external APIs (Stripe, Outline, SMTP) — no real calls
+
+## Monitoring
+- Metrics: `prom-client` on `GET /metrics` (blocked externally by nginx `deny all`)
+- Prometheus: scrapes `vizoguard-api` at `127.0.0.1:3000/metrics` every 15s
+- Grafana: `localhost:3001`, Prometheus datasource at `host.docker.internal:9090`, "Vizoguard API" dashboard
+- Counters: `http_requests_total`, `license_validations_total`, `vpn_keys_created_total`, `webhook_events_total`, `stripe_checkout_sessions_total`
+
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
 - Deploy: `cp nginx/security-headers.conf /etc/nginx/snippets/ && cp nginx/vizoguard.conf /etc/nginx/sites-available/vizoguard && nginx -t && systemctl reload nginx`
