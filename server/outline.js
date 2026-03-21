@@ -62,6 +62,9 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
 async function createAccessKey(name, apiUrl) {
   const url = apiUrl || DEFAULT_API_URL;
   const key = await outlineFetch(url, "/access-keys", "POST");
+  if (!key || !key.id || !key.accessUrl) {
+    throw new Error("Outline API returned incomplete key response");
+  }
   if (name) {
     try {
       await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });

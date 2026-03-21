@@ -26,6 +26,7 @@ function getNodeApiUrl(license) {
 function requireVpnLicense(req, res, next) {
   const { key } = req.body;
   if (!key || typeof key !== "string" || key.length > 24) return res.status(400).json({ error: "Missing or invalid license key" });
+  if (!/^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/.test(key)) return res.status(400).json({ error: "Invalid key format" });
 
   const license = stmts.findByKey.get(key);
   if (!license) return res.status(404).json({ error: "License not found" });
@@ -125,7 +126,7 @@ router.post("/get", requireVpnLicense, (req, res) => {
     return res.status(403).json({ error: "Device mismatch" });
   }
 
-  if (!license.outline_access_key) {
+  if (!license.outline_access_key || license.outline_access_key === 'pending') {
     return res.status(404).json({ error: "No VPN key provisioned. Call /api/vpn/create first." });
   }
   res.json({ access_url: license.outline_access_key });

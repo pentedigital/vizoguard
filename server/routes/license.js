@@ -86,7 +86,7 @@ router.post("/", (req, res) => {
 // GET /api/license/lookup?session_id=xxx — for thank-you page
 router.get("/lookup", async (req, res) => {
   const { session_id } = req.query;
-  if (!session_id || typeof session_id !== "string" || !session_id.startsWith("cs_")) {
+  if (!session_id || typeof session_id !== "string" || !session_id.startsWith("cs_") || session_id.length > 128) {
     return res.status(400).json({ error: "Missing or invalid session_id" });
   }
 

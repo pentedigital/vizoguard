@@ -151,7 +151,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
       case "invoice.payment_succeeded": {
         const invoice = event.data.object;
-        if (invoice.billing_reason === "subscription_create") break; // handled by checkout.session.completed
+        if (invoice.billing_reason === "subscription_create") {
+          webhookEventsTotal.inc({ event_type: event.type, result: 'skipped' });
+          break; // handled by checkout.session.completed
+        }
 
         const subId = invoice.subscription;
         if (!subId) break;
@@ -239,7 +242,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const sub = event.data.object;
         let updResult;
         if (sub.cancel_at_period_end) {
-          updResult = stmts.updateStatus.run("cancelled", sub.id);
+          updResult = stmts.reactivateStatus.run("cancelled", sub.id);
           console.log(`[i${INSTANCE}] Subscription set to cancel at period end: ${sub.id}`);
         } else if (sub.status === "active") {
           updResult = stmts.reactivateStatus.run("active", sub.id);
