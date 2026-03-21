@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v27';
+const CACHE_NAME = 'vg-v28';
 
 const APP_SHELL = [
   '/',
@@ -65,9 +65,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML pages (ensures updates are immediate)
+  // Use cache:'no-store' to bypass browser HTTP cache — prevents stale 404s from being served
   if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname === '/hi/' || url.pathname === '/fr/' || url.pathname === '/es/' || url.pathname === '/tr/' || url.pathname === '/ru/' || url.pathname.endsWith('.html')) {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: 'no-store' })
         .then((response) => {
           if (response.ok) {
             const clone = response.clone();
