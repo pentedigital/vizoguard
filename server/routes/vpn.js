@@ -54,8 +54,8 @@ function requireVpnLicense(req, res, next) {
 
 // POST /api/vpn/create — create or return existing Outline access key
 router.post("/create", requireVpnLicense, async (req, res) => {
+  const { license } = req;
   try {
-    const { license } = req;
 
     // Device verification — same check as /vpn/get (#11)
     const { device_id } = req.body;
