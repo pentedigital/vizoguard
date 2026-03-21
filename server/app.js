@@ -2,6 +2,7 @@ require("dotenv").config();
 
 // Fail fast on missing critical env vars (#6)
 const REQUIRED_ENV = ['STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','STRIPE_PRICE_VPN','STRIPE_PRICE_SECURITY_VPN','OUTLINE_API_URL','APP_URL'];
+const LAUNCH_DISCOUNT_END = process.env.LAUNCH_DISCOUNT_END ? new Date(process.env.LAUNCH_DISCOUNT_END) : null;
 for (const v of REQUIRED_ENV) { if (!process.env[v]) { console.error('FATAL: missing env var ' + v); process.exit(1); } }
 
 const express = require("express");
@@ -65,9 +66,15 @@ app.use("/api/vpn", apiLimiter, vpnRouter);
 // Checkout session creation (server-side so we can set metadata.plan)
 app.post("/api/checkout", checkoutLimiter, async (req, res) => {
   const plan = typeof req.body?.plan === "string" ? req.body.plan : null;
-  const priceMap = {
+
+  // Use regular prices after launch discount expires
+  const isDiscountActive = LAUNCH_DISCOUNT_END && Date.now() < LAUNCH_DISCOUNT_END.getTime();
+  const priceMap = isDiscountActive ? {
     vpn: process.env.STRIPE_PRICE_VPN,
     security_vpn: process.env.STRIPE_PRICE_SECURITY_VPN,
+  } : {
+    vpn: process.env.STRIPE_PRICE_VPN_REGULAR || process.env.STRIPE_PRICE_VPN,
+    security_vpn: process.env.STRIPE_PRICE_SECURITY_VPN_REGULAR || process.env.STRIPE_PRICE_SECURITY_VPN,
   };
   const priceId = priceMap[plan];
   if (!priceId) return res.status(400).json({ error: "Invalid plan" });
@@ -89,6 +96,17 @@ app.post("/api/checkout", checkoutLimiter, async (req, res) => {
     console.error("Checkout error:", err.message);
     res.status(500).json({ error: "Failed to create checkout session" });
   }
+});
+
+// Pricing info (frontend uses this to show/hide discount UI)
+app.get("/api/pricing", (_req, res) => {
+  const isDiscountActive = LAUNCH_DISCOUNT_END && Date.now() < LAUNCH_DISCOUNT_END.getTime();
+  res.json({
+    discount: isDiscountActive,
+    discountEnd: LAUNCH_DISCOUNT_END ? LAUNCH_DISCOUNT_END.toISOString() : null,
+    basic: { price: isDiscountActive ? 24.99 : 49.99, regular: 49.99 },
+    pro: { price: isDiscountActive ? 99.99 : 149.99, regular: 149.99 },
+  });
 });
 
 // Health check

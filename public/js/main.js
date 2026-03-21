@@ -52,6 +52,25 @@ window.addEventListener('pageshow', function(e){
   if(e.persisted){ _checkoutBusy = false; _resetBtns(document.querySelectorAll('.btn.loading')); }
 });
 
+// ── Pricing: check if launch discount is still active ────
+(function() {
+  fetch("/api/pricing").then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.discount) {
+      // Discount expired — hide strikethrough prices and badges, update amounts
+      document.querySelectorAll('.price-regular').forEach(function(el){ el.style.display = 'none'; });
+      document.querySelectorAll('.discount-badge').forEach(function(el){ el.style.display = 'none'; });
+      // Update displayed prices to regular
+      document.querySelectorAll('[data-i18n="pricing.basic_price_dollar"]').forEach(function(el){ el.textContent = '$49'; });
+      document.querySelectorAll('[data-i18n="pricing.basic_price_cents"]').forEach(function(el){ el.textContent = '.99'; });
+      document.querySelectorAll('[data-i18n="pricing.pro_price_dollar"]').forEach(function(el){ el.textContent = '$149'; });
+      document.querySelectorAll('[data-i18n="pricing.pro_price_cents"]').forEach(function(el){ el.textContent = '.99'; });
+      // Hide urgency banner
+      var banner = document.getElementById('urgency-banner');
+      if (banner) banner.style.display = 'none';
+    }
+  }).catch(function(){});
+})();
+
 // ── FAQ accordion ────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".faq-question").forEach((btn) => {
