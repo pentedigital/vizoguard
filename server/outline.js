@@ -63,7 +63,11 @@ async function createAccessKey(name, apiUrl) {
   const url = apiUrl || DEFAULT_API_URL;
   const key = await outlineFetch(url, "/access-keys", "POST");
   if (name) {
-    await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });
+    try {
+      await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });
+    } catch (nameErr) {
+      console.warn(`[outline] Failed to set key name (non-fatal):`, nameErr.message);
+    }
   }
   return { id: String(key.id), accessUrl: key.accessUrl };
 }

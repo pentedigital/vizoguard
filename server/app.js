@@ -10,6 +10,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { db } = require('./db');
 const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
 const vpnRouter = require("./routes/vpn");
@@ -120,9 +121,15 @@ app.get('/metrics', async (_req, res) => {
   res.end(await register.metrics());
 });
 
-// Health check
+// Health check with DB verification
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+  try {
+    db.prepare("SELECT 1").get();
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  } catch (err) {
+    console.error("Health check DB failure:", err.message);
+    res.status(503).json({ status: "error", reason: "db_unavailable" });
+  }
 });
 
 // Catch-all: hide framework fingerprint

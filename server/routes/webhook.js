@@ -33,6 +33,13 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     return res.status(400).send("Webhook signature verification failed");
   }
 
+  // Event-level idempotency — skip already-processed events
+  if (stmts.eventExists.get(event.id)) {
+    console.log(`[i${INSTANCE}] Duplicate event ${event.id}, skipping`);
+    return res.json({ received: true });
+  }
+  stmts.insertEvent.run(event.id, event.type);
+
   try {
     switch (event.type) {
       case "checkout.session.completed": {
@@ -96,6 +103,19 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         // Respond to Stripe immediately — don't risk 20s timeout (#19)
         res.json({ received: true });
 
+        // Guard against out-of-order events: verify subscription is still active
+        if (session.subscription) {
+          try {
+            const sub = await stripe.subscriptions.retrieve(session.subscription);
+            if (sub.status !== 'active' && sub.status !== 'trialing') {
+              stmts.updateStatus.run('expired', session.subscription);
+              console.warn(`[i${INSTANCE}] Subscription ${session.subscription} already ${sub.status}, marking expired`);
+            }
+          } catch (subErr) {
+            console.warn(`[i${INSTANCE}] Could not verify subscription status:`, subErr.message);
+          }
+        }
+
         // Auto-provision Outline VPN access key (async, fire-and-forget)
         let accessUrl = null;
         let newLicense = null;
@@ -105,14 +125,14 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           const bestNode = stmts.bestNode.get();
           const apiUrl = bestNode ? bestNode.api_url : null;
           const result = await outline.createAccessKey(email, apiUrl);
-          const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
-          await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
           try {
+            const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+            await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
             stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
             if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
-          } catch (dbErr) {
+          } catch (innerErr) {
             await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
-            throw dbErr;
+            throw innerErr;
           }
           accessUrl = result.accessUrl;
           console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
@@ -148,8 +168,8 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           expiresAt = base;
         }
         stmts.updateExpiry.run(expiresAt.toISOString(), subId);
-        // Reactivate if suspended (payment recovered after failure)
-        const renewResult = stmts.updateStatus.run("active", subId);
+        // Reactivate if suspended (payment recovered after failure) — guards against un-expiring deleted subs
+        const renewResult = stmts.reactivateStatus.run("active", subId);
         if (renewResult.changes > 0) console.log(`[i${INSTANCE}] Subscription reactivated on renewal: ${subId}`);
         console.log(`[i${INSTANCE}] Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
@@ -174,10 +194,11 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
               if (node) revokeApiUrl = node.api_url;
             }
             await outline.deleteAccessKey(suspendedLicense.outline_key_id, revokeApiUrl);
-            stmts.clearOutlineKey.run(suspendedLicense.id);
             console.log(`[i${INSTANCE}] Outline key revoked on suspension for ${subId}`);
           } catch (err) {
-            console.error(`[i${INSTANCE}] Failed to revoke Outline key on suspension:`, err);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key on suspension:`, err.message);
+          } finally {
+            stmts.clearOutlineKey.run(suspendedLicense.id);
           }
         }
 
@@ -201,10 +222,11 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
               if (node) revokeApiUrl = node.api_url;
             }
             await outline.deleteAccessKey(expiredLicense.outline_key_id, revokeApiUrl);
-            stmts.clearOutlineKey.run(expiredLicense.id);
             console.log(`[i${INSTANCE}] Outline key revoked for subscription ${sub.id}`);
           } catch (err) {
-            console.error(`[i${INSTANCE}] Failed to revoke Outline key:`, err);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key:`, err.message);
+          } finally {
+            stmts.clearOutlineKey.run(expiredLicense.id);
           }
         }
 

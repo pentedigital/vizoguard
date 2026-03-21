@@ -67,6 +67,18 @@ if (!cols.includes("vpn_node_id")) {
 db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_vpn_node ON licenses(vpn_node_id)");
 db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_status ON licenses(status)");
 
+// Add processed_events table for webhook idempotency
+db.exec(`
+  CREATE TABLE IF NOT EXISTS processed_events (
+    event_id    TEXT PRIMARY KEY,
+    event_type  TEXT NOT NULL,
+    processed_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+// Add composite index for bestNode query performance
+db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_node_status ON licenses(vpn_node_id, status)");
+
 const stmts = {
   insert: db.prepare(`
     INSERT INTO licenses (key, email, plan, stripe_customer_id, stripe_subscription_id, status, expires_at)
@@ -76,7 +88,7 @@ const stmts = {
   findBySubscription: db.prepare("SELECT * FROM licenses WHERE stripe_subscription_id = ?"),
   findByCustomer: db.prepare("SELECT * FROM licenses WHERE stripe_customer_id = ? ORDER BY created_at DESC LIMIT 1"),
   bindDevice: db.prepare("UPDATE licenses SET device_id = ? WHERE id = ? AND device_id IS NULL"),
-  updateExpiry: db.prepare("UPDATE licenses SET expires_at = ? WHERE stripe_subscription_id = ? AND status != 'expired'"),
+  updateExpiry: db.prepare("UPDATE licenses SET expires_at = ? WHERE stripe_subscription_id = ?"),
   updateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ?"),
   updateLastCheck: db.prepare("UPDATE licenses SET last_check = datetime('now') WHERE id = ?"),
   clearDevice: db.prepare("UPDATE licenses SET device_id = NULL WHERE id = ?"),
@@ -85,6 +97,16 @@ const stmts = {
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
   claimOutlineSlot: db.prepare("UPDATE licenses SET outline_key_id = 'pending' WHERE id = ? AND outline_key_id IS NULL"),
   resetOutlineClaim: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE id = ? AND outline_key_id = 'pending'"),
+
+  // Webhook idempotency
+  insertEvent: db.prepare("INSERT OR IGNORE INTO processed_events (event_id, event_type) VALUES (?, ?)"),
+  eventExists: db.prepare("SELECT 1 FROM processed_events WHERE event_id = ?"),
+
+  // Guarded status updates — prevent invalid transitions
+  reactivateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ? AND status NOT IN ('expired')"),
+
+  // Stale pending cleanup
+  resetStalePending: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE outline_key_id = 'pending' AND last_check < datetime('now', '-5 minutes')"),
 
   // VPN nodes
   insertNode: db.prepare("INSERT INTO vpn_nodes (region, name, host, api_url, max_keys) VALUES (@region, @name, @host, @api_url, @max_keys)"),

@@ -20,6 +20,10 @@ router.post("/", (req, res) => {
     return res.status(400).json({ valid: false, error: "Invalid device_id format" });
   }
 
+  if (!/^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/.test(key)) {
+    return res.status(400).json({ valid: false, error: "Invalid key format" });
+  }
+
   const license = stmts.findByKey.get(key);
   if (!license) {
     licenseValidationsTotal.inc({ result: 'invalid' });
