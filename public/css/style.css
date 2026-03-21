@@ -888,6 +888,15 @@ noscript .animate-up { opacity: 1; transform: none; }
   margin-bottom: 16px;
 }
 
+/* SEO Pages */
+.seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
+.seo-page h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+.seo-page h2 { color: var(--text); font-size: 1.4rem; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+.seo-page h3 { color: var(--text); font-size: 1.1rem; font-weight: 600; margin: 32px 0 12px; }
+.seo-page p, .seo-page li { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; }
+.seo-page ul, .seo-page ol { padding-left: 20px; margin: 12px 0; }
+.seo-page li { margin-bottom: 6px; }
+
 /* ── Responsive ───────────────── */
 
 /* Tablet landscape / small desktop */
@@ -970,6 +979,10 @@ noscript .animate-up { opacity: 1; transform: none; }
   .upsell-box { padding: 20px 16px; }
   .share-buttons { flex-direction: column; align-items: center; }
   .share-btn { width: 100%; max-width: 280px; justify-content: center; }
+
+  .seo-page { padding: 80px 16px 40px; }
+  .seo-page h1 { font-size: 1.5rem; }
+  .seo-page h2 { font-size: 1.2rem; margin-top: 36px; }
 }
 
 /* Small phone */
@@ -1049,4 +1062,7 @@ noscript .animate-up { opacity: 1; transform: none; }
   .upsell-box { padding: 16px 12px; margin-top: 20px; }
   .upsell-box h3 { font-size: 0.875rem; }
   .upsell-box p { font-size: 0.75rem; }
+
+  .seo-page { padding: 70px 12px 32px; }
+  .seo-page h1 { font-size: 1.3rem; }
 }
