@@ -153,6 +153,7 @@
 - Deploy: `cp nginx/security-headers.conf /etc/nginx/snippets/ && cp nginx/vizoguard.conf /etc/nginx/sites-available/vizoguard && nginx -t && systemctl reload nginx`
 - **Before any CSP change**: test with Google Ads + GTM + Stripe Checkout in browser DevTools console — CSP errors break conversion tracking silently
 - Automated CSP validation: use `/csp-validate` skill after nginx config changes — checks all required domains for Google Ads, GA4, GTM, Stripe
+- nginx uses `try_files $uri $uri/ $uri.html =404` — enables clean URLs (/pricing → pricing.html). Without this, all .html pages 404 when accessed without extension
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
