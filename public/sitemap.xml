@@ -270,6 +270,19 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Trust Pages -->
+  <url>
+    <loc>https://vizoguard.com/transparency</loc>
+    <lastmod>2026-03-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vizoguard.com/about</loc>
+    <lastmod>2026-03-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Phase 2 Authority Pages -->
   <url>
     <loc>https://vizoguard.com/features</loc>
