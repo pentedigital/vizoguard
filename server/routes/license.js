@@ -13,7 +13,7 @@ router.post("/", (req, res) => {
   if (!key || !device_id || typeof key !== "string" || typeof device_id !== "string") {
     return res.status(400).json({ valid: false, error: "Missing key or device_id" });
   }
-  if (key.length > 24 || device_id.length > 255) {
+  if (key.length > 24 || device_id.length > 64) {
     return res.status(400).json({ valid: false, error: "Invalid input" });
   }
   if (!/^[a-zA-Z0-9\-]{16,64}$/.test(device_id)) {
