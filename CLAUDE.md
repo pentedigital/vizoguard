@@ -146,10 +146,14 @@
 - Core SEO: `public/free-vpn.html`, `public/best-vpn-2026.html`, `public/vpn-download.html`, `public/secure-vpn.html`, `public/vpn-for-privacy.html` — 900px seo-page layout, 2500-3000 words each
 - Comparison: `public/compare/vizoguard-vs-{nordvpn,expressvpn,protonvpn,surfshark,cyberghost}.html` — 900px compare-page layout, 3200-3500 words each
 - Blog: `public/blog/{what-is-vpn,how-does-vpn-work,vpn-vs-proxy,vpn-vs-antivirus,public-wifi-security,what-is-malware,how-to-block-phishing,do-you-need-a-vpn,is-vpn-safe,hide-ip-address}.html` — 720px article-body layout, 2000-2500 words each
+- Authority: `public/features.html`, `public/ai-threat-protection.html`, `public/vpn-for-streaming.html`, `public/vpn-for-torrenting.html` — 900px seo-page layout, 2500-3000 words each
+- Blog + Glossary: `public/blog/{what-is-vpn,how-does-vpn-work,vpn-vs-proxy,vpn-vs-antivirus,public-wifi-security,what-is-malware,how-to-block-phishing,do-you-need-a-vpn,is-vpn-safe,hide-ip-address,vpn-glossary}.html` — 720px article-body layout
 - Blog authors: alternate between "Terry M Lisa" and "Marron J Washington"
 - All SEO pages: Article + FAQPage + BreadcrumbList JSON-LD schemas, same header/footer/analytics as landing pages
-- Sitemap: 32 URLs in `public/sitemap.xml` (clean URLs, no .html extension)
-- Cache: CSS/JS at `?v=19`, service worker `CACHE_NAME = 'vg-v30'`
+- CRO: Pricing page has testimonials (placeholder), trust badges, 11 FAQ questions, post-discount state after April 4 2026
+- Post-discount: JS date-check on pricing.html, thank-you.html, and all 7 landing pages auto-hides urgency/discount elements after April 4 2026, updates prices to $49.99/$149.99
+- Sitemap: 38 URLs in `public/sitemap.xml` (clean URLs, no .html extension)
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v32'`
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
