@@ -116,6 +116,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           accessUrl = result.accessUrl;
           console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
+          stmts.resetOutlineClaim.run(newLicense.id);
           console.error(`[i${INSTANCE}] Failed to create Outline key:`, outlineErr);
         }
 
@@ -145,6 +146,9 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           expiresAt = base;
         }
         stmts.updateExpiry.run(expiresAt.toISOString(), subId);
+        // Reactivate if suspended (payment recovered after failure)
+        const renewResult = stmts.updateStatus.run("active", subId);
+        if (renewResult.changes > 0) console.log(`[i${INSTANCE}] Subscription reactivated on renewal: ${subId}`);
         console.log(`[i${INSTANCE}] Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
         break;
       }
@@ -230,8 +234,9 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
     }
   } catch (err) {
     console.error(`[i${INSTANCE}] Error processing ${event.type}:`, err);
-    // Return 500 so Stripe retries on real failures (exponential backoff, 72h window)
-    return res.status(500).json({ error: "Internal processing error" });
+    if (!res.headersSent) {
+      return res.status(500).json({ error: "Internal processing error" });
+    }
   }
 
   res.json({ received: true });

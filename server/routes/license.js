@@ -63,6 +63,7 @@ router.post("/", (req, res) => {
 
   // Re-fetch for fresh state after potential concurrent webhook updates (#17)
   const fresh = stmts.findByKey.get(key);
+  if (!fresh) return res.status(404).json({ valid: false, error: "License not found" });
   stmts.updateLastCheck.run(fresh.id);
 
   res.json({

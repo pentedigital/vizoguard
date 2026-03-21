@@ -94,7 +94,7 @@ nav a {
 nav a:hover { color: var(--text); text-decoration: none; }
 
 /* ── Language switcher (dropdown) ── */
-nav.lang-switcher {
+.lang-switcher {
   position: relative;
   margin-left: 8px;
   gap: 0;

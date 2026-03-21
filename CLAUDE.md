@@ -88,7 +88,8 @@
 - Translations: `public/locales/en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`
 - RTL styles: `public/css/rtl.css` (loaded dynamically when Arabic is active)
 - Language pages: `public/ar/index.html`, `public/hi/index.html`, `public/fr/index.html`, `public/es/index.html` — each standalone with localized meta/OG/JSON-LD for SEO
-- Language switcher: dropdown in nav (EN, العربية, हिन्दी, FR, ES) — redirects to `/<code>/`
+- Language switcher: dropdown in nav (EN, العربية, हिन्दी, Français, Español) — redirects to `/<code>/`
+- i18n detection: URL path is the source of truth — no localStorage redirect. Root `/` is always English. Language detected from path prefix only
 - hreflang tags on all 5 pages cross-link for Google (en, ar, hi, fr, es, x-default)
 - Each page has 5 JSON-LD schemas: SoftwareApplication, Organization, FAQPage (6 Q&A), HowTo (3 steps), BreadcrumbList
 - Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED`+`LANG_PATHS`+`LANG_LABELS` in `i18n.js`, create `/public/<code>/index.html`, update hreflang+og:locale:alternate+switcher on ALL existing pages, add to sw.js APP_SHELL
@@ -122,7 +123,7 @@
 - CSP lives in `/etc/nginx/snippets/security-headers.conf` — `script-src` and `connect-src` locked to specific domains; `img-src` lists explicit Google country TLDs for Ads tracking pixels (CSP can't wildcard across TLDs like google.ae, google.co.uk)
 - Stripe Checkout iframe generates CSP "report-only" warnings in console — these are Stripe's internal policy, not ours, but monitor if Stripe changes from report-only to enforced
 - `<link rel=preload>` warnings from Stripe Checkout are from their iframe, not our HTML — verify with `grep -r "preload" public/` if unsure
-- Lang-switcher is a dropdown (`nav.lang-switcher` in `style.css`) — `rtl.css` has RTL overrides for dropdown position and padding
+- Lang-switcher is `div.lang-switcher` (not `<nav>`) with `role="navigation"` — CSS selector is `.lang-switcher`; `rtl.css` has RTL overrides for dropdown position and padding
 - Responsive breakpoints: 1024px (tablet landscape), 768px (tablet/phone + sticky CTA), 480px (small phone) — all CRO elements have overrides at each breakpoint
 - VPN key creation uses CAS pattern (`UPDATE SET outline_key_id='pending' WHERE outline_key_id IS NULL`) to prevent race in PM2 cluster — always roll back 'pending' in catch block
 - Webhook `checkout.session.completed` responds to Stripe immediately (`res.json`) then provisions Outline async — do NOT add blocking work before the response
@@ -133,6 +134,9 @@
 - `/api/license/lookup` intentionally does NOT return `access_url` — VPN credentials only via `/api/vpn/get` with device_id verification
 - `device_id` format validation: `/^[a-zA-Z0-9\-]{16,64}$/` — enforced on POST /api/license only
 - Adding a new language requires updating 7+ locations (see i18n section) — use `i18n-reviewer` subagent after changes
+- Webhook outer `catch` uses `if (!res.headersSent)` guard — checkout.session.completed responds early, so the catch must not double-send
+- Webhook Outline catch must call `stmts.resetOutlineClaim.run(newLicense.id)` — without this, failed provisioning permanently locks the license
+- `invoice.payment_succeeded` also calls `updateStatus("active")` to reactivate suspended licenses after payment recovery
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo

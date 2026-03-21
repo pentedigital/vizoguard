@@ -328,16 +328,16 @@
     <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
     <a href="#faq" data-i18n="nav.faq">FAQ</a>
     <a href="mailto:support@vizoguard.com" data-i18n="nav.contact">Contact</a>
-    <nav class="lang-switcher" id="lang-switcher" aria-label="Language selection">
+    <div class="lang-switcher" role="navigation" id="lang-switcher" aria-label="Language selection">
       <button class="lang-switcher-toggle" aria-expanded="false" aria-haspopup="true">EN</button>
       <div class="lang-dropdown" role="menu">
         <button role="menuitem" data-lang-switch="en" onclick="switchLang('en')">English</button>
         <button role="menuitem" data-lang-switch="ar" onclick="switchLang('ar')">العربية</button>
         <button role="menuitem" data-lang-switch="hi" onclick="switchLang('hi')">हिन्दी</button>
-        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Francais</button>
-        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Espanol</button>
+        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Français</button>
+        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Español</button>
       </div>
-    </nav>
+    </div>
   </nav>
 </header>
 
@@ -535,7 +535,7 @@ if ('serviceWorker' in navigator) {
     if(diff <= 0){
       document.getElementById('countdown-text').textContent = 'ending today!';
       clearInterval(timer);
-      return;
+      document.getElementById("urgency-banner").style.display="none"; return;
     }
     var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
     document.getElementById('countdown-text').textContent = 'ends in ' + d + 'd ' + h + 'h';

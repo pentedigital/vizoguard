@@ -68,7 +68,7 @@ router.post("/create", requireVpnLicense, async (req, res) => {
     }
 
     // Idempotent: return existing key if already provisioned
-    if (license.outline_access_key) {
+    if (license.outline_access_key && license.outline_access_key !== 'pending') {
       return res.json({ access_url: license.outline_access_key });
     }
 

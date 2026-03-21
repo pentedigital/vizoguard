@@ -17,21 +17,12 @@
   }
 
   function detectLang() {
-    // 1. URL path prefix (/ar/) — authoritative, overrides everything
+    // 1. URL path prefix (/ar/, /hi/, /fr/, /es/) — authoritative, overrides everything
     var pathLang = getPathLang();
     if (pathLang) return pathLang;
-    // 2. localStorage
-    var stored = localStorage.getItem("vg_lang");
-    if (stored && SUPPORTED.indexOf(stored) !== -1) {
-      // Redirect to correct URL if localStorage lang doesn't match current path
-      var expectedPath = LANG_PATHS[stored];
-      if (expectedPath && location.pathname !== expectedPath) {
-        window.location.href = expectedPath + location.hash;
-        return stored; // return value won't be used — redirect fires
-      }
-      return stored;
-    }
-    // 3. Browser language
+    // 2. Root path "/" is explicitly English — don't redirect away from it
+    if (location.pathname === "/") return "en";
+    // 3. Browser language (no localStorage redirect — URL is the source of truth)
     var nav = (navigator.language || "").slice(0, 2).toLowerCase();
     if (SUPPORTED.indexOf(nav) !== -1) return nav;
     // 4. Default
