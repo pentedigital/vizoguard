@@ -106,10 +106,10 @@
 - Checkout loading state: prevents double-click, shows "Redirecting..." spinner; `pageshow` event resets on bfcache Back
 - Thank-you page: Basic→Pro upsell box + referral sharing (Twitter/X, WhatsApp, copy link)
 - VPN deep-link on thank-you page uses `window.blur` to cancel the download fallback if Outline opens successfully
-- All CRO elements exist on all 5 language pages with full responsive overrides at 1024/768/480px
+- All CRO elements exist on all 7 language pages with full responsive overrides at 1024/768/480px
 
 ## Gotchas
-- When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to ALL locale files (`en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`)
+- When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to ALL locale files (`en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`, `tr.json`, `ru.json`)
 - FAQ answers use `data-i18n-html` attribute for safe HTML rendering (only `<strong>`, `<em>`, `<a>`, `<br>` allowed)
 - GitHub Actions SSH deploy fails (Hostinger blocks GitHub runner IPs) — use `gh run download` + manual copy to `/var/www/vizoguard/downloads/`
 - Docker host network mode bypasses UFW — use iptables directly for Outline port restrictions
@@ -118,7 +118,7 @@
 - Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
 - `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
 - Bump `CACHE_NAME` version in `public/sw.js` after changing CSS/JS/HTML — otherwise returning visitors get stale cached content
-- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all 5 HTML pages when updating CSS/JS
+- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all 7 HTML pages when updating CSS/JS
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
@@ -143,10 +143,13 @@
 - Countdown date must use UTC (`Z` suffix) and match across ALL 7 landing page scripts — banner auto-hides after expiry via `urgency-banner style.display=none`
 
 ## SEO Pages
-- Comparison pages: `public/compare/vizoguard-vs-*.html` — use `/new-seo-page` skill, Article + FAQPage + BreadcrumbList schemas
-- Blog posts: `public/blog/*.html` — article layout 720px max-width, Article + FAQPage + BreadcrumbList schemas
-- All SEO pages share same header/footer/analytics/scripts as landing pages
-- Sitemap must be updated when adding any new page — currently 15 URLs
+- Core SEO: `public/free-vpn.html`, `public/best-vpn-2026.html`, `public/vpn-download.html`, `public/secure-vpn.html`, `public/vpn-for-privacy.html` — 900px seo-page layout, 2500-3000 words each
+- Comparison: `public/compare/vizoguard-vs-{nordvpn,expressvpn,protonvpn,surfshark,cyberghost}.html` — 900px compare-page layout, 3200-3500 words each
+- Blog: `public/blog/{what-is-vpn,how-does-vpn-work,vpn-vs-proxy,vpn-vs-antivirus,public-wifi-security,what-is-malware,how-to-block-phishing,do-you-need-a-vpn,is-vpn-safe,hide-ip-address}.html` — 720px article-body layout, 2000-2500 words each
+- Blog authors: alternate between "Terry M Lisa" and "Marron J Washington"
+- All SEO pages: Article + FAQPage + BreadcrumbList JSON-LD schemas, same header/footer/analytics as landing pages
+- Sitemap: 32 URLs in `public/sitemap.xml` (clean URLs, no .html extension)
+- Cache: CSS/JS at `?v=19`, service worker `CACHE_NAME = 'vg-v30'`
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
