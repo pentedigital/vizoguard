@@ -33,8 +33,10 @@
   },
   "pricing": {
     "heading": "Pick your plan.",
-    "subheading": "Cancel anytime. Discount codes accepted.",
+    "subheading": "Launch discount — limited time. Cancel anytime.",
     "basic_label": "Basic",
+    "basic_regular": "$49.99/yr",
+    "basic_discount": "50% off",
     "basic_price_dollar": "$24",
     "basic_price_cents": ".99",
     "basic_period": "per year",
@@ -47,6 +49,8 @@
     "basic_cta": "Get Basic",
     "pro_tag": "Popular",
     "pro_label": "Pro",
+    "pro_regular": "$149.99/yr",
+    "pro_discount": "33% off",
     "pro_price_dollar": "$99",
     "pro_price_cents": ".99",
     "pro_period": "per year",
@@ -87,7 +91,7 @@
     "q8": "Is Vizoguard safe and legitimate?",
     "a8": "Yes. Vizoguard enforces a strict zero-logging policy, uses AI-powered threat detection, and offers a 30-day money-back guarantee. Built by PRIME360 HOLDING LTD in Malta. Rated 4.9/5 by users.",
     "q9": "How much does Vizoguard cost?",
-    "a9": "Vizoguard Basic (encrypted VPN) costs $24.99/year. Vizoguard Pro (AI security + VPN) costs $99.99/year. Both plans include a 30-day money-back guarantee and accept all major credit cards via Stripe.",
+    "a9": "Vizoguard Basic (encrypted VPN) is $24.99/year (regular $49.99) and Vizoguard Pro (AI security + VPN) is $99.99/year (regular $149.99). Both plans include a 30-day money-back guarantee and accept all major credit cards via Stripe.",
     "q10": "Does Vizoguard offer a free trial?",
     "a10": "Vizoguard does not offer a free trial, but both plans come with a 30-day money-back guarantee. If you are not satisfied, you can cancel and receive a full refund within 30 days, no questions asked.",
     "q11": "Does Vizoguard block phishing websites?",
@@ -97,7 +101,9 @@
     "q13": "Is Vizoguard better than a regular VPN?",
     "a13": "Regular VPNs only encrypt your traffic. Vizoguard Pro adds AI threat detection, phishing blocking, connection monitoring, and self-healing protection on top of the encrypted VPN. The Basic plan is a standard VPN at $24.99/year; Pro at $99.99/year adds the full security suite.",
     "q14": "Which countries does Vizoguard VPN work in?",
-    "a14": "Vizoguard VPN works worldwide. It uses the Shadowsocks protocol which is designed to bypass network restrictions. Available on Mac, Windows, iOS, Android, Linux, and ChromeOS."
+    "a14": "Vizoguard VPN works worldwide. It uses the Shadowsocks protocol which is designed to bypass network restrictions. Available on Mac, Windows, iOS, Android, Linux, and ChromeOS.",
+    "q15": "Is Vizoguard currently discounted?",
+    "a15": "Yes. Vizoguard is available at a limited launch discount. Basic is $24.99/year (regular $49.99 — 50% off) and Pro is $99.99/year (regular $149.99 — 33% off). All plans include a 30-day money-back guarantee."
   },
   "social": {
     "rating_num": "4.9/5",

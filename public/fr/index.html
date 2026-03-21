@@ -24,6 +24,8 @@
   <link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/">
   <link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/">
   <link rel="alternate" hreflang="es" href="https://vizoguard.com/es/">
+  <link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/">
+  <link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/">
   <link rel="alternate" hreflang="x-default" href="https://vizoguard.com/">
 
   <!-- Open Graph — French -->
@@ -41,6 +43,8 @@
   <meta property="og:locale:alternate" content="ar_AR">
   <meta property="og:locale:alternate" content="hi_IN">
   <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="ru_RU">
 
   <!-- Twitter Card — French -->
   <meta name="twitter:card" content="summary">
@@ -73,7 +77,7 @@
         "description": "VPN chiffré avec 100 Go/mois. Politique zéro journal. Toutes les plateformes.",
         "price": "24.99",
         "priceCurrency": "USD",
-        "priceValidUntil": "2027-12-31",
+        "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
         "url": "https://vizoguard.com/fr/#pricing"
       },
@@ -83,7 +87,7 @@
         "description": "Suite de sécurité IA avec blocage des menaces en temps réel, détection du phishing, surveillance des connexions, protection auto-reparatrice et VPN chiffré.",
         "price": "99.99",
         "priceCurrency": "USD",
-        "priceValidUntil": "2027-12-31",
+        "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
         "url": "https://vizoguard.com/fr/#pricing"
       }
@@ -114,7 +118,7 @@
       "@type": "ContactPoint",
       "email": "support@vizoguard.com",
       "contactType": "customer support",
-      "availableLanguage": ["English", "Arabic", "Hindi", "French", "Spanish"]
+      "availableLanguage": ["English", "Arabic", "Hindi", "French", "Spanish", "Turkish", "Russian"]
     },
     "sameAs": [
       "https://github.com/pentedigital/vizoguard-app"
@@ -261,7 +265,7 @@
         "description": "Encrypted VPN with 100 GB/month. Zero-logging policy. All platforms.",
         "price": "24.99",
         "priceCurrency": "USD",
-        "priceValidUntil": "2027-12-31",
+        "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
         "url": "https://vizoguard.com/fr/#pricing",
         "priceSpecification": {
@@ -277,7 +281,7 @@
         "description": "AI security suite with threat blocking, phishing detection, connection monitoring, self-healing protection, and encrypted VPN.",
         "price": "99.99",
         "priceCurrency": "USD",
-        "priceValidUntil": "2027-12-31",
+        "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
         "url": "https://vizoguard.com/fr/#pricing",
         "priceSpecification": {
@@ -309,7 +313,7 @@
 <a href="#pricing" class="skip-nav">Aller aux tarifs</a>
 
 <div class="urgency-banner" id="urgency-banner">
-  Prix de lancement — <span id="countdown-text">se termine dans 5 jours</span>. Verrouillez $24.99/an avant la fin.
+  Offre de lancement — <span id="countdown-text">se termine dans 14 jours</span>. Économisez jusqu'à 50% sur tous les forfaits.
 </div>
 
 <header>
@@ -327,6 +331,8 @@
         <button role="menuitem" data-lang-switch="hi" onclick="switchLang('hi')">हिन्दी</button>
         <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Français</button>
         <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Español</button>
+        <button role="menuitem" data-lang-switch="tr" onclick="switchLang('tr')">Türkçe</button>
+        <button role="menuitem" data-lang-switch="ru" onclick="switchLang('ru')">Русский</button>
       </div>
     </div>
   </nav>
@@ -387,10 +393,11 @@
 
 <section class="pricing" id="pricing">
   <h2 data-i18n="pricing.heading">Choisissez votre forfait.</h2>
-  <p data-i18n="pricing.subheading">Annulez à tout moment. Codes promo acceptés.</p>
+  <p data-i18n="pricing.subheading">Offre de lancement — économisez jusqu'à 50%. Annulez à tout moment.</p>
   <div class="pricing-grid">
     <div class="pricing-card">
       <div class="pricing-label" data-i18n="pricing.basic_label">Basic</div>
+      <div class="price-regular"><span data-i18n="pricing.basic_regular">$49.99/yr</span> <span class="discount-badge" data-i18n="pricing.basic_discount">50% off</span></div>
       <div class="pricing-amount">
         <span class="dollar" data-i18n="pricing.basic_price_dollar">$24</span><span class="cents" data-i18n="pricing.basic_price_cents">.99</span>
       </div>
@@ -409,6 +416,7 @@
     <div class="pricing-card featured">
       <div class="pricing-tag" data-i18n="pricing.pro_tag">Populaire</div>
       <div class="pricing-label" data-i18n="pricing.pro_label">Pro</div>
+      <div class="price-regular"><span data-i18n="pricing.pro_regular">$149.99/yr</span> <span class="discount-badge" data-i18n="pricing.pro_discount">33% off</span></div>
       <div class="pricing-amount">
         <span class="dollar" data-i18n="pricing.pro_price_dollar">$99</span><span class="cents" data-i18n="pricing.pro_price_cents">.99</span>
       </div>
@@ -518,7 +526,7 @@ if ('serviceWorker' in navigator) {
 
 <script>
 (function(){
-  var end = new Date('2026-03-25T23:59:59Z').getTime();
+  var end = new Date('2026-04-04T23:59:59Z').getTime();
   var timer = setInterval(update, 60000);
   function update(){
     var now = Date.now(), diff = end - now;

@@ -33,8 +33,10 @@
   },
   "pricing": {
     "heading": "Choisissez votre forfait.",
-    "subheading": "Annulez à tout moment. Codes promo acceptés.",
+    "subheading": "Offre de lancement — durée limitée. Annulez à tout moment.",
     "basic_label": "Basic",
+    "basic_regular": "$49.99/an",
+    "basic_discount": "-50%",
     "basic_price_dollar": "$24",
     "basic_price_cents": ".99",
     "basic_period": "par an",
@@ -47,6 +49,8 @@
     "basic_cta": "Choisir Basic",
     "pro_tag": "Populaire",
     "pro_label": "Pro",
+    "pro_regular": "$149.99/an",
+    "pro_discount": "-33%",
     "pro_price_dollar": "$99",
     "pro_price_cents": ".99",
     "pro_period": "par an",
@@ -97,7 +101,9 @@
     "q13": "Vizoguard est-il mieux qu'un VPN classique ?",
     "a13": "Les VPN classiques ne font que chiffrer votre trafic. Vizoguard Pro ajoute la détection des menaces par IA, le blocage du phishing, la surveillance des connexions et la protection auto-réparatrice en plus du VPN chiffré.",
     "q14": "Dans quels pays Vizoguard VPN fonctionne-t-il ?",
-    "a14": "Vizoguard VPN fonctionne dans le monde entier. Il utilise le protocole Shadowsocks conçu pour contourner les restrictions réseau. Disponible sur Mac, Windows, iOS, Android, Linux, ChromeOS."
+    "a14": "Vizoguard VPN fonctionne dans le monde entier. Il utilise le protocole Shadowsocks conçu pour contourner les restrictions réseau. Disponible sur Mac, Windows, iOS, Android, Linux, ChromeOS.",
+    "q15": "Vizoguard est-il en promotion actuellement ?",
+    "a15": "Oui. Vizoguard est disponible avec une réduction de lancement limitée. Basic à $24.99/an (prix normal $49.99 — -50%) et Pro à $99.99/an (prix normal $149.99 — -33%). Tous les forfaits incluent une garantie satisfait ou remboursé de 30 jours."
   },
   "social": {
     "rating_num": "4.9/5",

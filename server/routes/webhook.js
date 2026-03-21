@@ -97,8 +97,9 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
         // Auto-provision Outline VPN access key (async, fire-and-forget)
         let accessUrl = null;
+        let newLicense = null;
         try {
-          const newLicense = stmts.findByKey.get(licenseKey);
+          newLicense = stmts.findByKey.get(licenseKey);
           if (!newLicense) throw new Error("License not found after insert");
           const bestNode = stmts.bestNode.get();
           const apiUrl = bestNode ? bestNode.api_url : null;
@@ -109,14 +110,13 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
             stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
             if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
           } catch (dbErr) {
-            // Compensate: revoke orphaned Outline key (#4)
             await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
             throw dbErr;
           }
           accessUrl = result.accessUrl;
           console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
-          stmts.resetOutlineClaim.run(newLicense.id);
+          if (newLicense) stmts.resetOutlineClaim.run(newLicense.id);
           console.error(`[i${INSTANCE}] Failed to create Outline key:`, outlineErr);
         }
 

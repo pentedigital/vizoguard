@@ -2,14 +2,14 @@
 (function () {
   "use strict";
 
-  var SUPPORTED = ["en", "ar", "hi", "fr", "es"];
+  var SUPPORTED = ["en", "ar", "hi", "fr", "es", "tr", "ru"];
   var RTL_LANGS = ["ar"];
   var cache = {};
   // Only these tags are allowed in translation HTML values (FAQ answers use <strong>)
   var ALLOWED_TAGS = ["STRONG", "EM", "A", "BR"];
 
   // Map URL path prefixes to languages (empty string = default/en)
-  var LANG_PATHS = { "ar": "/ar/", "hi": "/hi/", "fr": "/fr/", "es": "/es/", "en": "/" };
+  var LANG_PATHS = { "ar": "/ar/", "hi": "/hi/", "fr": "/fr/", "es": "/es/", "tr": "/tr/", "ru": "/ru/", "en": "/" };
 
   function getPathLang() {
     var seg = location.pathname.split("/")[1];
@@ -107,7 +107,7 @@
     }
   }
 
-  var LANG_LABELS = { "en": "EN", "ar": "العربية", "hi": "हिन्दी", "fr": "FR", "es": "ES" };
+  var LANG_LABELS = { "en": "EN", "ar": "العربية", "hi": "हिन्दी", "fr": "FR", "es": "ES", "tr": "TR", "ru": "RU" };
 
   function updateLangSwitcher(lang) {
     document.querySelectorAll("[data-lang-switch]").forEach(function (el) {

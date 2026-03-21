@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v25';
+const CACHE_NAME = 'vg-v27';
 
 const APP_SHELL = [
   '/',
@@ -6,6 +6,8 @@ const APP_SHELL = [
   '/hi/',
   '/fr/',
   '/es/',
+  '/tr/',
+  '/ru/',
   '/css/style.css',
   '/css/rtl.css',
   '/js/main.js',
@@ -15,6 +17,8 @@ const APP_SHELL = [
   '/locales/hi.json',
   '/locales/fr.json',
   '/locales/es.json',
+  '/locales/tr.json',
+  '/locales/ru.json',
   '/setup.html',
   '/privacy.html',
   '/terms.html',
@@ -61,7 +65,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML pages (ensures updates are immediate)
-  if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname === '/hi/' || url.pathname === '/fr/' || url.pathname === '/es/' || url.pathname.endsWith('.html')) {
+  if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname === '/hi/' || url.pathname === '/fr/' || url.pathname === '/es/' || url.pathname === '/tr/' || url.pathname === '/ru/' || url.pathname.endsWith('.html')) {
     event.respondWith(
       fetch(request)
         .then((response) => {

@@ -11,6 +11,8 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
@@ -23,6 +25,8 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/hi/</loc>
@@ -34,6 +38,8 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/fr/</loc>
@@ -45,6 +51,8 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/es/</loc>
@@ -56,6 +64,8 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/setup.html</loc>
@@ -74,5 +84,31 @@
     <lastmod>2026-03-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://vizoguard.com/tr/</loc>
+    <lastmod>2026-03-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vizoguard.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vizoguard.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+  </url>
+  <url>
+    <loc>https://vizoguard.com/ru/</loc>
+    <lastmod>2026-03-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vizoguard.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vizoguard.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
   </url>
 </urlset>

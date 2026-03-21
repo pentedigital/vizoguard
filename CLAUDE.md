@@ -85,12 +85,12 @@
 
 ## i18n (Multilingual)
 - Engine: `public/js/i18n.js` — client-side, loads JSON translations via `data-i18n` attributes
-- Translations: `public/locales/en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`
+- Translations: `public/locales/en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`, `tr.json`, `ru.json`
 - RTL styles: `public/css/rtl.css` (loaded dynamically when Arabic is active)
-- Language pages: `public/ar/index.html`, `public/hi/index.html`, `public/fr/index.html`, `public/es/index.html` — each standalone with localized meta/OG/JSON-LD for SEO
-- Language switcher: dropdown in nav (EN, العربية, हिन्दी, Français, Español) — redirects to `/<code>/`
+- Language pages: `public/ar/`, `public/hi/`, `public/fr/`, `public/es/`, `public/tr/`, `public/ru/` — each standalone with localized meta/OG/JSON-LD for SEO
+- Language switcher: dropdown in nav (EN, العربية, हिन्दी, Français, Español, Türkçe, Русский) — redirects to `/<code>/`
 - i18n detection: URL path is the source of truth — no localStorage redirect. Root `/` is always English. Language detected from path prefix only
-- hreflang tags on all 5 pages cross-link for Google (en, ar, hi, fr, es, x-default)
+- hreflang tags on all 7 pages cross-link for Google (en, ar, hi, fr, es, tr, ru, x-default)
 - Each page has 5 JSON-LD schemas: SoftwareApplication, Organization, FAQPage (6 Q&A), HowTo (3 steps), BreadcrumbList
 - Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED`+`LANG_PATHS`+`LANG_LABELS` in `i18n.js`, create `/public/<code>/index.html`, update hreflang+og:locale:alternate+switcher on ALL existing pages, add to sw.js APP_SHELL
 
