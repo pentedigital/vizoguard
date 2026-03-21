@@ -56,18 +56,26 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What encryption does a secure VPN use?",
+        "name": "What does a secure VPN actually do?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A secure VPN uses AES-256 encryption for its data channel — the same standard used by governments, militaries, and financial institutions worldwide. AES-256 has never been publicly cracked and, at current computing power, would take longer than the age of the universe to brute-force. Modern VPNs also use ChaCha20 as an alternative cipher, particularly on mobile devices where it is faster and equally secure. The cipher alone is not enough: the key exchange and authentication layers also matter. Secure VPNs use Perfect Forward Secrecy (PFS), generating unique session keys so that compromising one session does not expose past or future traffic."
+          "text": "A secure VPN encrypts all traffic between your device and a VPN server using a strong cipher — typically AES-256 or ChaCha20 — so that anyone intercepting the connection sees only unreadable ciphertext. It also replaces your real IP address with the server's IP, preventing websites, advertisers, and ISPs from tracking your location. A truly secure VPN additionally routes DNS queries through its own encrypted resolvers, includes a kill switch to block traffic if the tunnel drops, and maintains a verified no-logs policy so there is no record of your activity even if the provider is subpoenaed."
         }
       },
       {
         "@type": "Question",
-        "name": "Is WireGuard more secure than OpenVPN?",
+        "name": "Is AES-256 encryption unbreakable?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "WireGuard and OpenVPN are both considered secure protocols, but they have different design philosophies. WireGuard has a significantly smaller codebase — roughly 4,000 lines versus OpenVPN's 100,000+ — which means a smaller attack surface and easier security auditing. WireGuard uses only modern, well-vetted cryptographic primitives (ChaCha20, Poly1305, Curve25519) and has been formally verified. OpenVPN is older and more configurable, which is both a strength and a weakness: misconfiguration can introduce vulnerabilities. For most users, WireGuard offers equivalent or better security with substantially better performance. OpenVPN remains a solid choice where WireGuard is not available."
+          "text": "For all practical purposes, yes. AES-256 has a key space of 2^256 — approximately 1.15 x 10^77 possible keys. Even a computer performing one billion operations per second would need vastly longer than the age of the universe to brute-force a single AES-256 key. No known attack breaks AES-256 without access to the key itself. Side-channel attacks targeting implementation flaws exist in theory, which is why VPN providers combine AES-256 with secure key exchange protocols like Diffie-Hellman to protect the key in transit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the most secure VPN protocol?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "WireGuard is widely regarded as the most secure modern VPN protocol. Its codebase is approximately 4,000 lines — a fraction of OpenVPN's 600,000+ lines — making it easier to audit for vulnerabilities. WireGuard uses state-of-the-art cryptography (ChaCha20, Curve25519, BLAKE2) and has been independently reviewed by multiple security researchers. OpenVPN remains secure and battle-tested for compatibility. IKEv2/IPSec is fast and stable on mobile. Shadowsocks is not a VPN protocol per se but a SOCKS5 proxy with encryption that excels at bypassing censorship. Avoid PPTP and L2TP without IPSec — both are considered insecure."
         }
       },
       {
@@ -75,39 +83,47 @@
         "name": "What is a VPN kill switch and why does it matter?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A VPN kill switch is a security feature that cuts your device's internet connection if the VPN tunnel drops unexpectedly. Without a kill switch, a VPN disconnection — even momentary, due to a server reboot or network change — exposes your real IP address and unencrypted traffic to your ISP and any network observer. The kill switch acts as a fail-safe: traffic either flows through the encrypted VPN tunnel or does not flow at all. A good kill switch operates at the network driver level (not just the application level) so it catches drops that happen before the VPN client can react. It should be enabled by default, not buried in advanced settings."
+          "text": "A kill switch is a failsafe that immediately cuts your internet connection if the VPN tunnel drops unexpectedly. Without one, your device falls back to your regular ISP connection the moment the VPN disconnects — potentially exposing your real IP address mid-session. This matters most when torrenting, working with sensitive data, or using public Wi-Fi. A properly implemented kill switch operates at the network driver or firewall level, blocking all traffic before the OS can route it outside the tunnel. System-level kill switches (like Vizoguard's) are more reliable than application-level implementations."
         }
       },
       {
         "@type": "Question",
-        "name": "What is a no-log VPN policy?",
+        "name": "What is a no-logs VPN policy?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A no-log VPN policy (also called a zero-log policy) means the VPN provider does not store records of your browsing activity, connection timestamps, IP addresses, or DNS queries. If the provider holds no logs, they have nothing to hand over in response to government requests, court orders, or data breaches. The critical word is 'verified': self-declared no-log policies are marketing claims. A trustworthy no-log policy is backed by an independent audit from a recognized security firm (such as Cure53 or SEC Consult), or demonstrated in practice through a legal case where the provider had no data to produce. Always check whether the audit report is publicly available and recent."
+          "text": "A no-logs (zero-log) policy means the VPN provider does not record your browsing activity, IP addresses, connection timestamps, DNS queries, or session duration. Even if compelled by law enforcement or subpoenaed by a court, there is nothing to hand over. The key word is verified — a self-declared no-logs policy is a marketing claim. Verified no-logs policies are backed by independent audits from recognized security firms (Cure53, SEC Consult, Deloitte) or proven in practice when a provider demonstrated during a law enforcement request that no user data existed."
         }
       },
       {
         "@type": "Question",
-        "name": "What is DNS leak protection in a VPN?",
+        "name": "Does a VPN protect against malware?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "DNS leak protection ensures that all your DNS queries — the requests your device makes to resolve domain names into IP addresses — travel through the VPN's encrypted tunnel rather than leaking to your ISP's resolver in plaintext. Without DNS leak protection, even with a VPN active, your ISP can see every domain you visit. DNS leaks are common in poorly implemented VPNs, especially on Windows where the OS may route DNS outside the tunnel. A secure VPN routes DNS through its own private resolvers, applies DNS over TLS or DNS over HTTPS, and includes leak detection tests you can verify at dnsleaktest.com."
+          "text": "A standard VPN alone does not protect against malware. A VPN encrypts your connection and hides your IP, but it does not scan downloads, block malicious files, or prevent you from visiting phishing sites — unless the VPN includes additional security features. Vizoguard Pro adds AI-powered threat detection that analyzes network behavior in real time, blocking connections to known malware distribution networks and flagging suspicious traffic patterns. This combination of VPN tunneling plus active threat monitoring is significantly more protective than a VPN alone."
         }
       },
       {
         "@type": "Question",
-        "name": "Is Shadowsocks a VPN protocol?",
+        "name": "How can I check if my VPN is actually secure?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Shadowsocks is not a traditional VPN protocol — it is a proxy protocol designed specifically to resist deep packet inspection (DPI) and circumvent censorship in restrictive network environments like those in China, Iran, and Russia. Unlike WireGuard or OpenVPN, which produce identifiable VPN traffic signatures, Shadowsocks makes your traffic look like ordinary HTTPS, making it extremely difficult for network-level censors to detect and block. When combined with strong encryption (AES-256-GCM or ChaCha20-Poly1305), Shadowsocks provides high security and excellent obfuscation. Vizoguard uses Shadowsocks as its underlying VPN transport to deliver both privacy and censorship resistance."
+          "text": "Four tests verify VPN security in practice. First, test for DNS leaks at dnsleaktest.com — all DNS queries should resolve through the VPN's servers, not your ISP. Second, test for IP leaks at ipleak.net — your real IP address should not appear. Third, check for WebRTC leaks in your browser (many browsers expose real IPs via WebRTC even when a VPN is active). Fourth, verify the VPN's cipher and protocol using a tool like Wireshark — traffic should show as encrypted ciphertext. Run these tests both while connected and immediately after a simulated VPN drop to confirm the kill switch engages."
         }
       },
       {
         "@type": "Question",
-        "name": "How can I verify my VPN is actually working?",
+        "name": "Is WireGuard safer than OpenVPN?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Verify your VPN is working with three checks. First, visit whatismyipaddress.com before and after connecting — your IP should change to the VPN server's IP. Second, run a DNS leak test at dnsleaktest.com with the VPN active — all DNS servers shown should belong to the VPN provider, not your ISP. Third, check for WebRTC leaks using a browser-based WebRTC leak test — your real local IP should not be visible. If any of these tests reveal your real IP or ISP's DNS servers while the VPN is connected, your VPN has a misconfiguration or your provider's infrastructure has a flaw."
+          "text": "WireGuard and OpenVPN are both considered secure, but they have different strengths. WireGuard's smaller codebase (approximately 4,000 lines vs. OpenVPN's 600,000+) reduces the attack surface significantly — fewer lines of code means fewer potential vulnerabilities. WireGuard also uses more modern cryptographic primitives and establishes connections faster. OpenVPN's advantage is its longer track record and broader compatibility with older hardware and operating systems. For most users in 2026, WireGuard is the better default choice for both security and performance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can my ISP see my traffic when I use a VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When using a properly configured secure VPN, your ISP can see that you are connected to a VPN server and roughly how much data you are transferring — but cannot see the content of your traffic, the websites you visit, or your DNS queries. The tunnel between your device and the VPN server is encrypted end-to-end. Your ISP sees only encrypted packets flowing to an IP address they can identify as a VPN endpoint. If you use obfuscation protocols like Shadowsocks, even the VPN fingerprint itself becomes difficult to detect."
         }
       },
       {
@@ -115,23 +131,7 @@
         "name": "What is split tunneling in a VPN?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Split tunneling lets you choose which apps or destinations route through the VPN tunnel and which connect directly to the internet. For example, you could route your browser and email through the VPN for privacy while letting your video calls or local network traffic connect directly to avoid latency. Split tunneling is useful for performance but introduces a security trade-off: any traffic outside the tunnel is unprotected and your ISP can see it. For maximum security, full-tunnel mode (all traffic through the VPN) is preferable. Split tunneling is most appropriate when you understand exactly which traffic you need to protect."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does using a VPN protect me from hackers on public Wi-Fi?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes — a secure VPN provides strong protection against the most common attacks on public Wi-Fi, including man-in-the-middle attacks, ARP spoofing, and passive eavesdropping on unencrypted traffic. When you connect through a VPN on a public network, all your traffic is encrypted before it leaves your device, so even if an attacker intercepts it at the router level, they see only encrypted ciphertext. However, a VPN does not protect against all threats: phishing attacks, malware already on your device, or attacks against HTTPS-encrypted sites (which are already protected) are outside the VPN's scope. For public Wi-Fi, a VPN combined with keeping software updated provides comprehensive protection."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What makes Vizoguard a secure VPN?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Vizoguard combines a strict zero-log architecture with AES-256 encryption, Shadowsocks obfuscation, a network-level kill switch, DNS leak prevention, and AI-powered threat detection (Pro plan). The Shadowsocks transport makes VPN traffic indistinguishable from HTTPS, bypassing censorship and DPI-based blocking. The zero-log policy means Vizoguard has no browsing data to produce in response to any request. The AI threat detection layer (Pro) identifies malware command-and-control traffic, phishing domains, and anomalous connection patterns in real time — a capability absent from most VPN-only services. Vizoguard is operated by PRIME360 HOLDING LTD under Malta jurisdiction, outside the Fourteen Eyes surveillance alliance."
+          "text": "Split tunneling lets you choose which applications or websites route through the VPN tunnel and which use your regular internet connection. For example, you might route your browser through the VPN for privacy while letting a streaming service use your direct connection for speed. Split tunneling is useful for balancing privacy with performance, but it introduces a risk: traffic routed outside the tunnel is unprotected and can expose your real IP. For maximum security, full tunnel mode (all traffic through the VPN) is preferable. If you use split tunneling, be precise about which apps bypass the tunnel."
         }
       }
     ]
@@ -221,8 +221,8 @@
     .breadcrumb a { color: var(--text-3); }
     .breadcrumb a:hover { color: var(--text); }
 
-    .security-list { list-style: none; padding: 0; margin: 16px 0; }
-    .security-list li {
+    .risk-list { list-style: none; padding: 0; margin: 16px 0; }
+    .risk-list li {
       display: flex;
       gap: 12px;
       align-items: flex-start;
@@ -232,7 +232,7 @@
       margin-bottom: 10px;
       background: var(--surface);
     }
-    .security-num {
+    .risk-num {
       flex-shrink: 0;
       width: 28px;
       height: 28px;
@@ -245,35 +245,8 @@
       align-items: center;
       justify-content: center;
     }
-    .security-content strong { color: var(--text); display: block; margin-bottom: 4px; }
-    .security-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
-
-    .threat-list { list-style: none; padding: 0; margin: 16px 0; }
-    .threat-list li {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-bottom: 10px;
-      background: var(--surface);
-    }
-    .threat-num {
-      flex-shrink: 0;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: rgba(255, 85, 85, 0.12);
-      color: var(--red, #ff5555);
-      font-weight: 700;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .threat-content strong { color: var(--text); display: block; margin-bottom: 4px; }
-    .threat-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
+    .risk-content strong { color: var(--text); display: block; margin-bottom: 4px; }
+    .risk-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.6; }
 
     .faq { margin: 24px 0 40px; }
     .faq-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
@@ -327,149 +300,156 @@
 
   <h1>Secure VPN: What Makes a VPN Truly Secure?</h1>
 
-  <p>Not all VPNs are created equal. The word "secure" appears on the marketing page of virtually every VPN product on the market — but the technical reality behind that claim varies enormously. A VPN that uses outdated encryption, routes DNS queries outside its tunnel, or lacks a kill switch is not a secure VPN, regardless of what the product page says.</p>
+  <p>Not every VPN is equally secure. The market is crowded with services that use the word "secure" as a marketing badge — yet rely on outdated encryption, weak protocols, or logging practices that undermine the entire purpose of a VPN. In 2026, understanding what actually separates a secure VPN from an insecure one is not optional knowledge. It is the foundation of every sound privacy decision you make online.</p>
 
-  <p>This guide cuts through the marketing language. We examine the specific technical attributes that define a genuinely secure VPN: encryption standards, protocols, operational security features like kill switches and DNS leak protection, and the logging policies that determine whether a provider can expose your data even when compelled to do so. If you want to understand what you are actually buying when you choose a VPN, start here.</p>
+  <p>This guide examines VPN security from first principles: the encryption standards that protect your data, the protocols that carry it, the features that prevent leaks when connections drop, and the logging policies that determine whether your activity can ever be traced back to you. We also explain how hackers exploit insecure VPNs — and what Vizoguard's architecture does differently to stop them.</p>
 
   <div class="verdict-box">
     <h3>Quick Summary</h3>
-    <p>A truly secure VPN requires AES-256 or ChaCha20 encryption, a modern protocol (WireGuard, OpenVPN, or Shadowsocks for censorship resistance), a verified zero-log policy, a network-level kill switch, and DNS leak prevention. Security claims without independent verification are marketing — not guarantees. This guide explains how to evaluate each component and what to look for beyond the feature list.</p>
+    <p>A truly secure VPN requires AES-256 or ChaCha20 encryption, a modern protocol (WireGuard, OpenVPN, or Shadowsocks), a system-level kill switch, DNS leak prevention, and a verified no-logs policy backed by an independent audit. Marketing claims alone are not sufficient — every element should be testable. Vizoguard combines all of these with AI-powered threat detection, providing security that standard VPNs cannot match.</p>
   </div>
 
   <!-- ===== SECTION 1 ===== -->
   <h2>What Does "Secure VPN" Actually Mean?</h2>
 
-  <p>Security in a VPN context operates across multiple layers simultaneously. When someone says a VPN is "secure," they could mean any combination of the following:</p>
+  <p>The term "secure VPN" is used so broadly it has nearly lost meaning. Every VPN vendor claims to be secure. The more useful question is: <strong style="color:var(--text)">what specific properties must a VPN have to be genuinely secure?</strong></p>
+
+  <p>A VPN creates an encrypted tunnel between your device and a server. Traffic inside that tunnel is unreadable to anyone intercepting the connection — your ISP, the government, a hacker on the same Wi-Fi network, or an advertising network. From the outside, the destination server sees the VPN server's IP address instead of yours. This is VPN security at its most basic.</p>
+
+  <p>But "secure" in practice means more than just "encrypted." It means:</p>
 
   <ul>
-    <li><strong>Encryption security:</strong> The cipher and key length used to encrypt data in transit are computationally unbreakable with current technology.</li>
-    <li><strong>Protocol security:</strong> The VPN protocol (WireGuard, OpenVPN, IKEv2, etc.) has been formally audited and is free of known cryptographic weaknesses.</li>
-    <li><strong>Operational security:</strong> The VPN correctly implements features like a kill switch, DNS leak prevention, and split tunneling to prevent accidental data exposure.</li>
-    <li><strong>Policy security:</strong> The provider's logging policy means they hold no data that could be exposed by a breach, subpoena, or legal order.</li>
-    <li><strong>Threat security:</strong> The VPN actively detects and blocks malicious traffic — phishing domains, malware connections, surveillance — rather than merely encrypting it.</li>
+    <li><strong>Strong encryption:</strong> The cipher used to protect traffic must be computationally infeasible to break. AES-256 and ChaCha20 meet this bar. PPTP does not.</li>
+    <li><strong>A modern, audited protocol:</strong> The protocol determines how the encrypted tunnel is established and maintained. WireGuard's small, auditable codebase makes it more trustworthy than legacy protocols with decades of accumulated complexity.</li>
+    <li><strong>No data retention:</strong> A VPN that logs your activity is not truly private. A verified zero-logs policy means there is nothing to hand over — even under legal compulsion.</li>
+    <li><strong>Leak prevention:</strong> DNS leaks, WebRTC leaks, and IP leaks can expose your real identity even through an encrypted tunnel. Secure VPNs actively prevent all three.</li>
+    <li><strong>Kill switch:</strong> If the VPN connection drops, a kill switch immediately blocks all internet traffic until the tunnel is re-established. Without it, a momentary disconnect exposes your real IP.</li>
   </ul>
 
-  <p>Most consumer VPN services address the first two layers adequately. The differentiation happens at layers three through five. A VPN that encrypts your traffic perfectly but still leaks your DNS queries to your ISP has a fundamental security gap. A VPN with a claimed no-log policy that has never been independently audited or tested provides no verifiable assurance. Understanding all five layers is how you evaluate whether a VPN is genuinely secure — or just marketed as one.</p>
-
-  <p>For a broader introduction to how VPNs work at the network level, see our guide to <a href="/vpn-for-privacy" style="color:var(--teal)">VPNs and online privacy</a>.</p>
+  <p>A VPN that satisfies all five properties is genuinely secure. A VPN that satisfies only some — or claims to satisfy them without verification — is not. The rest of this guide examines each component in detail so you can evaluate any VPN, including Vizoguard, against an objective standard. For a broader look at <a href="/vpn-for-privacy" style="color:var(--teal)">how VPNs protect your privacy</a>, our dedicated guide covers the full picture.</p>
 
   <!-- ===== SECTION 2 ===== -->
-  <h2>Encryption Standards: AES-256 and ChaCha20</h2>
+  <h2>Encryption Standards: AES-256 and ChaCha20 Explained</h2>
 
-  <p>Encryption is the mathematical process that converts your readable traffic into ciphertext that only your VPN server can decrypt. The strength of that encryption depends on the algorithm (cipher) and key length used.</p>
+  <p>Encryption is the core of VPN security. It transforms your readable traffic into ciphertext that cannot be deciphered without the correct key. Two encryption standards dominate modern secure VPNs:</p>
 
-  <h3>AES-256: The Government Standard</h3>
-  <p>AES-256 (Advanced Encryption Standard, 256-bit key) is the most widely used cipher in secure VPNs and the standard adopted by the US government for top-secret data classification. The "256" refers to the key length: with a 256-bit key, there are 2<sup>256</sup> possible keys — a number so large that brute-forcing the key would take longer than the current age of the universe, even with all computing power on Earth running simultaneously. AES-256 has never been publicly broken. Any VPN claiming to be secure should be using at minimum AES-128; AES-256 is strongly preferred for sensitive use.</p>
+  <h3>AES-256 (Advanced Encryption Standard, 256-bit)</h3>
+  <p>AES-256 is the encryption standard used by governments, banks, and militaries worldwide. The "256" refers to the key length: 256 bits, or 2<sup>256</sup> possible keys — approximately 1.15 &times; 10<sup>77</sup>. No brute-force attack is feasible within any realistic timeframe. Even distributing the workload across every computer on Earth, the heat death of the universe would arrive long before a single AES-256 key was broken.</p>
 
-  <p>AES-256 typically operates in GCM (Galois/Counter Mode), which provides both encryption and authentication in a single pass — meaning the receiver can verify that the data has not been tampered with in transit. This is important: encryption without authentication allows an attacker to flip bits in ciphertext and alter your traffic without being detected.</p>
+  <p>AES-256 operates in different modes. Secure VPNs use <strong>AES-256-GCM</strong> (Galois/Counter Mode), which provides both encryption and authentication in a single pass — meaning data cannot be altered in transit without detection. GCM mode is fast enough for high-throughput connections on modern hardware and is the standard in both WireGuard (where it is used in its ChaCha20-Poly1305 variant) and OpenVPN.</p>
 
-  <h3>ChaCha20-Poly1305: The Mobile Alternative</h3>
-  <p>ChaCha20 is a stream cipher developed by Daniel Bernstein, the cryptographer behind many of the algorithms used in WireGuard. ChaCha20-Poly1305 (the cipher paired with the Poly1305 message authentication code) is now a first-class standard in TLS 1.3 and used natively in WireGuard.</p>
+  <h3>ChaCha20-Poly1305</h3>
+  <p>ChaCha20 is a stream cipher developed by cryptographer Daniel Bernstein. Where AES benefits from hardware acceleration (AES-NI instructions available on most modern CPUs), ChaCha20 is designed to be fast in pure software — making it the superior choice on mobile devices, older hardware, and embedded systems where AES-NI is unavailable.</p>
 
-  <p>ChaCha20 offers two practical advantages over AES-256:</p>
+  <p>ChaCha20 is always paired with Poly1305, a message authentication code that ensures integrity. Together, ChaCha20-Poly1305 provides authenticated encryption equivalent to AES-256-GCM in security level. WireGuard uses ChaCha20-Poly1305 exclusively. Many security researchers consider ChaCha20 more resistant to timing side-channel attacks than AES in software implementations.</p>
+
+  <h3>What to Avoid</h3>
+  <p>Legacy encryption standards still appear in older or cheaper VPN configurations:</p>
   <ul>
-    <li><strong>Performance on ARM processors:</strong> Most mobile devices use ARM chips, which often lack hardware acceleration for AES (AES-NI). ChaCha20 is a pure software implementation that runs significantly faster on these devices without sacrificing security.</li>
-    <li><strong>Resistance to timing attacks:</strong> ChaCha20 is inherently constant-time, which eliminates a class of side-channel attacks that can theoretically affect AES implementations that do not take special care.</li>
+    <li><strong>3DES:</strong> Triple DES uses a 168-bit effective key length and is significantly slower than AES. It has known vulnerabilities (Sweet32 attack) and should not be used.</li>
+    <li><strong>RC4:</strong> A stream cipher with multiple practical attacks. Prohibited by RFC 7465 for TLS since 2015. Any VPN still using RC4 is not secure.</li>
+    <li><strong>Blowfish:</strong> Used historically by older OpenVPN configurations with 64-bit block size, making it vulnerable to birthday attacks (SWEET32) on long sessions.</li>
   </ul>
 
-  <p>ChaCha20-Poly1305 is considered equivalent to AES-256-GCM in security strength. If your VPN uses WireGuard, your traffic is encrypted with ChaCha20-Poly1305 by default. Both are excellent choices — the important thing is that your VPN specifies which cipher it uses and does not fall back to weaker alternatives like AES-128-CBC or, worse, PPTP's RC4 (which is thoroughly broken).</p>
-
-  <h3>Perfect Forward Secrecy</h3>
-  <p>Beyond the cipher, a secure VPN implements Perfect Forward Secrecy (PFS). PFS generates a unique session key for each connection using an ephemeral Diffie-Hellman key exchange. Even if an attacker recorded all your VPN traffic and later compromised your long-term private key, they could not decrypt past sessions — each session's key existed only for that session and was never stored. PFS is standard in WireGuard and OpenVPN when correctly configured; look for explicit mention of it in a provider's security documentation.</p>
+  <p>When evaluating a VPN, the encryption specification should be publicly documented. If a provider cannot or will not state which cipher they use, that is itself a red flag.</p>
 
   <!-- ===== SECTION 3 ===== -->
   <h2>VPN Protocols Compared: WireGuard, OpenVPN, Shadowsocks, IKEv2</h2>
 
-  <p>The encryption cipher determines how data is scrambled. The protocol determines how that encryption is applied, how authentication works, how connections are established, and how the VPN traffic looks to an outside observer. Protocol choice directly affects both security and censorship resistance.</p>
-
-  <h3>WireGuard</h3>
-  <p>WireGuard is the current state of the art for VPN protocols. Developed by Jason Donenfeld and first released in 2015, it became part of the Linux kernel in 2020 and has since been adopted by NordVPN, Mullvad, ProtonVPN, and many others. Its defining feature is simplicity: roughly 4,000 lines of code versus OpenVPN's 100,000+. Fewer lines means a smaller attack surface, easier auditing, and fewer places for bugs to hide. WireGuard uses only modern, well-vetted cryptographic primitives (ChaCha20, Poly1305, Curve25519 for key exchange, BLAKE2s for hashing, SipHash for hashtable keys) and has been formally verified.</p>
-
-  <p>WireGuard's principal limitation is that it assigns static IP addresses to VPN peers, which could in theory allow a VPN provider to correlate connections to users. Providers that care about this (Mullvad, ProtonVPN) implement IP randomization at the application layer. For most users, this is not a practical concern.</p>
-
-  <h3>OpenVPN</h3>
-  <p>OpenVPN has been the de facto standard VPN protocol for over two decades. It is open source, extensively audited, and supports a wide range of ciphers and configuration options. OpenVPN runs over either UDP (faster) or TCP (more reliable on restrictive networks) and can be configured to run on port 443 — the HTTPS port — making it difficult for network administrators to block without disrupting normal web traffic.</p>
-
-  <p>OpenVPN's age and configurability are both strengths and weaknesses. A correctly configured OpenVPN deployment is highly secure. But the flexibility means misconfigured setups are common, and the protocol's identifiable signature means it is susceptible to deep packet inspection (DPI) on heavily censored networks. For users in countries with extensive censorship, OpenVPN on port 443 is better than most alternatives — but Shadowsocks is more robust.</p>
-
-  <h3>Shadowsocks</h3>
-  <p>Shadowsocks is not technically a VPN protocol — it is a secure proxy protocol originally designed specifically to circumvent China's Great Firewall. Its core innovation is traffic obfuscation: Shadowsocks traffic is designed to be indistinguishable from ordinary HTTPS traffic, making it extraordinarily resistant to DPI-based blocking. While WireGuard and OpenVPN produce identifiable VPN traffic signatures that censors can detect and block, Shadowsocks produces traffic that looks like web browsing.</p>
-
-  <p>Shadowsocks supports strong encryption: AES-256-GCM and ChaCha20-Poly1305 are both supported ciphers. Used with a secure cipher, it provides equivalent data security to a traditional VPN protocol while adding a layer of obfuscation that traditional VPNs cannot match. Vizoguard uses Shadowsocks as its underlying transport for this reason — it delivers both encryption and censorship resistance in markets where standard VPN protocols are actively blocked.</p>
-
-  <p>Read more about how Shadowsocks and VPNs work on public Wi-Fi in our <a href="/blog/public-wifi-security" style="color:var(--teal)">public Wi-Fi security guide</a>.</p>
-
-  <h3>IKEv2/IPSec</h3>
-  <p>IKEv2 (Internet Key Exchange version 2) paired with IPSec is a mature protocol with strong support on mobile platforms, particularly iOS and macOS where it is implemented natively. It handles network changes well — useful when switching between Wi-Fi and cellular — and supports a range of ciphers including AES-256. IKEv2 has been audited and is considered secure when correctly configured.</p>
-
-  <p>Its limitations: IKEv2 traffic is identifiable and can be blocked on restrictive networks; it is also proprietary in some implementations (Microsoft and Cisco have their own variants). For users who need censorship resistance, IKEv2 is not the right choice. For corporate or mobile users on open networks who want a stable, fast connection, it remains a solid option.</p>
-
-  <h3>Protocol Comparison Table</h3>
+  <p>The VPN protocol determines how the encrypted tunnel is built and maintained — the rules for key exchange, authentication, and data transmission. Different protocols make different trade-offs between security, speed, compatibility, and detectability. Here is a structured comparison of the four protocols that matter in 2026:</p>
 
   <div class="compare-table-wrap">
     <table class="compare-table">
       <thead>
         <tr>
-          <th>Protocol</th>
-          <th>Encryption</th>
-          <th>Speed</th>
-          <th>Censorship Resistance</th>
-          <th>Audit Status</th>
-          <th class="highlight-col">Best For</th>
+          <th>Feature</th>
+          <th class="highlight-col">WireGuard</th>
+          <th>OpenVPN</th>
+          <th>Shadowsocks</th>
+          <th>IKEv2/IPSec</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>WireGuard</td>
-          <td>ChaCha20-Poly1305</td>
-          <td><span class="check">Excellent</span></td>
-          <td>Low — identifiable</td>
-          <td><span class="check">Formally verified</span></td>
-          <td class="highlight-col">Most users — fast, modern, audited</td>
+          <td>Codebase Size</td>
+          <td class="highlight-col"><span class="check">~4,000 lines</span></td>
+          <td>~600,000+ lines</td>
+          <td>~15,000 lines</td>
+          <td>~100,000+ lines</td>
         </tr>
         <tr>
-          <td>OpenVPN</td>
+          <td>Encryption</td>
+          <td class="highlight-col">ChaCha20-Poly1305</td>
           <td>AES-256-GCM</td>
-          <td>Good</td>
-          <td>Moderate — port 443 helps</td>
-          <td><span class="check">Extensively audited</span></td>
-          <td class="highlight-col">Compatibility, corporate environments</td>
-        </tr>
-        <tr>
-          <td>Shadowsocks</td>
           <td>AES-256-GCM / ChaCha20</td>
+          <td>AES-256-GCM</td>
+        </tr>
+        <tr>
+          <td>Connection Speed</td>
+          <td class="highlight-col"><span class="check">Excellent</span></td>
+          <td>Good</td>
+          <td>Good</td>
           <td><span class="check">Excellent</span></td>
-          <td><span class="check">Very high — looks like HTTPS</span></td>
-          <td><span class="check">Open source, widely reviewed</span></td>
-          <td class="highlight-col">Censorship bypass, restrictive networks</td>
         </tr>
         <tr>
-          <td>IKEv2/IPSec</td>
-          <td>AES-256</td>
-          <td><span class="check">Very good</span></td>
-          <td>Low — identifiable, easily blocked</td>
-          <td>Varies by implementation</td>
-          <td class="highlight-col">Mobile, iOS/macOS native clients</td>
-        </tr>
-        <tr>
-          <td>L2TP/IPSec</td>
-          <td>AES-256 (with IPSec)</td>
+          <td>Latency</td>
+          <td class="highlight-col"><span class="check">Very low</span></td>
           <td>Moderate</td>
-          <td><span class="cross">Very low</span></td>
-          <td>Older, less scrutiny</td>
-          <td class="highlight-col"><span class="cross">Legacy use only</span></td>
+          <td>Low</td>
+          <td><span class="check">Very low</span></td>
         </tr>
         <tr>
-          <td>PPTP</td>
-          <td><span class="cross">RC4 — broken</span></td>
-          <td>Fast but unsafe</td>
-          <td><span class="cross">None</span></td>
-          <td><span class="cross">Multiple known vulnerabilities</span></td>
-          <td class="highlight-col"><span class="cross">Avoid entirely</span></td>
+          <td>Censorship Bypass</td>
+          <td class="highlight-col">Limited (detectable)</td>
+          <td>Good with obfsproxy</td>
+          <td><span class="check">Excellent</span></td>
+          <td>Moderate</td>
+        </tr>
+        <tr>
+          <td>Security Audit</td>
+          <td class="highlight-col"><span class="check">Multiple independent audits</span></td>
+          <td><span class="check">Extensively reviewed</span></td>
+          <td>Community-reviewed</td>
+          <td>Reviewed — NSA-contributed concerns</td>
+        </tr>
+        <tr>
+          <td>Mobile Performance</td>
+          <td class="highlight-col"><span class="check">Excellent</span></td>
+          <td>Good</td>
+          <td>Good</td>
+          <td><span class="check">Excellent</span></td>
+        </tr>
+        <tr>
+          <td>Port Flexibility</td>
+          <td class="highlight-col">UDP only (by default)</td>
+          <td><span class="check">TCP + UDP</span></td>
+          <td><span class="check">TCP + UDP</span></td>
+          <td>UDP 500/4500</td>
+        </tr>
+        <tr>
+          <td>Best Use Case</td>
+          <td class="highlight-col">General privacy, speed</td>
+          <td>Compatibility, flexibility</td>
+          <td>Censored networks</td>
+          <td>Mobile reconnection</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <h3>WireGuard</h3>
+  <p>WireGuard is the dominant modern VPN protocol and the recommended default for most users. Its minimal codebase makes it dramatically easier to audit and verify — a critical security property, since complexity is the enemy of security. WireGuard is built into the Linux kernel since version 5.6, which means it operates with minimal overhead at the OS level. Connections establish in milliseconds. Its cryptography is fixed (no negotiation of weaker ciphers is possible), which eliminates an entire category of downgrade attacks.</p>
+
+  <p>The main limitation: WireGuard is identifiable by deep packet inspection (DPI). In countries or networks that actively block VPN traffic, WireGuard connections can be detected and blocked. For general use — home, office, travel — this is irrelevant. For use in restrictive environments, Shadowsocks becomes relevant.</p>
+
+  <h3>OpenVPN</h3>
+  <p>OpenVPN has been the gold standard for VPN security for over two decades. Its large codebase is a complexity risk, but it has also been extensively scrutinized by security researchers worldwide. OpenVPN supports both TCP and UDP transport, making it more flexible in restrictive network environments. When configured correctly with AES-256-GCM and perfect forward secrecy (PFS) via Diffie-Hellman key exchange, it provides excellent security. OpenVPN is a safe choice for users on older hardware or platforms without WireGuard support.</p>
+
+  <h3>Shadowsocks</h3>
+  <p>Shadowsocks was created specifically to bypass censorship in China, where standard VPN protocols are routinely blocked. It is technically a SOCKS5 proxy with strong encryption rather than a VPN protocol, but it provides equivalent privacy for internet traffic. Shadowsocks traffic is designed to be statistically indistinguishable from regular HTTPS traffic, making it resistant to DPI-based blocking. Vizoguard uses Shadowsocks as its underlying transport, which is why it works reliably in network environments where WireGuard and OpenVPN connections are blocked. Learn more about our <a href="/vpn-for-privacy" style="color:var(--teal)">privacy-focused VPN architecture</a>.</p>
+
+  <h3>IKEv2/IPSec</h3>
+  <p>IKEv2 (Internet Key Exchange version 2) paired with IPSec is the standard VPN protocol on iOS and macOS. Its main advantage is MOBIKE — a feature that allows seamless reconnection when switching between Wi-Fi and cellular without dropping the VPN tunnel. This makes it ideal for mobile use. The security concern: IKEv2/IPSec's complexity and historical involvement of government agencies (the NSA contributed to some of its specifications) has led some cryptographers to prefer WireGuard's more transparent design. In practice, IKEv2 with AES-256 is considered secure for most threat models.</p>
 
   <div class="cta-row">
     <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'secure-vpn',plan:'pro'})">Get Pro — $99.99/yr</a>
@@ -479,102 +459,104 @@
   <!-- ===== SECTION 4 ===== -->
   <h2>Kill Switch, DNS Leak Protection, and Split Tunneling</h2>
 
-  <p>Strong encryption and a solid protocol are necessary but not sufficient for a truly secure VPN. Operational security features determine whether your real identity is protected even when things go wrong.</p>
+  <p>Encryption and protocol choice determine how your traffic is protected inside the tunnel. These three features determine what happens at the edges — when connections drop, when DNS queries are made, or when only some traffic is intended to go through the VPN.</p>
 
-  <h3>Kill Switch: The Last Line of Defense</h3>
-  <p>A kill switch (also called a network lock) cuts your internet access if the VPN tunnel drops unexpectedly. VPN connections drop for many reasons: server maintenance, network congestion, switching between Wi-Fi and cellular, or a crash in the VPN client. Without a kill switch, these drops expose your real IP address and unencrypted traffic to your ISP and any network observer — even for the few seconds before you notice the disconnection and reconnect manually.</p>
+  <h3>Kill Switch</h3>
+  <p>A kill switch is a mechanism that blocks all internet traffic the moment the VPN tunnel drops. Without it, an unexpected disconnect — from a server-side issue, a network hiccup, or a software crash — causes your device to route traffic directly over your ISP connection, exposing your real IP address. If you were connected to a sensitive resource, that exposure can be significant.</p>
 
-  <p>A properly implemented kill switch operates at the network driver or firewall level, not the application level. Application-level kill switches — which tell the VPN app to block traffic when the tunnel drops — have a race condition: there is a window between the tunnel dropping and the application layer reacting. A kernel-level or firewall-level kill switch (using iptables or Windows Filtering Platform) blocks traffic before any data can leave the device.</p>
+  <p>Kill switches operate at two levels. <strong>Application-level kill switches</strong> work inside the VPN client software — they detect a disconnect and attempt to block traffic through the app. They are faster to implement but less reliable, since they depend on the VPN application itself remaining operational during the disconnect event. <strong>System-level kill switches</strong> operate at the network driver or OS firewall level (Windows Firewall, iptables, pf on macOS), blocking all traffic from the OS upward before any application can route outside the tunnel. Vizoguard uses a system-level kill switch — the most reliable implementation.</p>
 
-  <p>The kill switch should also be enabled by default. A feature buried in advanced settings that users must discover and enable is not meaningfully providing security — most users will never find it.</p>
+  <h3>DNS Leak Protection</h3>
+  <p>DNS (Domain Name System) translates domain names like vizoguard.com into IP addresses. When you connect to a VPN, all DNS queries should be routed through the VPN's encrypted resolvers — not your ISP's servers. A DNS leak occurs when some or all DNS queries escape the tunnel and reach your ISP's resolver in plaintext, revealing exactly which domains you are visiting even if the content of the connection is encrypted.</p>
 
-  <h3>DNS Leak Prevention: Closing the Plaintext Backdoor</h3>
-  <p>DNS (Domain Name System) queries are the requests your device sends to resolve domain names (like google.com) into IP addresses. By default, your operating system sends these queries to your ISP's resolver — in plaintext, unencrypted. Even with a VPN active, some implementations fail to route DNS through the encrypted tunnel, creating a "DNS leak" where your ISP can see every domain you visit regardless of the VPN.</p>
+  <p>DNS leaks are common in VPNs that do not explicitly force all DNS traffic through the tunnel. They can occur due to OS-level DNS settings overriding the VPN's configuration, or through IPv6 DNS requests that the VPN's IPv4-only tunnel does not capture. To test for DNS leaks, use dnsleaktest.com while connected to your VPN. All resolvers shown should belong to your VPN provider — not your ISP, Google (8.8.8.8), or Cloudflare (1.1.1.1) unless your VPN explicitly uses those as upstream resolvers.</p>
 
-  <p>DNS leak prevention routes all DNS queries through the VPN's own encrypted resolvers. A complete implementation also applies DNS over TLS (DoT) or DNS over HTTPS (DoH) within the tunnel for an additional layer of encryption. You can verify DNS leak protection at any time by visiting <strong>dnsleaktest.com</strong> while connected to the VPN — all DNS servers listed should belong to your VPN provider, not your ISP.</p>
+  <h3>WebRTC Leak Protection</h3>
+  <p>WebRTC is a browser technology that enables real-time communication (video calls, peer-to-peer connections). It can reveal your real IP address — even through a VPN — by initiating direct connections that bypass the VPN tunnel. This is a well-documented browser-level issue. Most secure VPNs disable WebRTC at the network level or provide browser extensions that block it. Test for WebRTC leaks at ipleak.net with your VPN active. If your real IP appears, your VPN is not protecting you at the WebRTC layer.</p>
 
-  <p>WebRTC leaks are a related threat: modern browsers use the WebRTC API for peer-to-peer communication, and this API can expose your real local IP address even through a VPN. Secure VPN clients disable WebRTC at the browser level or use firewall rules to block WebRTC traffic outside the tunnel. Browser extensions like uBlock Origin can also prevent WebRTC leaks.</p>
-
-  <h3>Split Tunneling: Controlled Flexibility</h3>
-  <p>Split tunneling lets you designate specific apps or destination IP ranges to route through the VPN while other traffic connects directly. A typical use case: routing your browser and email client through the VPN for privacy while letting a video conferencing app connect directly to reduce latency.</p>
-
-  <p>From a security perspective, split tunneling is a deliberate trade-off. Traffic routed outside the tunnel is unprotected — your ISP can see it, and it reveals your real IP to the destination. For users who understand which traffic they need protected and which they do not, split tunneling is a useful optimization. For users who are uncertain, full-tunnel mode (all traffic through the VPN) is the safer default. A secure VPN should offer split tunneling as an option, not as a default setting.</p>
+  <h3>Split Tunneling</h3>
+  <p>Split tunneling lets you selectively route traffic: some applications through the VPN, others through your direct connection. This is useful when you want to protect sensitive browsing while allowing a video streaming service to use your full unthrottled bandwidth. However, it introduces a risk that is easy to underestimate: any traffic that bypasses the tunnel carries your real IP and is unencrypted beyond your local network. If split tunneling is configured incorrectly — or if an application you assumed would be protected routes outside the tunnel — your privacy expectations will not match reality. For maximum security, use full-tunnel mode. If split tunneling is necessary, audit your configuration carefully and periodically retest with ipleak.net.</p>
 
   <!-- ===== SECTION 5 ===== -->
-  <h2>Logging Policies: What to Watch For</h2>
+  <h2>Logging Policies — What to Watch For</h2>
 
-  <p>Encryption protects your data while it travels across the network. A no-log policy protects your data from the VPN provider itself — and from anyone who can legally compel the provider to hand over data.</p>
+  <p>A VPN's technical security is meaningless if the provider logs your activity and hands it to a third party. Logging policy is arguably the most important non-technical security property of a VPN.</p>
 
-  <h3>What "No Logs" Should Mean</h3>
-  <p>A genuine no-log (or zero-log) policy means the provider does not collect or retain:</p>
+  <h3>What Gets Logged?</h3>
+  <p>VPN providers can log different types of data at different levels of granularity:</p>
+
   <ul>
-    <li>Your browsing history or DNS queries</li>
-    <li>Your real IP address assigned to a session</li>
-    <li>Timestamps of when you connected or disconnected</li>
-    <li>The amount of data transferred per session</li>
-    <li>The VPN server or exit node used</li>
+    <li><strong>Traffic logs:</strong> The actual content of your browsing — sites visited, data transferred, DNS queries. The most privacy-invasive form of logging. A genuine no-logs VPN never retains these.</li>
+    <li><strong>Connection metadata:</strong> IP addresses (yours and the server's), connection timestamps, session duration, and bandwidth used. Many VPNs that claim "no logs" still retain this metadata. It can be enough to correlate your identity with a specific browsing session.</li>
+    <li><strong>Aggregate statistics:</strong> Total bandwidth per server, number of concurrent users. This is operational data that does not identify individuals and is acceptable even in a strict no-logs context.</li>
+    <li><strong>Account data:</strong> Email address, payment information (handled by payment processors), subscription status. All VPNs retain this — it is required to provide the service. The question is whether this data is ever linked to your activity.</li>
   </ul>
 
-  <p>Some providers claim "no logs" while retaining connection metadata — timestamps, session durations, bandwidth used — which can still be used to correlate activity to individuals. Read the actual privacy policy, not the marketing summary. Look for specific language about what is and is not stored, under what circumstances data may be shared with third parties, and what happens in response to law enforcement requests.</p>
+  <h3>Verified vs. Unverified No-Logs Claims</h3>
+  <p>Any VPN can write "no logs" in a privacy policy. The claim is only as credible as the verification behind it. Three forms of verification carry weight:</p>
 
-  <h3>Verified vs. Self-Declared</h3>
-  <p>Self-declared no-log policies are marketing claims. A credible no-log policy is verified in one of two ways:</p>
-  <ul>
-    <li><strong>Independent audit:</strong> A recognized security firm (Cure53, SEC Consult, Deloitte, PwC) examines the provider's infrastructure and confirms that logging does not occur. The audit report should be publicly available. Audits should be repeated periodically — a 2019 audit does not verify 2026 operations.</li>
-    <li><strong>Legal precedent:</strong> The provider has been subject to a court order, government seizure, or law enforcement request and demonstrably had no logs to produce. This is the most definitive verification possible — the legal system has tested the policy and found it genuine.</li>
-  </ul>
+  <ol>
+    <li><strong>Independent security audits:</strong> A recognized security firm (Cure53, SEC Consult, Deloitte, KPMG) reviews the VPN provider's infrastructure, server configuration, and code to confirm that logging is technically impossible given the system design. These audits should be published in full, not summarized.</li>
+    <li><strong>Court-demonstrated no-logs:</strong> Several VPN providers have been subpoenaed by law enforcement and demonstrably had no data to produce. While not something a provider can manufacture, cases where subpoenas returned nothing are the most conclusive evidence of a genuine no-logs architecture.</li>
+    <li><strong>Warrant canaries:</strong> Some providers maintain warrant canaries — statements that are updated to indicate if they have received secret legal process. While imperfect (providers may be compelled not to update them), they add one more transparency layer.</li>
+  </ol>
 
   <h3>Jurisdiction Matters</h3>
-  <p>Where a VPN company is incorporated determines which legal systems can compel data disclosure. VPN providers based in Fourteen Eyes countries (US, UK, Canada, Australia, New Zealand, and allied nations) are subject to intelligence-sharing agreements and national security letters that may not notify the target or allow legal challenge. Providers in jurisdictions outside these alliances — Malta (EU), British Virgin Islands, Switzerland, Panama, Romania — face higher bars for compelled disclosure and no mandatory participation in mass surveillance programs.</p>
-
-  <p>Vizoguard is operated by PRIME360 HOLDING LTD under Maltese jurisdiction, within the EU's GDPR framework but outside the Fourteen Eyes alliance. Malta does not participate in signals intelligence sharing agreements.</p>
+  <p>Where a VPN provider is incorporated determines which legal processes can compel data disclosure. Providers in Fourteen Eyes countries (US, UK, Canada, Australia, New Zealand, and nine European allies) can be subject to intelligence-sharing arrangements and gag orders that prohibit notifying users of requests. Providers in countries without data-sharing agreements with major intelligence alliances — Malta, Switzerland, Panama, the British Virgin Islands — face a higher legal threshold for compelled disclosure. Vizoguard operates under PRIME360 HOLDING LTD, registered in Malta.</p>
 
   <!-- ===== SECTION 6 ===== -->
   <h2>How Hackers Exploit Insecure VPNs</h2>
 
-  <p>Understanding attack vectors helps clarify why each security layer matters. These are documented, real-world techniques used against insecure VPN implementations:</p>
+  <p>Understanding how attackers target VPNs helps clarify why each security feature matters. Here are the most common attack vectors against insecure VPN implementations:</p>
 
-  <ul class="threat-list">
+  <ul class="risk-list">
     <li>
-      <div class="threat-num">1</div>
-      <div class="threat-content">
-        <strong>VPN Downgrade Attacks</strong>
-        <span>Some VPN clients attempt to negotiate a connection using the strongest available protocol and silently fall back to weaker ones if the server is unresponsive or the network blocks certain ports. An attacker who controls the network can manipulate this negotiation to force the client into using a weaker cipher or deprecated protocol. Secure VPN clients disallow fallback to insecure protocols — if WireGuard is selected, it connects or fails, never silently downgrades to PPTP.</span>
+      <div class="risk-num">1</div>
+      <div class="risk-content">
+        <strong>Man-in-the-Middle via Weak Key Exchange</strong>
+        <span>If a VPN uses static keys or weak Diffie-Hellman parameters (DH-768 or DH-1024), an attacker with sufficient compute can recover the session key and decrypt traffic. Modern VPNs use ephemeral keys with perfect forward secrecy (PFS) — each session uses a unique key that is discarded after use, so compromising one session does not compromise past or future sessions.</span>
       </div>
     </li>
     <li>
-      <div class="threat-num">2</div>
-      <div class="threat-content">
+      <div class="risk-num">2</div>
+      <div class="risk-content">
+        <strong>Protocol Downgrade Attacks</strong>
+        <span>VPNs that allow negotiation of cipher suites can be forced by an attacker to agree on a weaker cipher. This is why WireGuard's fixed cryptographic suite is a security advantage — there is nothing to downgrade to. OpenVPN requires careful configuration to disable weak cipher options explicitly.</span>
+      </div>
+    </li>
+    <li>
+      <div class="risk-num">3</div>
+      <div class="risk-content">
+        <strong>DNS Hijacking</strong>
+        <span>On compromised local networks (public Wi-Fi, malicious routers), attackers can redirect DNS queries to a controlled resolver that returns false responses — sending you to phishing sites instead of legitimate ones. A VPN that does not force all DNS traffic through the tunnel is vulnerable even when the encryption is otherwise intact.</span>
+      </div>
+    </li>
+    <li>
+      <div class="risk-num">4</div>
+      <div class="risk-content">
+        <strong>VPN Credential Theft and Account Takeover</strong>
+        <span>Insecure VPN implementations that store credentials in plaintext configuration files or transmit them without proper authentication can be compromised at the client level. Attackers who obtain VPN credentials can impersonate users, route traffic through their access to monitor activity, or use the VPN account to mask their own malicious traffic.</span>
+      </div>
+    </li>
+    <li>
+      <div class="risk-num">5</div>
+      <div class="risk-content">
+        <strong>Exploiting Unpatched VPN Server Vulnerabilities</strong>
+        <span>In 2019–2020, critical vulnerabilities in enterprise VPN servers from Pulse Secure, Citrix, and Fortinet were exploited by nation-state attackers to extract credentials and gain persistent network access. Consumer VPNs face the same risk if providers do not patch server software promptly. Watchtower-style auto-update containers (which Vizoguard uses for its Outline/Shadowbox deployment) reduce this risk by ensuring patches are applied automatically.</span>
+      </div>
+    </li>
+    <li>
+      <div class="risk-num">6</div>
+      <div class="risk-content">
         <strong>Traffic Correlation Attacks</strong>
-        <span>Even with encryption, an attacker who can observe both your outgoing connection (to the VPN server) and the VPN server's outgoing traffic (to the destination) can correlate packet timing and volume to identify which sites you are visiting — even without decrypting anything. This attack requires nation-state-level resources and access to multiple network observation points. For most users, it is not a practical threat, but VPNs that use traffic padding and timing randomization provide better resistance.</span>
+        <span>A sophisticated adversary who can observe both ends of a VPN connection — your ISP traffic and the destination server — can correlate timing and volume patterns to identify which users are communicating with which servers, even without breaking encryption. This is a known limitation of all VPNs. For most threat models, the adversary capable of this attack is a nation-state, not a typical hacker.</span>
       </div>
     </li>
     <li>
-      <div class="threat-num">3</div>
-      <div class="threat-content">
-        <strong>DNS Hijacking Through Insecure Resolvers</strong>
-        <span>If a VPN leaks DNS outside the tunnel, or uses an unencrypted resolver, an attacker on the local network can respond to DNS queries with falsified answers — redirecting you to a malicious server while the address bar shows the legitimate domain name. This is the foundation of many phishing attacks on public Wi-Fi. DNS over TLS within the VPN tunnel prevents this attack entirely.</span>
-      </div>
-    </li>
-    <li>
-      <div class="threat-num">4</div>
-      <div class="threat-content">
-        <strong>Fake VPN Apps and Man-in-the-Middle Proxies</strong>
-        <span>Malicious VPN apps — particularly free VPNs distributed outside official app stores — sometimes function as man-in-the-middle proxies that intercept and inspect traffic rather than encrypting it. The app shows a "connected" UI state while routing traffic through an attacker-controlled server. A 2020 study found over 38% of free VPN apps contained malware or malicious code. Only install VPN apps from official app stores and verified providers. See our guide to <a href="/blog/what-is-malware" style="color:var(--teal)">what malware is and how it spreads</a>.</span>
-      </div>
-    </li>
-    <li>
-      <div class="threat-num">5</div>
-      <div class="threat-content">
-        <strong>Session Hijacking After VPN Drop</strong>
-        <span>Without a kill switch, a momentary VPN disconnection exposes your real IP. If you are logged into a site that uses IP-based session validation (less common now but still used by some services), this IP change can either reveal your real location or allow an attacker who has pre-positioned themselves on your network to inject traffic into an active session during the exposure window. The kill switch eliminates this window entirely.</span>
-      </div>
-    </li>
-    <li>
-      <div class="threat-num">6</div>
-      <div class="threat-content">
-        <strong>Expired Certificate and HSTS Stripping</strong>
-        <span>Some insecure VPN implementations perform their own SSL inspection, which requires installing a custom root certificate. An attacker who compromises this certificate chain — or a poorly implemented VPN that fails to validate server certificates correctly — can present valid-looking HTTPS connections to sites that are actually MITM intercepted. Never install a VPN that asks you to trust a custom root CA certificate unless you fully understand the implications.</span>
+      <div class="risk-num">7</div>
+      <div class="risk-content">
+        <strong>Malware Delivered Through Fake VPN Clients</strong>
+        <span>Trojanized VPN applications distributed through unofficial channels are a significant attack vector. A fake VPN client can appear fully functional while logging all traffic, exfiltrating credentials, or establishing persistent remote access. Always download VPN software from the provider's official website. For Vizoguard, the canonical download is at <a href="/download" style="color:var(--teal)">vizoguard.com/download</a>. To understand broader malware risks, see our guide to <a href="/blog/what-is-malware" style="color:var(--teal)">what malware is and how it spreads</a>.</span>
       </div>
     </li>
   </ul>
@@ -582,49 +564,27 @@
   <!-- ===== SECTION 7 ===== -->
   <h2>Vizoguard Security Architecture: AI Threat Detection + VPN</h2>
 
-  <p>Most VPNs operate as pure network privacy tools: they encrypt your traffic and hide your IP address, but they take no position on the security of the traffic itself. A VPN that encrypts malware traffic encrypts it equally well as legitimate traffic. Encryption is not the same as security — it is a prerequisite for it.</p>
+  <p>Standard VPNs provide one security layer: encryption of the tunnel. Vizoguard is designed around the understanding that encryption alone does not make you safe — it only ensures that the data passing through the tunnel cannot be read in transit. Threats that originate inside your connection (malware that already runs on your device), that arrive through encrypted HTTPS (phishing pages, malicious downloads), or that manipulate DNS before the tunnel is established all pass through a standard VPN completely unimpeded.</p>
 
-  <p>Vizoguard's architecture extends beyond standard VPN functionality with a layered security approach:</p>
+  <p>Vizoguard Pro adds a second security layer: AI-powered threat detection that operates in parallel with the VPN tunnel. Here is how the architecture works:</p>
 
-  <ul class="security-list">
-    <li>
-      <div class="security-num">1</div>
-      <div class="security-content">
-        <strong>Shadowsocks Transport with AES-256-GCM</strong>
-        <span>Vizoguard uses Shadowsocks as its underlying transport protocol, providing AES-256-GCM encryption combined with traffic obfuscation that makes VPN usage indistinguishable from ordinary HTTPS. This delivers censorship resistance in markets where standard VPN protocols are actively blocked — including countries in the Middle East, Southeast Asia, and Central Asia where many Vizoguard users are located.</span>
-      </div>
-    </li>
-    <li>
-      <div class="security-num">2</div>
-      <div class="security-content">
-        <strong>Zero-Log Architecture</strong>
-        <span>Vizoguard's servers are architected to not log browsing activity, connection timestamps, or IP-to-session mappings. Operating under Maltese jurisdiction (PRIME360 HOLDING LTD), outside the Fourteen Eyes intelligence-sharing alliance, the service has no legal obligation to participate in mass surveillance programs. No logs means no data to produce regardless of the legal instrument applied.</span>
-      </div>
-    </li>
-    <li>
-      <div class="security-num">3</div>
-      <div class="security-content">
-        <strong>Network-Level Kill Switch</strong>
-        <span>Vizoguard's desktop client implements a kernel-level kill switch using platform-native firewall rules (iptables on Linux, Windows Filtering Platform on Windows, pf on macOS). Traffic is blocked at the firewall level before reaching the network stack, eliminating the race condition that application-level kill switches face during VPN reconnection.</span>
-      </div>
-    </li>
-    <li>
-      <div class="security-num">4</div>
-      <div class="security-content">
-        <strong>DNS Leak Prevention with Encrypted Resolution</strong>
-        <span>All DNS queries are routed exclusively through Vizoguard's encrypted resolvers within the tunnel. DNS over TLS is applied within the tunnel for an additional encryption layer. The client blocks all external DNS resolution via firewall rules while connected, preventing OS-level DNS fallback. Users can verify this independently at dnsleaktest.com.</span>
-      </div>
-    </li>
-    <li>
-      <div class="security-num">5</div>
-      <div class="security-content">
-        <strong>AI Threat Detection (Pro Plan)</strong>
-        <span>Vizoguard Pro adds real-time AI-powered threat analysis to the VPN layer. Outbound connection attempts are analyzed against continuously updated threat intelligence feeds covering malware command-and-control servers, phishing domains, cryptojacking endpoints, and surveillance infrastructure. Suspicious connections are blocked before reaching the tunnel, and users receive alerts with context about the blocked threat. This transforms the VPN from a passive privacy tool into an active security layer.</span>
-      </div>
-    </li>
+  <h3>Shadowsocks-Based Transport</h3>
+  <p>Vizoguard's VPN layer uses Shadowsocks, running on Outline's open-source server implementation. This gives the connection two properties that standard VPN protocols lack: resistance to deep packet inspection (DPI) — the connection looks like normal HTTPS traffic to network observers — and resilience in censored network environments where WireGuard or OpenVPN would be blocked. The Outline server (shadowbox) is deployed in a Docker container with auto-update via Watchtower, ensuring cryptographic components and server software receive patches automatically.</p>
+
+  <h3>AI Threat Detection</h3>
+  <p>Vizoguard Pro's threat detection layer analyzes network connection metadata in real time — not the content of encrypted connections (which would violate privacy), but the behavioral signatures of those connections. Connections to known malware command-and-control (C2) infrastructure, DNS resolution patterns associated with domain generation algorithms (DGA), and traffic volume anomalies consistent with data exfiltration are flagged and blocked before they complete. This is the same class of behavioral analysis used by enterprise security information and event management (SIEM) systems, applied at the individual user level.</p>
+
+  <h3>What This Means in Practice</h3>
+  <p>For a Vizoguard Pro user on a compromised public Wi-Fi network:</p>
+  <ul>
+    <li>The Shadowsocks tunnel encrypts all traffic, preventing passive eavesdropping.</li>
+    <li>DNS queries are routed through the VPN's resolvers, preventing DNS hijacking and ISP-level DNS logging.</li>
+    <li>The system-level kill switch prevents IP exposure if the tunnel drops.</li>
+    <li>If malware on the device attempts to contact a C2 server, the AI threat detection layer identifies the behavioral signature and blocks the connection before data leaves the device.</li>
+    <li>If the user lands on a phishing page served over HTTPS, the connection metadata is analyzed against threat intelligence databases and the connection is blocked if the domain matches known phishing infrastructure.</li>
   </ul>
 
-  <p>For a detailed comparison of Vizoguard's feature set against a major competitor, see our <a href="/compare/vizoguard-vs-nordvpn" style="color:var(--teal)">Vizoguard vs NordVPN comparison</a>. For questions about privacy policy and data handling, visit our <a href="/vpn-for-privacy" style="color:var(--teal)">VPN privacy page</a> or review our <a href="/pricing" style="color:var(--teal)">plan comparison</a>.</p>
+  <p>This is a materially different security posture from a VPN that encrypts the tunnel and stops there. For a detailed comparison on specific security dimensions, see how <a href="/compare/vizoguard-vs-nordvpn" style="color:var(--teal)">Vizoguard compares to NordVPN</a>. The risks of connecting without this level of protection are explored in our guide to <a href="/blog/public-wifi-security" style="color:var(--teal)">public Wi-Fi security</a>.</p>
 
   <div class="cta-row">
     <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'secure-vpn',plan:'pro'})">Get Pro — $99.99/yr</a>
@@ -637,72 +597,72 @@
   <div class="faq">
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">What encryption does a secure VPN use?</button>
+      <button class="faq-question" aria-expanded="false">What does a secure VPN actually do?</button>
       <div class="faq-answer" role="region">
-        <p>A secure VPN uses AES-256 encryption for its data channel — the same standard used by governments, militaries, and financial institutions worldwide. AES-256 has never been publicly cracked and, at current computing power, would take longer than the age of the universe to brute-force. Modern VPNs also use ChaCha20 as an alternative cipher, particularly on mobile devices where it is faster and equally secure. The cipher alone is not enough: the key exchange and authentication layers also matter. Secure VPNs use Perfect Forward Secrecy (PFS), generating unique session keys so that compromising one session does not expose past or future traffic.</p>
+        <p>A secure VPN encrypts all traffic between your device and a VPN server using a strong cipher — typically AES-256 or ChaCha20 — so that anyone intercepting the connection sees only unreadable ciphertext. It also replaces your real IP address with the server's IP, preventing websites, advertisers, and ISPs from tracking your location. A truly secure VPN additionally routes DNS queries through its own encrypted resolvers, includes a kill switch to block traffic if the tunnel drops, and maintains a verified no-logs policy so there is no record of your activity even if the provider is subpoenaed.</p>
       </div>
     </div>
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">Is WireGuard more secure than OpenVPN?</button>
+      <button class="faq-question" aria-expanded="false">Is AES-256 encryption unbreakable?</button>
       <div class="faq-answer" role="region">
-        <p>WireGuard and OpenVPN are both considered secure protocols, but they have different design philosophies. WireGuard has a significantly smaller codebase — roughly 4,000 lines versus OpenVPN's 100,000+ — which means a smaller attack surface and easier security auditing. WireGuard uses only modern, well-vetted cryptographic primitives (ChaCha20, Poly1305, Curve25519) and has been formally verified. OpenVPN is older and more configurable, which is both a strength and a weakness: misconfiguration can introduce vulnerabilities. For most users, WireGuard offers equivalent or better security with substantially better performance. OpenVPN remains a solid choice where WireGuard is not available.</p>
+        <p>For all practical purposes, yes. AES-256 has a key space of 2<sup>256</sup> — approximately 1.15 &times; 10<sup>77</sup> possible keys. Even a computer performing one billion operations per second would need vastly longer than the age of the universe to brute-force a single AES-256 key. No known attack breaks AES-256 without access to the key itself. Side-channel attacks targeting implementation flaws exist in theory, which is why VPN providers combine AES-256 with secure key exchange protocols like Diffie-Hellman to protect the key in transit.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is the most secure VPN protocol?</button>
+      <div class="faq-answer" role="region">
+        <p>WireGuard is widely regarded as the most secure modern VPN protocol. Its codebase is approximately 4,000 lines — a fraction of OpenVPN's 600,000+ lines — making it easier to audit for vulnerabilities. WireGuard uses state-of-the-art cryptography (ChaCha20, Curve25519, BLAKE2) and has been independently reviewed by multiple security researchers. OpenVPN remains secure and battle-tested for compatibility. IKEv2/IPSec is fast and stable on mobile. Shadowsocks is not a VPN protocol per se but a SOCKS5 proxy with encryption that excels at bypassing censorship. Avoid PPTP and L2TP without IPSec — both are considered insecure.</p>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">What is a VPN kill switch and why does it matter?</button>
       <div class="faq-answer" role="region">
-        <p>A VPN kill switch is a security feature that cuts your device's internet connection if the VPN tunnel drops unexpectedly. Without a kill switch, a VPN disconnection — even momentary, due to a server reboot or network change — exposes your real IP address and unencrypted traffic to your ISP and any network observer. The kill switch acts as a fail-safe: traffic either flows through the encrypted VPN tunnel or does not flow at all. A good kill switch operates at the network driver level (not just the application level) so it catches drops that happen before the VPN client can react. It should be enabled by default, not buried in advanced settings.</p>
+        <p>A kill switch is a failsafe that immediately cuts your internet connection if the VPN tunnel drops unexpectedly. Without one, your device falls back to your regular ISP connection the moment the VPN disconnects — potentially exposing your real IP address mid-session. This matters most when torrenting, working with sensitive data, or using public Wi-Fi. A properly implemented kill switch operates at the network driver or firewall level, blocking all traffic before the OS can route it outside the tunnel. System-level kill switches (like Vizoguard's) are more reliable than application-level implementations.</p>
       </div>
     </div>
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">What is a no-log VPN policy?</button>
+      <button class="faq-question" aria-expanded="false">What is a no-logs VPN policy?</button>
       <div class="faq-answer" role="region">
-        <p>A no-log VPN policy (also called a zero-log policy) means the VPN provider does not store records of your browsing activity, connection timestamps, IP addresses, or DNS queries. If the provider holds no logs, they have nothing to hand over in response to government requests, court orders, or data breaches. The critical word is 'verified': self-declared no-log policies are marketing claims. A trustworthy no-log policy is backed by an independent audit from a recognized security firm (such as Cure53 or SEC Consult), or demonstrated in practice through a legal case where the provider had no data to produce. Always check whether the audit report is publicly available and recent.</p>
+        <p>A no-logs (zero-log) policy means the VPN provider does not record your browsing activity, IP addresses, connection timestamps, DNS queries, or session duration. Even if compelled by law enforcement or subpoenaed by a court, there is nothing to hand over. The key word is "verified" — a self-declared no-logs policy is a marketing claim. Verified no-logs policies are backed by independent audits from recognized security firms (Cure53, SEC Consult, Deloitte) or proven in practice when a provider demonstrated during a law enforcement request that no user data existed.</p>
       </div>
     </div>
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">What is DNS leak protection in a VPN?</button>
+      <button class="faq-question" aria-expanded="false">Does a VPN protect against malware?</button>
       <div class="faq-answer" role="region">
-        <p>DNS leak protection ensures that all your DNS queries — the requests your device makes to resolve domain names into IP addresses — travel through the VPN's encrypted tunnel rather than leaking to your ISP's resolver in plaintext. Without DNS leak protection, even with a VPN active, your ISP can see every domain you visit. DNS leaks are common in poorly implemented VPNs, especially on Windows where the OS may route DNS outside the tunnel. A secure VPN routes DNS through its own private resolvers, applies DNS over TLS or DNS over HTTPS, and includes leak detection tests you can verify at dnsleaktest.com.</p>
+        <p>A standard VPN alone does not protect against malware. A VPN encrypts your connection and hides your IP, but it does not scan downloads, block malicious files, or prevent you from visiting phishing sites — unless the VPN includes additional security features. Vizoguard Pro adds AI-powered threat detection that analyzes network behavior in real time, blocking connections to known malware distribution networks and flagging suspicious traffic patterns. This combination of VPN tunneling plus active threat monitoring is significantly more protective than a VPN alone.</p>
       </div>
     </div>
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">Is Shadowsocks a VPN protocol?</button>
+      <button class="faq-question" aria-expanded="false">How can I check if my VPN is actually secure?</button>
       <div class="faq-answer" role="region">
-        <p>Shadowsocks is not a traditional VPN protocol — it is a proxy protocol designed specifically to resist deep packet inspection (DPI) and circumvent censorship in restrictive network environments like those in China, Iran, and Russia. Unlike WireGuard or OpenVPN, which produce identifiable VPN traffic signatures, Shadowsocks makes your traffic look like ordinary HTTPS, making it extremely difficult for network-level censors to detect and block. When combined with strong encryption (AES-256-GCM or ChaCha20-Poly1305), Shadowsocks provides high security and excellent obfuscation. Vizoguard uses Shadowsocks as its underlying VPN transport to deliver both privacy and censorship resistance.</p>
+        <p>Four tests verify VPN security in practice. First, test for DNS leaks at dnsleaktest.com — all DNS queries should resolve through the VPN's servers, not your ISP. Second, test for IP leaks at ipleak.net — your real IP address should not appear. Third, check for WebRTC leaks in your browser (many browsers expose real IPs via WebRTC even when a VPN is active). Fourth, verify the VPN's cipher and protocol using a tool like Wireshark — traffic should show as encrypted ciphertext. Run these tests both while connected and immediately after a simulated VPN drop to confirm the kill switch engages.</p>
       </div>
     </div>
 
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">How can I verify my VPN is actually working?</button>
+      <button class="faq-question" aria-expanded="false">Is WireGuard safer than OpenVPN?</button>
       <div class="faq-answer" role="region">
-        <p>Verify your VPN is working with three checks. First, visit whatismyipaddress.com before and after connecting — your IP should change to the VPN server's IP. Second, run a DNS leak test at dnsleaktest.com with the VPN active — all DNS servers shown should belong to the VPN provider, not your ISP. Third, check for WebRTC leaks using a browser-based WebRTC leak test — your real local IP should not be visible. If any of these tests reveal your real IP or ISP's DNS servers while the VPN is connected, your VPN has a misconfiguration or your provider's infrastructure has a flaw.</p>
+        <p>WireGuard and OpenVPN are both considered secure, but they have different strengths. WireGuard's smaller codebase (approximately 4,000 lines vs. OpenVPN's 600,000+) reduces the attack surface significantly — fewer lines of code means fewer potential vulnerabilities. WireGuard also uses more modern cryptographic primitives and establishes connections faster. OpenVPN's advantage is its longer track record and broader compatibility with older hardware and operating systems. For most users in 2026, WireGuard is the better default choice for both security and performance.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Can my ISP see my traffic when I use a VPN?</button>
+      <div class="faq-answer" role="region">
+        <p>When using a properly configured secure VPN, your ISP can see that you are connected to a VPN server and roughly how much data you are transferring — but cannot see the content of your traffic, the websites you visit, or your DNS queries. The tunnel between your device and the VPN server is encrypted end-to-end. Your ISP sees only encrypted packets flowing to an IP address they can identify as a VPN endpoint. If you use obfuscation protocols like Shadowsocks, even the VPN fingerprint itself becomes difficult to detect.</p>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">What is split tunneling in a VPN?</button>
       <div class="faq-answer" role="region">
-        <p>Split tunneling lets you choose which apps or destinations route through the VPN tunnel and which connect directly to the internet. For example, you could route your browser and email through the VPN for privacy while letting your video calls or local network traffic connect directly to avoid latency. Split tunneling is useful for performance but introduces a security trade-off: any traffic outside the tunnel is unprotected and your ISP can see it. For maximum security, full-tunnel mode (all traffic through the VPN) is preferable. Split tunneling is most appropriate when you understand exactly which traffic you need to protect.</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">Does using a VPN protect me from hackers on public Wi-Fi?</button>
-      <div class="faq-answer" role="region">
-        <p>Yes — a secure VPN provides strong protection against the most common attacks on public Wi-Fi, including man-in-the-middle attacks, ARP spoofing, and passive eavesdropping on unencrypted traffic. When you connect through a VPN on a public network, all your traffic is encrypted before it leaves your device, so even if an attacker intercepts it at the router level, they see only encrypted ciphertext. However, a VPN does not protect against all threats: phishing attacks, malware already on your device, or attacks against HTTPS-encrypted sites (which are already protected) are outside the VPN's scope. For public Wi-Fi, a VPN combined with keeping software updated provides comprehensive protection.</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">What makes Vizoguard a secure VPN?</button>
-      <div class="faq-answer" role="region">
-        <p>Vizoguard combines a strict zero-log architecture with AES-256 encryption, Shadowsocks obfuscation, a network-level kill switch, DNS leak prevention, and AI-powered threat detection (Pro plan). The Shadowsocks transport makes VPN traffic indistinguishable from HTTPS, bypassing censorship and DPI-based blocking. The zero-log policy means Vizoguard has no browsing data to produce in response to any request. The AI threat detection layer (Pro) identifies malware command-and-control traffic, phishing domains, and anomalous connection patterns in real time — a capability absent from most VPN-only services. Vizoguard is operated by PRIME360 HOLDING LTD under Malta jurisdiction, outside the Fourteen Eyes surveillance alliance.</p>
+        <p>Split tunneling lets you choose which applications or websites route through the VPN tunnel and which use your regular internet connection. For example, you might route your browser through the VPN for privacy while letting a streaming service use your direct connection for speed. Split tunneling is useful for balancing privacy with performance, but it introduces a risk: traffic routed outside the tunnel is unprotected and can expose your real IP. For maximum security, full tunnel mode (all traffic through the VPN) is preferable. If you use split tunneling, be precise about which apps bypass the tunnel.</p>
       </div>
     </div>
 
@@ -717,11 +677,11 @@
   <div style="margin-top:3em; padding-top:2em; border-top:1px solid var(--border,#2a2a3e);">
     <h3>Related</h3>
     <ul style="list-style:none; padding:0;">
-      <li style="margin-bottom:0.5em;"><a href="/vpn-for-privacy" style="color:var(--teal);">VPN and Online Privacy — What You Need to Know</a></li>
-      <li style="margin-bottom:0.5em;"><a href="/blog/public-wifi-security" style="color:var(--teal);">Public Wi-Fi Security Guide</a></li>
-      <li style="margin-bottom:0.5em;"><a href="/blog/what-is-malware" style="color:var(--teal);">What Is Malware? Types, Risks &amp; How to Stay Protected</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/vpn-for-privacy" style="color:var(--teal);">VPN for Privacy — What Your VPN Does (and Doesn't) Protect</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/blog/public-wifi-security" style="color:var(--teal);">Public Wi-Fi Security: How Hackers Attack and How to Stay Safe</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/blog/what-is-malware" style="color:var(--teal);">What Is Malware? Types, Attack Vectors, and How VPNs Help</a></li>
       <li style="margin-bottom:0.5em;"><a href="/pricing" style="color:var(--teal);">Vizoguard Pricing &amp; Plans</a></li>
-      <li style="margin-bottom:0.5em;"><a href="/compare/vizoguard-vs-nordvpn" style="color:var(--teal);">Vizoguard vs NordVPN — Full Comparison</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/compare/vizoguard-vs-nordvpn" style="color:var(--teal);">Vizoguard vs NordVPN — Full Security Comparison</a></li>
     </ul>
   </div>
 
