@@ -66,6 +66,97 @@
   }
   </script>
 
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "tr",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Güvenli bir VPN gerçekte ne yapar?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Güvenli bir VPN, cihazınız ile bir VPN sunucusu arasındaki tüm trafiği güçlü bir şifre — genellikle AES-256 veya ChaCha20 — kullanarak şifreler. Gerçek IP adresinizi sunucunun IP'siyle değiştirir. Gerçekten güvenli bir VPN ayrıca DNS sorgularını kendi şifreli çözümleyicileri üzerinden yönlendirir, kill switch içerir ve doğrulanmış kayıt tutmama politikası sürdürür."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "AES-256 şifrelemesi kırılmaz mı?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tüm pratik amaçlar için, evet. AES-256'nın anahtar uzayı 2^256'dır — yaklaşık 1,15 × 10^77 olası anahtar. Saniyede milyar işlem yapan bir bilgisayar bile tek bir AES-256 anahtarını kaba kuvvetle kırmak için evrenin yaşından çok daha fazla süreye ihtiyaç duyar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "En güvenli VPN protokolü hangisidir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "WireGuard, en güvenli modern VPN protokolü olarak yaygın biçimde kabul görmektedir. Kod tabanı yaklaşık 4.000 satırdır — OpenVPN'in 600.000+ satırının küçük bir kısmı. WireGuard son teknoloji kriptografi (ChaCha20, Curve25519, BLAKE2) kullanır. PPTP ve IPSec olmadan L2TP'den kaçının — her ikisi de güvensiz kabul edilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN kill switch nedir ve neden önemlidir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Kill switch, VPN tüneli beklenmedik şekilde düşerse internet bağlantınızı anında kesen bir güvenlik mekanizmasıdır. Olmadan, cihazınız VPN bağlantısı kesildiği anda normal ISP bağlantınıza geri döner — gerçek IP adresinizi ifşa edebilir. Sistem düzeyinde kill switch'ler (Vizoguard'ınki gibi) uygulama düzeyindeki uygulamalardan daha güvenilirdir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN kayıt tutmama politikası nedir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Kayıt tutmama (sıfır kayıt) politikası, VPN sağlayıcısının tarama etkinliğinizi, IP adreslerinizi, bağlantı zaman damgalarını, DNS sorgularını veya oturum süresini kaydetmediği anlamına gelir. Doğrulanmış kayıt tutmama politikaları, tanınmış güvenlik firmalarının (Cure53, SEC Consult, Deloitte) bağımsız denetimleriyle desteklenir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN kötü amaçlı yazılımlara karşı korur mu?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tek başına standart bir VPN kötü amaçlı yazılımlara karşı korumaz. Vizoguard Pro, bilinen kötü amaçlı yazılım dağıtım ağlarına bağlantıları engelleyen ve şüpheli trafik modellerini işaretleyen gerçek zamanlı ağ davranışı analizi yapan yapay zeka destekli tehdit tespiti ekler."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN'imin gerçekten güvenli olduğunu nasıl kontrol edebilirim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dört test, VPN güvenliğini pratikte doğrular. İlk olarak dnsleaktest.com'da DNS sızıntılarını test edin. İkinci olarak ipleak.net'te IP sızıntılarını test edin. Üçüncü olarak tarayıcınızda WebRTC sızıntılarını kontrol edin. Dördüncü olarak Wireshark gibi bir araç kullanarak VPN'in şifresini ve protokolünü doğrulayın."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "WireGuard, OpenVPN'den daha güvenli midir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Her ikisi de güvenli kabul edilir, ancak farklı güçlü yönleri vardır. WireGuard'ın daha küçük kod tabanı (yaklaşık 4.000 satır - OpenVPN'in 600.000+ satırına karşılık) saldırı yüzeyini önemli ölçüde azaltır. 2026'daki çoğu kullanıcı için WireGuard, hem güvenlik hem de performans için daha iyi varsayılan seçimdir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN kullanırken ISP'im trafiğimi görebilir mi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Düzgün yapılandırılmış güvenli bir VPN kullanırken, ISP'niz bir VPN sunucusuna bağlı olduğunuzu ve kabaca ne kadar veri aktardığınızı görebilir — ancak trafik içeriğini, ziyaret ettiğiniz siteleri veya DNS sorgularınızı göremez. Shadowsocks gibi gizleme protokolleri kullanırsanız, VPN parmak izi bile tespit edilmesi zor hale gelir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VPN'de bölünmüş tünelleme nedir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bölünmüş tünelleme, hangi uygulamaların veya sitelerin VPN tüneli üzerinden, hangilerinin normal internet bağlantınızı kullanacağını seçmenizi sağlar. Maksimum güvenlik için tam tünel modu (tüm trafik VPN üzerinden) tercih edilir."
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Structured Data: BreadcrumbList -->
   <script type="application/ld+json">
   {

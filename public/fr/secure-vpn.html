@@ -66,6 +66,97 @@
   }
   </script>
 
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "fr",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Que fait réellement un VPN sécurisé ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un VPN sécurisé chiffre tout le trafic entre votre appareil et un serveur VPN avec un cipher fort — typiquement AES-256 ou ChaCha20. Il remplace également votre adresse IP réelle par celle du serveur. Un VPN vraiment sécurisé route aussi les requêtes DNS via ses propres résolveurs chiffrés, inclut un kill switch et maintient une politique no-logs vérifiée."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le chiffrement AES-256 est-il incassable ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pour toutes fins pratiques, oui. AES-256 a un espace de clés de 2^256 — environ 1,15 × 10^77 clés possibles. Même un ordinateur effectuant un milliard d'opérations par seconde nécessiterait bien plus longtemps que l'âge de l'univers pour casser une seule clé AES-256 par force brute."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quel est le protocole VPN le plus sécurisé ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "WireGuard est largement considéré comme le protocole VPN moderne le plus sécurisé. Son codebase est d'environ 4 000 lignes — une fraction des 600 000+ lignes d'OpenVPN. WireGuard utilise une cryptographie de pointe (ChaCha20, Curve25519, BLAKE2). Évitez PPTP et L2TP sans IPSec — les deux sont considérés comme non sécurisés."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce qu'un kill switch VPN et pourquoi est-il important ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un kill switch est un dispositif de sécurité qui coupe immédiatement votre connexion internet si le tunnel VPN tombe de manière inattendue. Sans lui, votre appareil bascule vers votre connexion FAI habituelle dès que le VPN se déconnecte. Les kill switches au niveau système (comme celui de Vizoguard) sont plus fiables que les implémentations au niveau application."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce qu'une politique no-logs VPN ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Une politique no-logs (zéro-log) signifie que le fournisseur VPN n'enregistre pas votre activité de navigation, vos adresses IP, les horodatages de connexion, les requêtes DNS ou la durée de session. Les politiques no-logs vérifiées sont soutenues par des audits indépendants de firmes de sécurité reconnues (Cure53, SEC Consult, Deloitte)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Un VPN protège-t-il contre les malwares ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un VPN standard seul ne protège pas contre les malwares. Vizoguard Pro ajoute une détection des menaces par IA qui analyse le comportement réseau en temps réel, bloquant les connexions vers des réseaux de distribution de malwares connus."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment vérifier que mon VPN est vraiment sécurisé ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Quatre tests vérifient la sécurité VPN en pratique. Premièrement, testez les fuites DNS sur dnsleaktest.com. Deuxièmement, testez les fuites IP sur ipleak.net. Troisièmement, vérifiez les fuites WebRTC dans votre navigateur. Quatrièmement, vérifiez le cipher et le protocole avec Wireshark. Exécutez ces tests connecté et après une déconnexion simulée."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "WireGuard est-il plus sûr qu'OpenVPN ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Les deux sont considérés comme sécurisés, mais ont des forces différentes. Le codebase plus petit de WireGuard (environ 4 000 lignes vs 600 000+ pour OpenVPN) réduit significativement la surface d'attaque. Pour la plupart des utilisateurs en 2026, WireGuard est le meilleur choix par défaut pour la sécurité et les performances."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Mon FAI peut-il voir mon trafic quand j'utilise un VPN ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Avec un VPN sécurisé correctement configuré, votre FAI peut voir que vous êtes connecté à un serveur VPN et approximativement la quantité de données transférées — mais ne peut pas voir le contenu de votre trafic, les sites que vous visitez, ou vos requêtes DNS. Si vous utilisez des protocoles d'obfuscation comme Shadowsocks, même l'empreinte VPN elle-même devient difficile à détecter."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce que le split tunneling dans un VPN ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le split tunneling vous permet de choisir quelles applications ou sites passent par le tunnel VPN et lesquels utilisent votre connexion directe. Pour une sécurité maximale, le mode tunnel complet (tout le trafic via le VPN) est préférable."
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Structured Data: BreadcrumbList -->
   <script type="application/ld+json">
   {

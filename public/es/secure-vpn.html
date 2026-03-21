@@ -66,6 +66,97 @@
   }
   </script>
 
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "es",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué hace realmente una VPN segura?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Una VPN segura cifra todo el tráfico entre tu dispositivo y un servidor VPN usando un cipher fuerte — típicamente AES-256 o ChaCha20. También reemplaza tu dirección IP real con la del servidor. Una VPN verdaderamente segura además enruta las consultas DNS a través de sus propios resolutores cifrados, incluye un kill switch, y mantiene una política no-logs verificada."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿El cifrado AES-256 es inquebrantable?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Para todos los efectos prácticos, sí. AES-256 tiene un espacio de claves de 2^256 — aproximadamente 1,15 × 10^77 claves posibles. Incluso un ordenador realizando mil millones de operaciones por segundo necesitaría mucho más tiempo que la edad del universo para romper una sola clave AES-256 por fuerza bruta."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuál es el protocolo VPN más seguro?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "WireGuard es ampliamente considerado el protocolo VPN moderno más seguro. Su codebase es de aproximadamente 4.000 líneas — una fracción de las 600.000+ líneas de OpenVPN. WireGuard usa criptografía de vanguardia (ChaCha20, Curve25519, BLAKE2). Evita PPTP y L2TP sin IPSec — ambos se consideran inseguros."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es un kill switch VPN y por qué importa?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un kill switch es un mecanismo de seguridad que corta inmediatamente tu conexión a internet si el túnel VPN cae inesperadamente. Sin él, tu dispositivo vuelve a tu conexión ISP regular en el momento en que la VPN se desconecta. Los kill switch a nivel de sistema (como el de Vizoguard) son más confiables que las implementaciones a nivel de aplicación."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es una política no-logs VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Una política no-logs (zero-log) significa que el proveedor VPN no registra tu actividad de navegación, direcciones IP, marcas de tiempo de conexión, consultas DNS o duración de sesión. Las políticas no-logs verificadas están respaldadas por auditorías independientes de empresas de seguridad reconocidas (Cure53, SEC Consult, Deloitte)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Protege una VPN contra el malware?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Una VPN estándar sola no protege contra el malware. Vizoguard Pro añade detección de amenazas por IA que analiza el comportamiento de la red en tiempo real, bloqueando conexiones hacia redes de distribución de malware conocidas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo puedo verificar si mi VPN es realmente segura?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cuatro pruebas verifican la seguridad VPN en la práctica. Primero, prueba fugas DNS en dnsleaktest.com. Segundo, prueba fugas IP en ipleak.net. Tercero, verifica fugas WebRTC en tu navegador. Cuarto, verifica el cipher y protocolo con Wireshark. Realiza estas pruebas conectado y después de una desconexión simulada."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Es WireGuard más seguro que OpenVPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ambos se consideran seguros, pero tienen diferentes fortalezas. El codebase más pequeño de WireGuard (aproximadamente 4.000 líneas vs 600.000+ de OpenVPN) reduce significativamente la superficie de ataque. Para la mayoría de los usuarios en 2026, WireGuard es la mejor opción predeterminada tanto para seguridad como para rendimiento."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Puede mi ISP ver mi tráfico cuando uso una VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Con una VPN segura correctamente configurada, tu ISP puede ver que estás conectado a un servidor VPN y aproximadamente cuántos datos estás transfiriendo — pero no puede ver el contenido de tu tráfico, los sitios que visitas, o tus consultas DNS. Si usas protocolos de ofuscación como Shadowsocks, incluso la huella VPN se vuelve difícil de detectar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es el split tunneling en una VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El split tunneling te permite elegir qué aplicaciones o sitios web se enrutan a través del túnel VPN y cuáles usan tu conexión a internet regular. Para máxima seguridad, el modo de túnel completo (todo el tráfico a través de la VPN) es preferible."
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Structured Data: BreadcrumbList -->
   <script type="application/ld+json">
   {
