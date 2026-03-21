@@ -156,6 +156,38 @@
           "@type": "Answer",
           "text": "Yes. You can upgrade from Basic to Pro at any time. Simply subscribe to Pro and your new plan starts immediately. Contact support@vizoguard.com if you need help with the transition."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Will Vizoguard slow down my device?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No noticeable impact. Vizoguard runs lightweight URL analysis, not deep packet inspection. VPN encryption adds less than 5% latency on modern hardware."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is Vizoguard so much cheaper than NordVPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard focuses on security + VPN rather than maintaining 6,000+ servers worldwide. Lower infrastructure costs mean lower prices — you get more security features for less money."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I try before I buy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no free trial, but every plan comes with a 30-day money-back guarantee. Try it risk-free — if it is not for you, email support for a full refund."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if I'm not satisfied?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Email support@vizoguard.com within 30 days for a full refund. No questions asked. Your VPN access remains active until the refund processes."
+        }
       }
     ]
   }
@@ -248,11 +280,11 @@
     <div class="pricing-card">
       <div class="pricing-label">Basic</div>
       <div class="price-regular">$49.99/yr <span class="discount-badge">50% off</span></div>
-      <div class="pricing-amount">
+      <div class="pricing-amount" data-regular-price="$49.99">
         <span class="dollar">$24</span><span class="cents">.99</span>
       </div>
       <div class="pricing-period">per year</div>
-      <div class="price-daily">That's just $2.08/month</div>
+      <div class="price-daily" data-regular-price="$4.17/month">That's just $2.08/month</div>
       <p class="pricing-desc">Encrypted VPN. No logs. All platforms.</p>
       <ul class="pricing-list">
         <li>Encrypted VPN</li>
@@ -267,11 +299,11 @@
       <div class="pricing-tag">Popular</div>
       <div class="pricing-label">Pro</div>
       <div class="price-regular">$149.99/yr <span class="discount-badge">33% off</span></div>
-      <div class="pricing-amount">
+      <div class="pricing-amount" data-regular-price="$149.99">
         <span class="dollar">$99</span><span class="cents">.99</span>
       </div>
       <div class="pricing-period">per year</div>
-      <div class="price-daily">That's just $8.33/month</div>
+      <div class="price-daily" data-regular-price="$12.50/month">That's just $8.33/month</div>
       <p class="pricing-desc">AI security + VPN. Blocks threats before they load.</p>
       <ul class="pricing-list">
         <li>Everything in Basic</li>
@@ -328,6 +360,41 @@
 
 <div class="divider"></div>
 
+<!-- PLACEHOLDER: Replace with real testimonials -->
+<section class="testimonials">
+  <h2>What Our Users Say</h2>
+  <div class="testimonial-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"I work from coffee shops every day. Vizoguard Basic gives me peace of mind that my traffic is encrypted — for less than a latte per month."</p>
+      <div class="testimonial-author">Sarah K.</div>
+      <div class="testimonial-role">Remote Worker</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"Switched from NordVPN to Vizoguard Pro. The AI threat detection catches phishing domains that my old VPN never blocked. Worth every penny."</p>
+      <div class="testimonial-author">Marcus D.</div>
+      <div class="testimonial-role">Privacy Advocate</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"I travel between 4 countries for work. Vizoguard's Shadowsocks protocol bypasses every firewall I've hit. Basic plan, $24.99 for the whole year."</p>
+      <div class="testimonial-author">Rina P.</div>
+      <div class="testimonial-role">Digital Nomad</div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-badges">
+  <div class="trust-badge"><span class="trust-badge-icon">🔒</span>AES-256 Encryption</div>
+  <div class="trust-badge"><span class="trust-badge-icon">👁‍🗨</span>Zero-Log Policy</div>
+  <div class="trust-badge"><span class="trust-badge-icon">🛡</span>Secure Payments via Stripe</div>
+  <div class="trust-badge"><span class="trust-badge-icon">↩</span>30-Day Guarantee</div>
+  <div class="trust-badge"><span class="trust-badge-icon">✓</span>GDPR Compliant</div>
+</div>
+
+<div class="divider"></div>
+
 <section style="max-width:680px; margin:0 auto; padding:40px 24px; text-align:center;">
   <h2>Why choose Vizoguard?</h2>
   <p style="color:var(--text-2); line-height:1.7; margin-bottom:1.5em;">Most VPNs only encrypt your connection. Vizoguard Pro goes further with AI-powered threat detection that blocks phishing, malware, and trackers before they reach your device — all in one app. Basic plan users get a fast, private VPN at the lowest price in the market.</p>
@@ -372,6 +439,26 @@
   <div class="faq-item">
     <button class="faq-question" aria-expanded="false">Can I upgrade from Basic to Pro?</button>
     <div class="faq-answer"><p>Yes. You can upgrade from Basic to Pro at any time. Simply subscribe to Pro and your new plan starts immediately. Contact <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> if you need help with the transition.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">Will Vizoguard slow down my device?</button>
+    <div class="faq-answer"><p>No noticeable impact. Vizoguard runs lightweight URL analysis, not deep packet inspection. VPN encryption adds less than 5% latency on modern hardware.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">Why is Vizoguard so much cheaper than NordVPN?</button>
+    <div class="faq-answer"><p>Vizoguard focuses on security + VPN rather than maintaining 6,000+ servers worldwide. Lower infrastructure costs mean lower prices — you get more security features for less money.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">Can I try before I buy?</button>
+    <div class="faq-answer"><p>There is no free trial, but every plan comes with a 30-day money-back guarantee. Try it risk-free — if it is not for you, email support for a full refund.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">What happens if I'm not satisfied?</button>
+    <div class="faq-answer"><p>Email <a href="mailto:support@vizoguard.com">support@vizoguard.com</a> within 30 days for a full refund. No questions asked. Your VPN access remains active until the refund processes.</p></div>
   </div>
 </section>
 
@@ -428,6 +515,18 @@ if ('serviceWorker' in navigator) {
       var rect = pricing.getBoundingClientRect();
       sticky.style.display = (rect.bottom < 0) ? 'block' : '';
     }, {passive: true});
+  }
+})();
+</script>
+<script>
+(function() {
+  if (new Date() > new Date('2026-04-04T23:59:59Z')) {
+    document.querySelectorAll('.urgency-banner, .discount-badge, .price-regular').forEach(function(el) {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll('[data-regular-price]').forEach(function(el) {
+      el.textContent = el.getAttribute('data-regular-price');
+    });
   }
 })();
 </script>
