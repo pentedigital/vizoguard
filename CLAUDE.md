@@ -18,7 +18,7 @@
 - Pricing: Basic $24.99/yr (regular $49.99, 50% launch discount) and Pro $99.99/yr (regular $149.99, 33% launch discount)
 - Launch discount countdown ends April 4, 2026 — update date in ALL 7 landing page inline scripts + schema priceValidUntil
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: index, ar/index, hi/index, fr/index, es/index, tr/index, ru/index, setup, privacy, terms, thank-you, pricing, download, compare/vizoguard-vs-nordvpn, compare/vizoguard-vs-expressvpn, blog/what-is-vpn
+- Pages: 100+ HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
@@ -46,6 +46,7 @@
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
 - `GET /api/vpn/status` — health only (`{"status":"online|offline"}` — no node details)
 - `GET /api/health` — API health check
+- `GET /metrics` — Prometheus metrics (blocked externally by nginx)
 
 ## Stripe Integration
 - Checkout: `POST /api/checkout` — creates Stripe Checkout session with plan metadata
@@ -79,7 +80,7 @@
 ## Environment
 - Copy `server/.env.example` to `server/.env` before running
 - Required env vars: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_VPN`, `STRIPE_PRICE_SECURITY_VPN`, `SMTP_PASS`, `OUTLINE_API_URL`
-- Optional: `PORT` (default 3000), `DB_PATH` (default `data/vizoguard.db`), `APP_URL` (default `https://vizoguard.com`)
+- Optional: `PORT` (default 3000), `DB_PATH` (default `data/vizoguard.db`), `APP_URL` (default `https://vizoguard.com`), `LAUNCH_DISCOUNT_END` (ISO date for discount expiry, e.g., `2026-04-04`), `STRIPE_PRICE_VPN_REGULAR`, `STRIPE_PRICE_SECURITY_VPN_REGULAR`
 - Server host: srv1450871 (187.77.131.31), Ubuntu
 - Git credentials stored in `/root/.git-credentials`
 - `gh` CLI must be installed manually (`apt install gh`) and authed via `gh auth login`
@@ -118,7 +119,7 @@
 - Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
 - `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
 - Bump `CACHE_NAME` version in `public/sw.js` after changing CSS/JS/HTML — otherwise returning visitors get stale cached content
-- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all 7 HTML pages when updating CSS/JS
+- CSS/JS have `max-age=31536000, immutable` (1 year) in nginx — safe because assets are versioned with `?v=XX`; bump the `?v=` query string across all HTML pages when updating CSS/JS
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
@@ -147,7 +148,6 @@
 - Comparison: `public/compare/vizoguard-vs-{nordvpn,expressvpn,protonvpn,surfshark,cyberghost}.html` — 900px compare-page layout, 3200-3500 words each
 - Blog: `public/blog/{what-is-vpn,how-does-vpn-work,vpn-vs-proxy,vpn-vs-antivirus,public-wifi-security,what-is-malware,how-to-block-phishing,do-you-need-a-vpn,is-vpn-safe,hide-ip-address}.html` — 720px article-body layout, 2000-2500 words each
 - Authority: `public/features.html`, `public/ai-threat-protection.html`, `public/vpn-for-streaming.html`, `public/vpn-for-torrenting.html` — 900px seo-page layout, 2500-3000 words each
-- Blog + Glossary: `public/blog/{what-is-vpn,how-does-vpn-work,vpn-vs-proxy,vpn-vs-antivirus,public-wifi-security,what-is-malware,how-to-block-phishing,do-you-need-a-vpn,is-vpn-safe,hide-ip-address,vpn-glossary}.html` — 720px article-body layout
 - Blog authors: alternate between "Terry M Lisa" and "Marron J Washington"
 - All SEO pages: Article + FAQPage + BreadcrumbList JSON-LD schemas, same header/footer/analytics as landing pages
 - CRO: Pricing page has testimonials (placeholder), trust badges, 11 FAQ questions, post-discount state after April 4 2026
