@@ -1,8 +1,9 @@
 const { Router } = require("express");
-const { stmts } = require("../db");
+const { db, stmts } = require("../db");
 const outline = require("../outline");
 
 const router = Router();
+const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
 
 const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
 
@@ -16,6 +17,7 @@ function getNodeApiUrl(license) {
   const best = stmts.bestNode.get();
   if (best) return { apiUrl: best.api_url, nodeId: best.id };
   // Fallback to default (env var)
+  console.warn(`[i${INSTANCE}] VPN: no active nodes, falling back to DEFAULT_API_URL`);
   return { apiUrl: null, nodeId: null };
 }
 
@@ -54,21 +56,51 @@ router.post("/create", requireVpnLicense, async (req, res) => {
   try {
     const { license } = req;
 
+    // Device verification — same check as /vpn/get (#11)
+    const { device_id } = req.body;
+    if (license.device_id && (!device_id || device_id !== license.device_id)) {
+      return res.status(403).json({ error: "Device mismatch" });
+    }
+
+    // Only active licenses can create new keys (#13)
+    if (license.status !== "active") {
+      return res.status(403).json({ error: "Only active licenses can create VPN keys" });
+    }
+
     // Idempotent: return existing key if already provisioned
     if (license.outline_access_key) {
       return res.json({ access_url: license.outline_access_key });
+    }
+
+    // Atomic CAS to prevent race condition — only one request wins (#2)
+    const claim = stmts.claimOutlineSlot.run(license.id);
+    if (claim.changes === 0) {
+      const updated = stmts.findByKey.get(req.body.key);
+      if (updated && updated.outline_access_key && updated.outline_access_key !== 'pending') {
+        return res.json({ access_url: updated.outline_access_key });
+      }
+      return res.status(409).json({ error: "VPN key provisioning in progress" });
     }
 
     const { apiUrl, nodeId } = getNodeApiUrl(license);
     const result = await outline.createAccessKey(license.email, apiUrl);
     await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
 
-    stmts.setOutlineKey.run(result.accessUrl, result.id, license.id);
-    if (nodeId) stmts.setLicenseNode.run(nodeId, license.id);
+    try {
+      stmts.setOutlineKey.run(result.accessUrl, result.id, license.id);
+      if (nodeId) stmts.setLicenseNode.run(nodeId, license.id);
+    } catch (dbErr) {
+      // Compensate: revoke the key we just created to avoid orphan (#4)
+      await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
+      throw dbErr;
+    }
 
+    console.log(`[i${INSTANCE}] VPN key created via API: licenseId=${license.id} nodeId=${nodeId || 'default'}`);
     res.json({ access_url: result.accessUrl });
   } catch (err) {
-    console.error("VPN create error:", err.message);
+    // Roll back CAS sentinel so user can retry (C1 fix)
+    stmts.resetOutlineClaim.run(license.id);
+    console.error(`[i${INSTANCE}] VPN create error:`, err);
     res.status(500).json({ error: "Failed to create VPN access key" });
   }
 });
@@ -93,6 +125,12 @@ router.post("/get", requireVpnLicense, (req, res) => {
 router.post("/delete", requireVpnLicense, async (req, res) => {
   try {
     const { license } = req;
+
+    // Only active licenses can delete keys (#13)
+    if (license.status !== "active") {
+      return res.status(403).json({ error: "Only active licenses can delete VPN keys" });
+    }
+
     if (!license.outline_key_id) {
       return res.status(404).json({ error: "No VPN key to delete" });
     }
@@ -101,9 +139,10 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
     await outline.deleteAccessKey(license.outline_key_id, apiUrl);
     stmts.clearOutlineKey.run(license.id);
 
+    console.log(`[i${INSTANCE}] VPN key deleted via API: licenseId=${license.id}`);
     res.json({ success: true });
   } catch (err) {
-    console.error("VPN delete error:", err.message);
+    console.error(`[i${INSTANCE}] VPN delete error:`, err);
     res.status(500).json({ error: "Failed to delete VPN key" });
   }
 });

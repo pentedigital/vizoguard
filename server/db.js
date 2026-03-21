@@ -63,6 +63,10 @@ if (!cols.includes("vpn_node_id")) {
   db.exec("ALTER TABLE licenses ADD COLUMN vpn_node_id INTEGER");
 }
 
+// Performance indexes for hot-path queries
+db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_vpn_node ON licenses(vpn_node_id)");
+db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_status ON licenses(status)");
+
 const stmts = {
   insert: db.prepare(`
     INSERT INTO licenses (key, email, plan, stripe_customer_id, stripe_subscription_id, status, expires_at)
@@ -79,6 +83,8 @@ const stmts = {
   setOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = ?, outline_key_id = ? WHERE id = ?"),
   clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL WHERE id = ?"),
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
+  claimOutlineSlot: db.prepare("UPDATE licenses SET outline_key_id = 'pending' WHERE id = ? AND outline_key_id IS NULL"),
+  resetOutlineClaim: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE id = ? AND outline_key_id = 'pending'"),
 
   // VPN nodes
   insertNode: db.prepare("INSERT INTO vpn_nodes (region, name, host, api_url, max_keys) VALUES (@region, @name, @host, @api_url, @max_keys)"),

@@ -3,6 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 
 const router = Router();
+const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
 
 // POST /api/license — validate + bind device
 router.post("/", (req, res) => {
@@ -13,6 +14,9 @@ router.post("/", (req, res) => {
   }
   if (key.length > 24 || device_id.length > 255) {
     return res.status(400).json({ valid: false, error: "Invalid input" });
+  }
+  if (!/^[a-zA-Z0-9\-]{16,64}$/.test(device_id)) {
+    return res.status(400).json({ valid: false, error: "Invalid device_id format" });
   }
 
   const license = stmts.findByKey.get(key);
@@ -36,17 +40,20 @@ router.post("/", (req, res) => {
   if (!license.device_id) {
     const result = stmts.bindDevice.run(device_id, license.id);
     if (result.changes === 0) {
-      // Another request bound a device between our SELECT and UPDATE
       const updated = stmts.findByKey.get(key);
       if (updated && updated.device_id !== device_id) {
+        console.warn(`[i${INSTANCE}] Device mismatch: licenseId=${license.id}`);
         return res.status(403).json({
           valid: false,
           error: "License is bound to a different device. Contact support@vizoguard.com to transfer.",
           status: "device_mismatch",
         });
       }
+    } else {
+      console.log(`[i${INSTANCE}] Device bound: licenseId=${license.id} plan=${license.plan}`);
     }
   } else if (license.device_id !== device_id) {
+    console.warn(`[i${INSTANCE}] Device mismatch: licenseId=${license.id}`);
     return res.status(403).json({
       valid: false,
       error: "License is bound to a different device. Contact support@vizoguard.com to transfer.",
@@ -54,12 +61,14 @@ router.post("/", (req, res) => {
     });
   }
 
-  stmts.updateLastCheck.run(license.id);
+  // Re-fetch for fresh state after potential concurrent webhook updates (#17)
+  const fresh = stmts.findByKey.get(key);
+  stmts.updateLastCheck.run(fresh.id);
 
   res.json({
     valid: true,
-    status: license.status,
-    expires: license.expires_at,
+    status: fresh.status,
+    expires: fresh.expires_at,
   });
 });
 
@@ -103,7 +112,6 @@ router.get("/lookup", async (req, res) => {
       email: license.email,
       plan: license.plan,
       expires: license.expires_at,
-      access_url: license.outline_access_key || null,
     });
   } catch (err) {
     console.error("License lookup error:", err.message);

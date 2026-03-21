@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "title": "Vizoguard — Seguridad IA y VPN",
+    "description": "Vizoguard: seguridad IA + VPN cifrado. Bloquea phishing, malware y rastreadores en tiempo real. Desde $24.99/ano. Mac, Windows, iOS, Android."
+  },
+  "nav": {
+    "features": "Funciones",
+    "pricing": "Precios",
+    "faq": "Preguntas frecuentes",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Seguridad IA. VPN privado. Una sola app.",
+    "subtitle": "Bloquea amenazas antes de que carguen. Cifra todo lo que envias. Mac, Windows, iOS, Android.",
+    "cta": "Empezar",
+    "cta2": "Saber mas"
+  },
+  "features": {
+    "heading": "Funciones",
+    "threat_title": "Bloqueo de amenazas en tiempo real",
+    "threat_desc": "Detiene URLs maliciosas antes de que tu navegador las cargue.",
+    "phishing_title": "Deteccion de phishing",
+    "phishing_desc": "Funciona con dominios nuevos. Sin actualizaciones de firmas.",
+    "vpn_title": "VPN cifrado",
+    "vpn_desc": "Todo el trafico cifrado. Sin registros. Sin rastreo.",
+    "monitor_title": "Monitoreo de conexiones",
+    "monitor_desc": "Mira cada app que se conecta a Internet en tiempo real.",
+    "heal_title": "Proteccion autorreparable",
+    "heal_desc": "Se restaura automaticamente si es manipulado.",
+    "platform_title": "Todas las plataformas",
+    "platform_desc": "Escritorio: app de seguridad completa. Movil: VPN cifrado.",
+    "platform_link": "Guia de instalacion"
+  },
+  "pricing": {
+    "heading": "Elige tu plan.",
+    "subheading": "Cancela cuando quieras. Codigos de descuento aceptados.",
+    "basic_label": "Basic",
+    "basic_price_dollar": "$24",
+    "basic_price_cents": ".99",
+    "basic_period": "por ano",
+    "basic_desc": "VPN cifrado. Sin registros. Todas las plataformas.",
+    "basic_f1": "VPN cifrado",
+    "basic_f2": "100 GB/mes",
+    "basic_f3": "Mac, Windows, iOS, Android",
+    "basic_f4": "Politica cero registros",
+    "basic_f5": "Cancela cuando quieras",
+    "basic_cta": "Elegir Basic",
+    "pro_tag": "Popular",
+    "pro_label": "Pro",
+    "pro_price_dollar": "$99",
+    "pro_price_cents": ".99",
+    "pro_period": "por ano",
+    "pro_desc": "Seguridad IA + VPN. Bloquea amenazas antes de que carguen.",
+    "pro_f1": "Todo lo de Basic",
+    "pro_f2": "Bloqueo de amenazas en tiempo real",
+    "pro_f3": "Deteccion de phishing con IA",
+    "pro_f4": "Monitoreo de conexiones",
+    "pro_f5": "Proteccion autorreparable",
+    "pro_f6": "App de escritorio",
+    "pro_cta": "Elegir Pro"
+  },
+  "steps": {
+    "heading": "Tres pasos. Sesenta segundos.",
+    "s1_title": "Suscribete",
+    "s1_desc": "Elige tu plan. Tu clave de licencia llega al instante por email.",
+    "s2_title": "Instala",
+    "s2_desc": "Descarga la app e ingresa tu clave de licencia.",
+    "s3_title": "Listo",
+    "s3_desc": "Vizoguard funciona en segundo plano. Solo navega."
+  },
+  "faq": {
+    "heading": "Preguntas frecuentes",
+    "q1": "\u00bfCual es la diferencia entre Basic y Pro?",
+    "a1": "<strong>Basic</strong> ($24.99/ano) es un VPN cifrado con 100 GB/mes en todas las plataformas via la app Outline. <strong>Pro</strong> ($99.99/ano) agrega bloqueo de amenazas con IA, deteccion de phishing, monitoreo de conexiones y proteccion autorreparable via la app Vizoguard \u2014 mas VPN.",
+    "q2": "\u00bfComo funciona el VPN?",
+    "a2": "Despues de suscribirte, haz clic en \u00ab Conectar con Outline \u00bb en la pagina de agradecimiento. La app Outline se abre e importa tu VPN automaticamente. Sin copiar y pegar. Los usuarios Pro tambien obtienen VPN integrado en la app Vizoguard.",
+    "q3": "\u00bfCuantos dispositivos?",
+    "a3": "<strong>Basic:</strong> usa tu VPN en cualquier dispositivo via la app Outline (100 GB/mes compartidos). <strong>Pro:</strong> una licencia se vincula a un dispositivo en la primera activacion. Contacta a support@vizoguard.com para transferir.",
+    "q4": "\u00bfPuedo cancelar?",
+    "a4": "En cualquier momento. La proteccion continua hasta el final de tu periodo pagado. Cancela desde Stripe o contacta al soporte.",
+    "q5": "\u00bfQue plataformas?",
+    "a5": "VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. App de seguridad: macOS 12+ y Windows 10/11.",
+    "q6": "\u00bfFunciona sin conexion?",
+    "a6": "Las funciones de seguridad funcionan sin conexion con datos de amenazas en cache. La licencia se verifica cada 24 horas con un periodo de gracia de 7 dias. El VPN requiere Internet."
+  },
+  "social": {
+    "rating_num": "4.9/5",
+    "rating_label": "Calificacion de usuarios",
+    "guarantee_num": "30 dias",
+    "guarantee_label": "Garantia de devolucion",
+    "logs_num": "Cero",
+    "logs_label": "Politica de registros"
+  },
+  "footer": {
+    "copyright": "\u00a9 2026 Vizoguard",
+    "privacy": "Privacidad",
+    "terms": "Terminos"
+  }
+}

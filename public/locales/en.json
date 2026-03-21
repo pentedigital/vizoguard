@@ -83,6 +83,14 @@
     "q6": "Does it work offline?",
     "a6": "Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet."
   },
+  "social": {
+    "rating_num": "4.9/5",
+    "rating_label": "User rating",
+    "guarantee_num": "30-day",
+    "guarantee_label": "Money-back guarantee",
+    "logs_num": "Zero",
+    "logs_label": "Logs policy"
+  },
   "footer": {
     "copyright": "© 2026 Vizoguard",
     "privacy": "Privacy",

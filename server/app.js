@@ -1,5 +1,9 @@
 require("dotenv").config();
 
+// Fail fast on missing critical env vars (#6)
+const REQUIRED_ENV = ['STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','STRIPE_PRICE_VPN','STRIPE_PRICE_SECURITY_VPN','OUTLINE_API_URL','APP_URL'];
+for (const v of REQUIRED_ENV) { if (!process.env[v]) { console.error('FATAL: missing env var ' + v); process.exit(1); } }
+
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
@@ -11,6 +15,7 @@ const vpnRouter = require("./routes/vpn");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
 
 // Trust nginx reverse proxy (needed for rate limiting with X-Forwarded-For)
 app.set("trust proxy", 1);
@@ -39,13 +44,14 @@ app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
     if (req.path.startsWith("/api/")) {
-      console.log(`${req.method} ${req.path} ${res.statusCode} ${Date.now() - start}ms`);
+      console.log(`[i${INSTANCE}] ${req.method} ${req.path} ${res.statusCode} ${Date.now() - start}ms ip=${req.ip}`);
     }
   });
   next();
 });
 
-// Rate limiting
+// Rate limiting — NOTE: in-memory store means each PM2 cluster instance has its own counter.
+// Effective limits are max * instance_count. Use nginx limit_req_zone for strict enforcement.
 const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false });
 const checkoutLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, standardHeaders: true, legacyHeaders: false });
 const licenseLimiter = rateLimit({ windowMs: 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false });

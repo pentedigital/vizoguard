@@ -2,14 +2,14 @@
 (function () {
   "use strict";
 
-  var SUPPORTED = ["en", "ar"];
+  var SUPPORTED = ["en", "ar", "hi", "fr", "es"];
   var RTL_LANGS = ["ar"];
   var cache = {};
   // Only these tags are allowed in translation HTML values (FAQ answers use <strong>)
   var ALLOWED_TAGS = ["STRONG", "EM", "A", "BR"];
 
   // Map URL path prefixes to languages (empty string = default/en)
-  var LANG_PATHS = { "ar": "/ar/", "en": "/" };
+  var LANG_PATHS = { "ar": "/ar/", "hi": "/hi/", "fr": "/fr/", "es": "/es/", "en": "/" };
 
   function getPathLang() {
     var seg = location.pathname.split("/")[1];
@@ -116,6 +116,8 @@
     }
   }
 
+  var LANG_LABELS = { "en": "EN", "ar": "العربية", "hi": "हिन्दी", "fr": "FR", "es": "ES" };
+
   function updateLangSwitcher(lang) {
     document.querySelectorAll("[data-lang-switch]").forEach(function (el) {
       var switchLang = el.getAttribute("data-lang-switch");
@@ -124,6 +126,31 @@
       } else {
         el.classList.remove("active-lang");
       }
+    });
+    // Update dropdown toggle label
+    var toggle = document.querySelector(".lang-switcher-toggle");
+    if (toggle) toggle.textContent = LANG_LABELS[lang] || lang.toUpperCase();
+  }
+
+  // Dropdown open/close
+  function initDropdown() {
+    var switcher = document.getElementById("lang-switcher");
+    if (!switcher) return;
+    var toggle = switcher.querySelector(".lang-switcher-toggle");
+
+    toggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var isOpen = switcher.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", isOpen);
+    });
+
+    document.addEventListener("click", function () {
+      switcher.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    });
+
+    switcher.querySelector(".lang-dropdown").addEventListener("click", function (e) {
+      e.stopPropagation();
     });
   }
 
@@ -147,6 +174,7 @@
       })
       .catch(function (err) {
         console.error("i18n: failed to load " + lang, err);
+        if (lang !== "en") { loadAndApply("en"); }
       });
   }
 
@@ -154,15 +182,12 @@
   window.switchLang = function (lang) {
     if (SUPPORTED.indexOf(lang) === -1) return;
 
-    // If switching to Arabic and we're on /, redirect to /ar/
-    // If switching to English and we're on /ar/, redirect to /
-    var onArabicPage = location.pathname.indexOf("/ar/") === 0 || location.pathname === "/ar";
-    if (lang === "ar" && !onArabicPage) {
-      window.location.href = "/ar/" + location.hash;
-      return;
-    }
-    if (lang === "en" && onArabicPage) {
-      window.location.href = "/" + location.hash;
+    // Redirect to the correct language URL path
+    var currentPath = location.pathname;
+    var targetPath = LANG_PATHS[lang];
+    var onTargetPage = (targetPath === "/") ? (currentPath === "/") : (currentPath === targetPath || currentPath.indexOf(targetPath) === 0);
+    if (!onTargetPage) {
+      window.location.href = targetPath + location.hash;
       return;
     }
 
@@ -170,11 +195,14 @@
   };
 
   // Initialize on DOM ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-      loadAndApply(detectLang());
-    });
-  } else {
+  function init() {
+    initDropdown();
     loadAndApply(detectLang());
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
 })();

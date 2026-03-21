@@ -21,6 +21,9 @@
   <!-- hreflang for multilingual SEO -->
   <link rel="alternate" hreflang="en" href="https://vizoguard.com/">
   <link rel="alternate" hreflang="ar" href="https://vizoguard.com/ar/">
+  <link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/">
+  <link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/">
+  <link rel="alternate" hreflang="es" href="https://vizoguard.com/es/">
   <link rel="alternate" hreflang="x-default" href="https://vizoguard.com/">
 
   <!-- Open Graph -->
@@ -32,14 +35,19 @@
   <meta property="og:image" content="https://vizoguard.com/icons/icon-512.png">
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Vizoguard — AI Security and VPN">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="es_ES">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Vizoguard — AI Security & VPN">
   <meta name="twitter:description" content="AI-powered threat detection + encrypted VPN. Block phishing, malware, and trackers. From $24.99/year.">
   <meta name="twitter:image" content="https://vizoguard.com/icons/icon-512.png">
+  <meta name="twitter:image:alt" content="Vizoguard — AI security and VPN application">
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -104,6 +112,11 @@
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": "https://vizoguard.com/#faq",
+    "inLanguage": "en",
+    "datePublished": "2026-03-15",
+    "dateModified": "2026-03-21",
+    "author": { "@type": "Organization", "name": "Vizoguard" },
     "mainEntity": [
       {
         "@type": "Question",
@@ -136,7 +149,46 @@
           "@type": "Answer",
           "text": "Yes. Protection continues until the end of your paid period. Cancel from Stripe or email support."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "What platforms are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "VPN: Mac, Windows, iOS, Android, Linux, ChromeOS. Security app: macOS 12+ and Windows 10/11."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Security features work offline with cached threat data. License checks every 24 hours with a 7-day grace period. VPN requires internet."
+        }
       }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to set up Vizoguard",
+    "description": "Install and activate Vizoguard AI security and VPN in three steps.",
+    "inLanguage": "en",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Subscribe", "text": "Pick your plan. Your license key arrives instantly by email." },
+      { "@type": "HowToStep", "position": 2, "name": "Install", "text": "Download the app and enter your license key." },
+      { "@type": "HowToStep", "position": 3, "name": "Done", "text": "Vizoguard runs in the background. You just browse." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Vizoguard", "item": "https://vizoguard.com/" }
     ]
   }
   </script>
@@ -169,11 +221,16 @@
     <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
     <a href="#faq" data-i18n="nav.faq">FAQ</a>
     <a href="mailto:support@vizoguard.com" data-i18n="nav.contact">Contact</a>
-    <div class="lang-switcher">
-      <button data-lang-switch="en" onclick="switchLang('en')" aria-label="English">EN</button>
-      <span class="lang-sep">|</span>
-      <button data-lang-switch="ar" onclick="switchLang('ar')" aria-label="العربية">عربي</button>
-    </div>
+    <nav class="lang-switcher" id="lang-switcher" aria-label="Language selection">
+      <button class="lang-switcher-toggle" aria-expanded="false" aria-haspopup="true">EN</button>
+      <div class="lang-dropdown" role="menu">
+        <button role="menuitem" data-lang-switch="en" onclick="switchLang('en')">English</button>
+        <button role="menuitem" data-lang-switch="ar" onclick="switchLang('ar')">العربية</button>
+        <button role="menuitem" data-lang-switch="hi" onclick="switchLang('hi')">हिन्दी</button>
+        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Francais</button>
+        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Espanol</button>
+      </div>
+    </nav>
   </nav>
 </header>
 
@@ -188,11 +245,11 @@
 
 <div class="social-proof">
   <div class="social-proof-inner">
-    <div class="proof-stat"><span class="num">4.9/5</span><span class="label">User rating</span></div>
+    <div class="proof-stat"><span class="num" data-i18n="social.rating_num">4.9/5</span><span class="label" data-i18n="social.rating_label">User rating</span></div>
     <div class="proof-divider"></div>
-    <div class="proof-stat"><span class="num">30-day</span><span class="label">Money-back guarantee</span></div>
+    <div class="proof-stat"><span class="num" data-i18n="social.guarantee_num">30-day</span><span class="label" data-i18n="social.guarantee_label">Money-back guarantee</span></div>
     <div class="proof-divider"></div>
-    <div class="proof-stat"><span class="num">Zero</span><span class="label">Logs policy</span></div>
+    <div class="proof-stat"><span class="num" data-i18n="social.logs_num">Zero</span><span class="label" data-i18n="social.logs_label">Logs policy</span></div>
   </div>
 </div>
 
@@ -272,7 +329,7 @@
     </div>
   </div>
   <div class="guarantee">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" role="img"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     30-day money-back guarantee. No questions asked.
   </div>
 </section>
@@ -356,15 +413,15 @@ if ('serviceWorker' in navigator) {
 
 <div class="sticky-cta" id="sticky-cta">
   <div class="sticky-cta-inner">
-    <button class="btn btn-secondary" onclick="startCheckout('vpn')">Basic $24.99/yr</button>
-    <button class="btn" onclick="startCheckout('security_vpn')">Pro $99.99/yr</button>
+    <button class="btn btn-secondary" onclick="startCheckout('vpn')" data-i18n="pricing.basic_cta">Basic $24.99/yr</button>
+    <button class="btn" onclick="startCheckout('security_vpn')" data-i18n="pricing.pro_cta">Pro $99.99/yr</button>
   </div>
 </div>
 
 <script>
 // Countdown timer — ends March 25 2026
 (function(){
-  var end = new Date('2026-03-25T23:59:59').getTime();
+  var end = new Date('2026-03-25T23:59:59Z').getTime();
   var timer = setInterval(update, 60000);
   function update(){
     var now = Date.now(), diff = end - now;

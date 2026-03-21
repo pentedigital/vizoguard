@@ -7,6 +7,7 @@ const { sendLicenseEmail } = require("../email");
 const outline = require("../outline");
 
 const router = Router();
+const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
 
 function generateKey() {
   const segments = [];
@@ -41,11 +42,17 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           break;
         }
 
-        // Idempotency: skip if license already exists for this subscription
+        // Idempotency: skip if license already exists for this subscription or customer (#18)
         if (session.subscription) {
           const existing = stmts.findBySubscription.get(session.subscription);
           if (existing) {
-            console.log(`License already exists for subscription ${session.subscription}, skipping`);
+            console.log(`[i${INSTANCE}] License already exists for subscription ${session.subscription}, skipping`);
+            break;
+          }
+        } else if (session.customer) {
+          const existing = stmts.findByCustomer.get(session.customer);
+          if (existing) {
+            console.log(`[i${INSTANCE}] License already exists for customer ${session.customer} (no subscription), skipping`);
             break;
           }
         }
@@ -73,14 +80,22 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
             });
             break;
           } catch (insertErr) {
+            // Duplicate subscription from cluster race — not an error (#3)
+            if (insertErr.message.includes("UNIQUE") && insertErr.message.includes("stripe_subscription_id")) {
+              console.log(`[i${INSTANCE}] Duplicate webhook for subscription ${session.subscription}, skipping`);
+              return res.json({ received: true });
+            }
             if (attempt === 2 || !insertErr.message.includes("UNIQUE")) throw insertErr;
-            console.warn(`Key collision on attempt ${attempt + 1}, retrying`);
+            console.warn(`[i${INSTANCE}] Key collision on attempt ${attempt + 1}, retrying`);
           }
         }
 
-        console.log(`License created for ${email} (plan: ${plan})`);
+        console.log(`[i${INSTANCE}] License created for ${email} (plan: ${plan})`);
 
-        // Auto-provision Outline VPN access key (picks best node)
+        // Respond to Stripe immediately — don't risk 20s timeout (#19)
+        res.json({ received: true });
+
+        // Auto-provision Outline VPN access key (async, fire-and-forget)
         let accessUrl = null;
         try {
           const newLicense = stmts.findByKey.get(licenseKey);
@@ -90,21 +105,25 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           const result = await outline.createAccessKey(email, apiUrl);
           const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
           await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
-          stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
-          if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
+          try {
+            stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
+            if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
+          } catch (dbErr) {
+            // Compensate: revoke orphaned Outline key (#4)
+            await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
+            throw dbErr;
+          }
           accessUrl = result.accessUrl;
-          console.log(`Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
+          console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
-          console.error("Failed to create Outline key:", outlineErr.message);
+          console.error(`[i${INSTANCE}] Failed to create Outline key:`, outlineErr);
         }
 
-        try {
-          await sendLicenseEmail(email, licenseKey, plan, accessUrl);
-          console.log(`License email sent to ${email}`);
-        } catch (emailErr) {
-          console.error("Failed to send license email:", emailErr.message);
-        }
-        break;
+        // Email failure is logged but non-fatal since Stripe already got 200 (#15)
+        await sendLicenseEmail(email, licenseKey, plan, accessUrl).catch((emailErr) => {
+          console.error(`[i${INSTANCE}] Failed to send license email:`, emailErr);
+        });
+        return; // Already responded above
       }
 
       case "invoice.payment_succeeded": {
@@ -119,11 +138,14 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (invoice.lines?.data?.[0]?.period?.end) {
           expiresAt = new Date(invoice.lines.data[0].period.end * 1000);
         } else {
-          expiresAt = new Date();
-          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+          // Fallback: base on existing expiry, not current time (#32)
+          const existing = stmts.findBySubscription.get(subId);
+          const base = existing?.expires_at ? new Date(existing.expires_at) : new Date();
+          base.setFullYear(base.getFullYear() + 1);
+          expiresAt = base;
         }
         stmts.updateExpiry.run(expiresAt.toISOString(), subId);
-        console.log(`Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
+        console.log(`[i${INSTANCE}] Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
         break;
       }
 
@@ -132,7 +154,8 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const subId = invoice.subscription;
         if (!subId) break;
 
-        stmts.updateStatus.run("suspended", subId);
+        const suspResult = stmts.updateStatus.run("suspended", subId);
+        if (suspResult.changes === 0) console.warn(`[i${INSTANCE}] payment_failed: no license for subscription ${subId}`);
 
         // Revoke Outline VPN key on suspension to prevent continued access
         const suspendedLicense = stmts.findBySubscription.get(subId);
@@ -145,20 +168,21 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
             }
             await outline.deleteAccessKey(suspendedLicense.outline_key_id, revokeApiUrl);
             stmts.clearOutlineKey.run(suspendedLicense.id);
-            console.log(`Outline key revoked on suspension for ${subId}`);
+            console.log(`[i${INSTANCE}] Outline key revoked on suspension for ${subId}`);
           } catch (err) {
-            console.error("Failed to revoke Outline key on suspension:", err.message);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key on suspension:`, err);
           }
         }
 
-        console.log(`Payment failed for subscription ${subId}, status set to suspended`);
+        console.log(`[i${INSTANCE}] Payment failed for subscription ${subId}, status set to suspended`);
         break;
       }
 
       case "customer.subscription.deleted": {
         const sub = event.data.object;
         const expiredLicense = stmts.findBySubscription.get(sub.id);
-        stmts.updateStatus.run("expired", sub.id);
+        const expResult = stmts.updateStatus.run("expired", sub.id);
+        if (expResult.changes === 0) console.warn(`[i${INSTANCE}] subscription.deleted: no license for ${sub.id}`);
 
         // Revoke Outline VPN access (use correct node for multi-node)
         if (expiredLicense && expiredLicense.outline_key_id) {
@@ -170,34 +194,42 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
             }
             await outline.deleteAccessKey(expiredLicense.outline_key_id, revokeApiUrl);
             stmts.clearOutlineKey.run(expiredLicense.id);
-            console.log(`Outline key revoked for subscription ${sub.id}`);
+            console.log(`[i${INSTANCE}] Outline key revoked for subscription ${sub.id}`);
           } catch (err) {
-            console.error("Failed to revoke Outline key:", err.message);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key:`, err);
           }
         }
 
-        console.log(`Subscription expired: ${sub.id}`);
+        console.log(`[i${INSTANCE}] Subscription expired: ${sub.id}`);
         break;
       }
 
       case "customer.subscription.updated": {
         const sub = event.data.object;
+        let updResult;
         if (sub.cancel_at_period_end) {
-          stmts.updateStatus.run("cancelled", sub.id);
-          console.log(`Subscription set to cancel at period end: ${sub.id}`);
+          updResult = stmts.updateStatus.run("cancelled", sub.id);
+          console.log(`[i${INSTANCE}] Subscription set to cancel at period end: ${sub.id}`);
         } else if (sub.status === "active") {
-          stmts.updateStatus.run("active", sub.id);
+          updResult = stmts.updateStatus.run("active", sub.id);
+          console.log(`[i${INSTANCE}] Subscription reactivated: ${sub.id}`);
         } else if (sub.status === "past_due" || sub.status === "unpaid") {
-          stmts.updateStatus.run("suspended", sub.id);
+          updResult = stmts.updateStatus.run("suspended", sub.id);
+          console.log(`[i${INSTANCE}] Subscription suspended (${sub.status}): ${sub.id}`);
+        } else {
+          console.log(`[i${INSTANCE}] Subscription updated with unhandled status: ${sub.status} for ${sub.id}`);
+        }
+        if (updResult && updResult.changes === 0) {
+          console.warn(`[i${INSTANCE}] subscription.updated: no license for ${sub.id}`);
         }
         break;
       }
 
       default:
-        console.log(`Unhandled event: ${event.type}`);
+        console.log(`[i${INSTANCE}] Unhandled event: ${event.type}`);
     }
   } catch (err) {
-    console.error(`Error processing ${event.type}:`, err);
+    console.error(`[i${INSTANCE}] Error processing ${event.type}:`, err);
     // Return 500 so Stripe retries on real failures (exponential backoff, 72h window)
     return res.status(500).json({ error: "Internal processing error" });
   }

@@ -53,6 +53,20 @@
   margin-left: 0;
   margin-right: 8px;
 }
+[dir="rtl"] .lang-dropdown {
+  right: auto;
+  left: 0;
+}
+[dir="rtl"] .lang-dropdown button {
+  text-align: right;
+}
+[dir="rtl"] .lang-switcher-toggle {
+  padding: 4px 10px 4px 24px;
+}
+[dir="rtl"] .lang-switcher-toggle::after {
+  right: auto;
+  left: 8px;
+}
 
 /* Guarantee badge RTL */
 [dir="rtl"] .guarantee {

@@ -49,7 +49,7 @@ function _resetBtns(btns){
 }
 // Reset checkout state when user navigates back (bfcache)
 window.addEventListener('pageshow', function(e){
-  if(e.persisted){ _resetBtns(document.querySelectorAll('.btn.loading')); }
+  if(e.persisted){ _checkoutBusy = false; _resetBtns(document.querySelectorAll('.btn.loading')); }
 });
 
 // ── FAQ accordion ────────────────────────────

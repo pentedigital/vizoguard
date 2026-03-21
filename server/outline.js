@@ -30,9 +30,10 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
     const req = https.request(opts, (res) => {
       let data = "";
       res.on("data", (chunk) => (data += chunk));
+      res.on("error", (err) => { clearTimeout(timeout); reject(err); });
       res.on("end", () => {
         clearTimeout(timeout);
-        if (method === "DELETE" && (res.statusCode === 204 || res.statusCode === 200)) {
+        if (method === "DELETE" && (res.statusCode === 204 || res.statusCode === 200 || res.statusCode === 404)) {
           return resolve(null);
         }
         if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -41,7 +42,7 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
         try {
           resolve(data ? JSON.parse(data) : null);
         } catch (e) {
-          reject(new Error(`Outline API returned invalid JSON: ${data.slice(0, 200)}`));
+          reject(new Error("Outline API returned invalid JSON"));
         }
       });
     });

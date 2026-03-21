@@ -12,9 +12,12 @@
 ## Live Site
 - https://vizoguard.com/ — landing page, setup guide, privacy/terms
 - https://vizoguard.com/ar/ — Arabic landing page (full Arabic SEO: meta, OG, JSON-LD)
+- https://vizoguard.com/hi/ — Hindi landing page (full Hindi SEO)
+- https://vizoguard.com/fr/ — French landing page (full French SEO)
+- https://vizoguard.com/es/ — Spanish landing page (full Spanish SEO)
 - Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: index, ar/index, setup, privacy, terms, thank-you (security page removed)
+- Pages: index, ar/index, hi/index, fr/index, es/index, setup, privacy, terms, thank-you (security page removed)
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
@@ -82,27 +85,28 @@
 
 ## i18n (Multilingual)
 - Engine: `public/js/i18n.js` — client-side, loads JSON translations via `data-i18n` attributes
-- Translations: `public/locales/en.json`, `public/locales/ar.json`
+- Translations: `public/locales/en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`
 - RTL styles: `public/css/rtl.css` (loaded dynamically when Arabic is active)
-- Arabic page: `public/ar/index.html` — standalone with Arabic meta/OG/JSON-LD for SEO
-- Language switcher in nav (EN / عربي) — redirects between `/` and `/ar/`
-- hreflang tags on both EN and AR pages cross-link for Google
-- Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED` array in `i18n.js`, create `/public/<code>/index.html`
+- Language pages: `public/ar/index.html`, `public/hi/index.html`, `public/fr/index.html`, `public/es/index.html` — each standalone with localized meta/OG/JSON-LD for SEO
+- Language switcher: dropdown in nav (EN, العربية, हिन्दी, FR, ES) — redirects to `/<code>/`
+- hreflang tags on all 5 pages cross-link for Google (en, ar, hi, fr, es, x-default)
+- Each page has 5 JSON-LD schemas: SoftwareApplication, Organization, FAQPage (6 Q&A), HowTo (3 steps), BreadcrumbList
+- Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED`+`LANG_PATHS`+`LANG_LABELS` in `i18n.js`, create `/public/<code>/index.html`, update hreflang+og:locale:alternate+switcher on ALL existing pages, add to sw.js APP_SHELL
 
 ## CRO (Conversion Optimization)
-- Urgency banner: countdown timer (ends March 25, 2026) — update `end` date in inline script on index.html + ar/index.html
-- Urgency date lives in TWO inline `<script>` blocks (EN + AR) — must update both or countdown is inconsistent
-- Social proof bar: rating + guarantee + zero-logs — below hero on both EN/AR
+- Urgency banner: countdown timer (ends March 25, 2026) — update `end` date in inline script on ALL 5 language pages
+- Urgency date lives in FIVE inline `<script>` blocks (one per language page) — must update all or countdown is inconsistent
+- Social proof bar: rating + guarantee + zero-logs — below hero on all language pages
 - Per-day price anchoring: "$2.08/month" / "$8.33/month" on pricing cards
 - 30-day money-back guarantee badge under pricing section
 - Sticky mobile CTA: appears after scrolling past pricing — only on ≤768px via JS `innerWidth` check; CSS `display:none` is the default
 - Checkout loading state: prevents double-click, shows "Redirecting..." spinner; `pageshow` event resets on bfcache Back
 - Thank-you page: Basic→Pro upsell box + referral sharing (Twitter/X, WhatsApp, copy link)
 - VPN deep-link on thank-you page uses `window.blur` to cancel the download fallback if Outline opens successfully
-- All CRO elements exist on both EN and AR pages with full responsive overrides at 1024/768/480px
+- All CRO elements exist on all 5 language pages with full responsive overrides at 1024/768/480px
 
 ## Gotchas
-- When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to both `locales/en.json` and `locales/ar.json`
+- When adding/editing translatable text in HTML, use `data-i18n="section.key"` and add the key to ALL locale files (`en.json`, `ar.json`, `hi.json`, `fr.json`, `es.json`)
 - FAQ answers use `data-i18n-html` attribute for safe HTML rendering (only `<strong>`, `<em>`, `<a>`, `<br>` allowed)
 - GitHub Actions SSH deploy fails (Hostinger blocks GitHub runner IPs) — use `gh run download` + manual copy to `/var/www/vizoguard/downloads/`
 - Docker host network mode bypasses UFW — use iptables directly for Outline port restrictions
@@ -111,21 +115,22 @@
 - Always run `pm2 restart vizoguard-api` after editing `.env` or server JS files
 - `server_tokens off` in `/etc/nginx/conf.d/hide-version.conf`
 - Bump `CACHE_NAME` version in `public/sw.js` after changing CSS/JS/HTML — otherwise returning visitors get stale cached content
-- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all HTML pages when updating CSS/JS (currently `?v=18`)
+- CSS/JS have `max-age=86400` (24h) in nginx — bump the `?v=` query string on all `<link>` and `<script>` tags across all 5 HTML pages when updating CSS/JS
 - Switching PM2 from fork→cluster requires `pm2 delete` then `pm2 start` — restart alone won't change exec_mode
 - `/etc/letsencrypt/options-ssl-nginx.conf` overrides `ssl_protocols` in nginx.conf — check both when changing TLS settings
 - Grafana (Docker) reaches Prometheus via `host.docker.internal:9090`, not `localhost`
 - CSP lives in `/etc/nginx/snippets/security-headers.conf` — `script-src` and `connect-src` locked to specific domains; `img-src` lists explicit Google country TLDs for Ads tracking pixels (CSP can't wildcard across TLDs like google.ae, google.co.uk)
 - Stripe Checkout iframe generates CSP "report-only" warnings in console — these are Stripe's internal policy, not ours, but monitor if Stripe changes from report-only to enforced
 - `<link rel=preload>` warnings from Stripe Checkout are from their iframe, not our HTML — verify with `grep -r "preload" public/` if unsure
-- Lang-switcher base styles are in `style.css` (not `rtl.css`) — `rtl.css` only has the `[dir="rtl"]` margin override
+- Lang-switcher is a dropdown (`nav.lang-switcher` in `style.css`) — `rtl.css` has RTL overrides for dropdown position and padding
 - Responsive breakpoints: 1024px (tablet landscape), 768px (tablet/phone + sticky CTA), 480px (small phone) — all CRO elements have overrides at each breakpoint
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
 - Deploy: `cp nginx/security-headers.conf /etc/nginx/snippets/ && cp nginx/vizoguard.conf /etc/nginx/sites-available/vizoguard && nginx -t && systemctl reload nginx`
 - **Before any CSP change**: test with Google Ads + GTM + Stripe Checkout in browser DevTools console — CSP errors break conversion tracking silently
-- **TODO**: automated CSP/tracking validation — a hook or CI job that checks for CSP violations after nginx config changes (currently manual browser-only testing)
+- Automated CSP validation: use `/csp-validate` skill after nginx config changes — checks all required domains for Google Ads, GA4, GTM, Stripe
 
 ## Related Repos
 - Desktop app: `pentedigital/vizoguard-app` (Electron client, lives at `/root/vizoguard-app`)
+- Android app: `pentedigital/vizoguard-android` (Kotlin + Compose, lives at `/root/vizoguard-android`)

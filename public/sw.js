@@ -1,14 +1,20 @@
-const CACHE_NAME = 'vg-v18';
+const CACHE_NAME = 'vg-v23';
 
 const APP_SHELL = [
   '/',
   '/ar/',
+  '/hi/',
+  '/fr/',
+  '/es/',
   '/css/style.css',
   '/css/rtl.css',
   '/js/main.js',
   '/js/i18n.js',
   '/locales/en.json',
   '/locales/ar.json',
+  '/locales/hi.json',
+  '/locales/fr.json',
+  '/locales/es.json',
   '/setup.html',
   '/privacy.html',
   '/terms.html',
@@ -55,7 +61,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML pages (ensures updates are immediate)
-  if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname.endsWith('.html')) {
+  if (url.pathname === '/' || url.pathname === '/ar/' || url.pathname === '/hi/' || url.pathname === '/fr/' || url.pathname === '/es/' || url.pathname.endsWith('.html')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
