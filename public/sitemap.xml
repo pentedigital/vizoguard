@@ -27,6 +27,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/hi/</loc>
@@ -40,6 +41,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/fr/</loc>
@@ -53,6 +55,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/es/</loc>
@@ -66,6 +69,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/pricing.html</loc>
@@ -108,7 +112,7 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/compare/vizoguard-vs-expressvpn"/>
   </url>
   <url>
-    <loc>https://vizoguard.com/blog/what-is-vpn.html</loc>
+    <loc>https://vizoguard.com/blog/what-is-vpn</loc>
     <lastmod>2026-03-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -349,6 +353,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <url>
     <loc>https://vizoguard.com/ru/</loc>
@@ -362,6 +367,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vizoguard.com/es/"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/"/>
   </url>
   <!-- International: free-vpn -->
   <url>
@@ -1212,5 +1218,12 @@
     <xhtml:link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/ai-threat-protection"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/ai-threat-protection"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/ai-threat-protection"/>
+  </url>
+  <!-- Blog Index -->
+  <url>
+    <loc>https://vizoguard.com/blog/</loc>
+    <lastmod>2026-03-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
