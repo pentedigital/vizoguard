@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18020160060"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18020160060');
+    gtag('config', 'GT-NGJF3VBT');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Threat Protection: How Vizoguard Blocks Threats in Real Time | Vizoguard</title>
+  <meta name="description" content="How does AI threat protection work? Learn how Vizoguard's 8 analysis vectors detect phishing, malware, and zero-day threats before your browser loads them.">
+  <meta name="keywords" content="ai threat protection, ai security, real-time threat detection, phishing protection, malware blocking, zero day protection">
+  <meta name="author" content="Vizoguard">
+  <link rel="canonical" href="https://vizoguard.com/ai-threat-protection">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AI Threat Protection: How Vizoguard Blocks Threats in Real Time | Vizoguard">
+  <meta property="og:description" content="How does AI threat protection work? Learn how Vizoguard's 8 analysis vectors detect phishing, malware, and zero-day threats before your browser loads them.">
+  <meta property="og:url" content="https://vizoguard.com/ai-threat-protection">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Vizoguard">
+  <meta property="og:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AI Threat Protection: How Vizoguard Blocks Threats in Real Time | Vizoguard">
+  <meta name="twitter:description" content="How does AI threat protection work? Learn how Vizoguard's 8 analysis vectors detect phishing, malware, and zero-day threats before your browser loads them.">
+  <meta name="twitter:image" content="https://vizoguard.com/icons/icon-512.png">
+
+  <!-- Structured Data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "AI Threat Protection: How Vizoguard Blocks Threats in Real Time",
+    "description": "How does AI threat protection work? Learn how Vizoguard's 8 analysis vectors detect phishing, malware, and zero-day threats before your browser loads them.",
+    "author": { "@type": "Organization", "name": "Vizoguard", "url": "https://vizoguard.com" },
+    "publisher": { "@type": "Organization", "name": "Vizoguard", "logo": { "@type": "ImageObject", "url": "https://vizoguard.com/icons/icon-512.png" } },
+    "datePublished": "2026-03-21",
+    "dateModified": "2026-03-21",
+    "mainEntityOfPage": "https://vizoguard.com/ai-threat-protection",
+    "image": "https://vizoguard.com/icons/icon-512.png"
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is AI threat protection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AI threat protection is a real-time security system that analyzes URLs, domains, and network requests using multiple detection algorithms before your device connects to them. Unlike traditional blocklists that only catch known threats, AI-based detection can identify never-before-seen phishing sites, brand impersonation attempts, and zero-day malware delivery pages by examining structural and behavioral characteristics of the URL itself — not just whether it appears on a list."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Vizoguard's AI threat protection work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard intercepts every URL your device attempts to connect to before the browser loads the content. The URL is instantly passed through 8 parallel analysis vectors: blocklist matching, suspicious TLD detection, brand impersonation analysis, IP-in-URL detection, excessive subdomain analysis, dangerous download detection, homoglyph detection, and phishing keyword pattern matching. If any vector scores the URL as malicious, the connection is blocked and you see a warning page — typically in under 20 milliseconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can AI threat protection stop zero-day phishing attacks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. This is the primary advantage over blocklist-only approaches. A zero-day phishing site — one registered hours or days ago — will not appear on any blocklist yet. But it will exhibit structural signals that Vizoguard's analysis vectors detect: suspicious TLDs, brand name misspellings, excessive subdomains designed to look legitimate, and phishing keywords in the URL path. These heuristic signals allow Vizoguard to block new threats even before they are formally catalogued."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is homoglyph detection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Homoglyph attacks exploit the visual similarity between characters from different Unicode scripts. For example, a Cyrillic 'а' (Unicode U+0430) looks identical to a Latin 'a' (Unicode U+0061) in most fonts. An attacker can register аррlе.com using Cyrillic characters — which resolves to a completely different domain than apple.com — and it appears legitimate to the human eye. Vizoguard detects mixed-script domains and flags them as high-risk before any connection is made."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is brand impersonation detection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Brand impersonation detection identifies domains that closely mimic the names of well-known services and companies. Examples include paypa1.com (replacing 'l' with '1'), amazon-secure-login.com (legitimate brand embedded in a longer domain), or appleid-verify.net (combining a brand name with action words that suggest urgency). Vizoguard maintains a database of high-value brand targets and scores any domain that fuzzy-matches these targets against context signals like TLD, subdomain structure, and URL path keywords."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does AI threat protection slow down my browsing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Vizoguard's threat analysis runs locally on your device in under 20 milliseconds for the heuristic vectors. Blocklist lookups are cached and compressed for minimal latency. Because the analysis happens inside the VPN tunnel before the connection is forwarded, there is no additional round-trip to an external server for each URL check. In practice, the latency introduced by threat analysis is imperceptible compared to normal network latency."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What types of malicious downloads does Vizoguard block?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vizoguard flags download URLs that point to executable file types commonly used to deliver malware: .exe, .scr, .bat, .cmd, .com, .pif, .vbs, .js (when served as a download), .msi, and .dll files originating from domains with no established trust history. The detection does not block all downloads — only those from suspicious sources. Trusted software distribution domains (Microsoft, Adobe, major app stores) are whitelisted to avoid false positives."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is AI threat protection different from antivirus software?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Traditional antivirus operates after a file has been downloaded to your device — it scans the file against known malware signatures. Vizoguard's AI threat protection operates at the network level, before any file is downloaded or any malicious page is loaded. This means a zero-day exploit delivered via a phishing page is stopped before your browser renders a single byte of its content. The two approaches are complementary: antivirus handles files already on your device; AI threat protection prevents malicious content from reaching your device at all."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is an excessive subdomain attack?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Attackers use long subdomain chains to make a malicious URL appear legitimate at a glance. A URL like login.secure.verify.account.paypal.com.malicious-domain.xyz looks like it might be PayPal-related when scanned quickly, but the actual registered domain is malicious-domain.xyz. Vizoguard's excessive subdomain analysis counts subdomain depth, looks for high-value brand names embedded in subdomain labels, and cross-references the actual registered domain against the full URL structure to surface these deceptive patterns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is AI threat protection available on all Vizoguard plans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AI threat protection — including all 8 analysis vectors — is available exclusively on Vizoguard Pro ($99.99/yr). The Basic plan ($24.99/yr) includes VPN encryption and a no-logs policy but does not include the AI security layer. If your primary concern is threat detection rather than just IP masking, Vizoguard Pro is the appropriate choice."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Vizoguard", "item": "https://vizoguard.com/" },
+      { "@type": "ListItem", "position": 2, "name": "AI Threat Protection", "item": "https://vizoguard.com/ai-threat-protection" }
+    ]
+  }
+  </script>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00e5a0">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css?v=20">
+  <style>
+    .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
+    .seo-page h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .seo-page h2 { color: var(--text); font-size: 1.4rem; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .seo-page h3 { color: var(--text); font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; }
+    .seo-page p, .seo-page li { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; }
+    .seo-page ul, .seo-page ol { padding-left: 20px; margin: 12px 0; }
+    .seo-page li { margin-bottom: 6px; }
+
+    .verdict-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 24px 0 40px;
+    }
+    .verdict-box h3 { color: var(--teal); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .verdict-box p { color: var(--text-2); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+    .compare-table-wrap { overflow-x: auto; margin: 24px 0 40px; -webkit-overflow-scrolling: touch; }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      min-width: 560px;
+    }
+    .compare-table thead th {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    .compare-table thead th:first-child { border-radius: 8px 0 0 0; }
+    .compare-table thead th:last-child { border-radius: 0 8px 0 0; }
+    .compare-table tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+    .compare-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .compare-table tbody td:first-child { color: var(--text); font-weight: 500; }
+    .check { color: var(--teal); }
+    .cross { color: var(--red, #ff5555); }
+    .highlight-col { background: rgba(0, 229, 160, 0.04); }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      margin: 32px 0 48px;
+      flex-wrap: wrap;
+    }
+    .cta-row .btn { padding: 14px 32px; font-size: 0.95rem; }
+
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-3); margin-bottom: 12px; }
+    .breadcrumb a { color: var(--text-3); }
+    .breadcrumb a:hover { color: var(--text); }
+
+    .vector-list { list-style: none; padding: 0; margin: 16px 0; }
+    .vector-list li {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: var(--surface);
+    }
+    .vector-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 229, 160, 0.12);
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vector-content strong { color: var(--text); display: block; margin-bottom: 6px; font-size: 1rem; }
+    .vector-content span { color: var(--text-2); font-size: 0.9rem; line-height: 1.65; }
+    .vector-content code {
+      background: rgba(0,229,160,0.08);
+      color: var(--teal);
+      font-family: monospace;
+      font-size: 0.85rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .flow-steps { list-style: none; padding: 0; margin: 20px 0; counter-reset: flow-counter; }
+    .flow-steps li {
+      counter-increment: flow-counter;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      position: relative;
+    }
+    .flow-steps li::before {
+      content: counter(flow-counter);
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 229, 160, 0.15);
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flow-steps li strong { color: var(--text); display: block; margin-bottom: 4px; }
+    .flow-steps li p { color: var(--text-2); font-size: 0.9rem; line-height: 1.65; margin: 0; }
+
+    .faq { margin: 24px 0 40px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-question:hover { background: rgba(255,255,255,0.03); }
+    .faq-question::after { content: '+'; font-size: 1.2rem; color: var(--teal); flex-shrink: 0; transition: transform 0.2s; }
+    .faq-item.open .faq-question::after { transform: rotate(45deg); }
+    .faq-answer { display: none; padding: 0 20px 18px; }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-answer p { color: var(--text-2); font-size: 0.9rem; line-height: 1.7; margin: 12px 0 0; }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 20px 0 36px;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 18px;
+    }
+    .use-case-card strong { color: var(--text); display: block; margin-bottom: 8px; font-size: 0.95rem; }
+    .use-case-card p { color: var(--text-2); font-size: 0.875rem; line-height: 1.6; margin: 0; }
+
+    @media (max-width: 768px) {
+      .seo-page { padding: 80px 16px 40px; }
+      .seo-page h1 { font-size: 1.5rem; }
+      .seo-page h2 { font-size: 1.2rem; }
+      .cta-row { flex-direction: column; }
+      .cta-row .btn { width: 100%; text-align: center; }
+      .use-case-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Vizo<span>guard</span></a>
+  <nav>
+    <a href="/#features">Features</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="mailto:support@vizoguard.com">Contact</a>
+  </nav>
+</header>
+
+<main class="seo-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Vizoguard</a> &rsaquo; AI Threat Protection
+  </nav>
+
+  <h1>AI Threat Protection: How Vizoguard Blocks Threats in Real Time</h1>
+
+  <p>A phishing site can be live and operational within minutes of registration. A zero-day malware delivery page can exist on the internet for 48 hours before any threat intelligence feed notices it. Traditional blocklists — the foundation of most VPNs' "security" features — are reactive by design. They catch threats after the fact, after someone has already been compromised and the domain has been reported and catalogued.</p>
+
+  <p>Vizoguard Pro takes a fundamentally different approach. Instead of asking <em>is this domain on a known-bad list?</em>, Vizoguard's AI threat protection asks <em>does this domain exhibit the structural and behavioral characteristics of a malicious site?</em> Those are different questions with very different implications for what gets caught — and what slips through.</p>
+
+  <p>This page explains exactly how Vizoguard's real-time threat detection works: the technical architecture, the 8 analysis vectors it applies to every URL, and why heuristic analysis catches the attacks that block lists never will.</p>
+
+  <div class="verdict-box">
+    <h3>Key Takeaway</h3>
+    <p>Vizoguard Pro intercepts every URL before your browser loads it and runs it through 8 parallel analysis vectors in under 20 milliseconds. Blocklist matching catches known threats; the remaining 7 vectors catch threats that have never been seen before. This is the core technical differentiator between Vizoguard Pro and every VPN that relies solely on blocklists.</p>
+  </div>
+
+  <!-- ===== SECTION 1 ===== -->
+  <h2>What Is AI Threat Protection?</h2>
+
+  <p>AI threat protection is a network-level security layer that analyzes URLs and domains in real time using algorithmic detection — not just lookup tables. The "AI" in the name reflects the use of multi-vector heuristic scoring: multiple independent signals about a URL are combined and weighted to produce a threat probability score. No single signal is definitive; the aggregate assessment is.</p>
+
+  <p>To understand why this matters, it helps to understand how traditional blocklist-based protection works and where it fails.</p>
+
+  <h3>How Blocklists Work</h3>
+  <p>A blocklist is a database of known-bad domains, IP addresses, and URLs. When your device tries to connect to a site, a blocklist-based system checks whether the destination appears in the database. If it does, the connection is blocked. If it does not, the connection is allowed.</p>
+
+  <p>The fundamental limitation is the word <em>known</em>. A domain must be discovered, analyzed, reported, and added to the relevant threat feeds before blocklist-based protection can catch it. For well-established malware infrastructure that has been running for weeks or months, blocklists work well. For fresh phishing attacks — which attackers specifically design to evade blocklists by rotating domains frequently — they offer almost no protection.</p>
+
+  <p>Research consistently shows that phishing pages have a median lifespan of 4–8 hours before they are taken down or rotated. Most blocklists update every 24 hours at best. The window of protection is inverted: blocklists are most effective after a threat has already done its damage and least effective during the period when the attack is most active.</p>
+
+  <h3>How Heuristic Detection Fills the Gap</h3>
+  <p>Heuristic detection does not rely on a domain being previously catalogued. It analyzes the structure of the URL itself — the domain name, subdomain pattern, TLD, file paths, and query parameters — looking for patterns that are statistically associated with malicious intent.</p>
+
+  <p>The insight is that malicious domains are not random. Phishing operators follow predictable patterns because those patterns work: they use confusable characters to impersonate brands, they use action-oriented keywords to trigger urgency, they use recently-registered cheap TLDs to minimize cost, and they construct subdomain chains to make malicious domains appear legitimate. Vizoguard's 8 analysis vectors are each designed to detect one family of these patterns.</p>
+
+  <p>See how Vizoguard's full feature set compares to other VPNs on the <a href="/features" style="color:var(--teal)">features page</a>.</p>
+
+  <!-- ===== SECTION 2 ===== -->
+  <h2>The 8 Analysis Vectors</h2>
+
+  <p>Every URL that passes through Vizoguard Pro is evaluated against 8 independent analysis vectors simultaneously. The results are aggregated into a composite threat score. A URL triggering multiple vectors receives a higher score and a higher probability of being blocked. Here is what each vector detects and why it matters.</p>
+
+  <ul class="vector-list">
+    <li>
+      <div class="vector-num">1</div>
+      <div class="vector-content">
+        <strong>Blocklist Matching — Known Threats</strong>
+        <span>The foundation layer. Vizoguard maintains a continuously synchronized local copy of major threat intelligence feeds including Google Safe Browsing, PhishTank, abuse.ch URLhaus, and curated malware domain lists. Blocklist lookups run against a compressed Bloom filter structure in memory, making the check nearly instantaneous. Known-bad domains are blocked before any other analysis runs. This vector alone handles the majority of commodity threats — drive-by malware sites, known ransomware command-and-control domains, and catalogued phishing infrastructure that has been in circulation for days or longer.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">2</div>
+      <div class="vector-content">
+        <strong>Suspicious TLD Detection — High-Risk Domain Endings</strong>
+        <span>Not all top-level domains carry equal risk. Generic TLDs like <code>.xyz</code>, <code>.top</code>, <code>.click</code>, <code>.loan</code>, <code>.work</code>, <code>.gq</code>, <code>.ml</code>, <code>.cf</code>, <code>.ga</code>, and <code>.tk</code> are consistently overrepresented in threat intelligence data because they are either free, extremely cheap, or offer anonymous registration. Phishing operators specifically prefer these TLDs to minimize the cost of rotating infrastructure. Vizoguard scores any domain using a high-risk TLD more aggressively in the composite threat model — particularly when combined with other signals. The vector does not block all <code>.xyz</code> domains outright (many legitimate services use them), but it raises the threat score proportionally.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">3</div>
+      <div class="vector-content">
+        <strong>Brand Impersonation Detection — Lookalike Domains</strong>
+        <span>Phishing attacks overwhelmingly target users of high-value consumer brands: banks, payment processors, email providers, social networks, and e-commerce platforms. Vizoguard maintains a database of over 500 brand name patterns and applies fuzzy string matching to every domain it evaluates. Classic examples: <code>paypa1.com</code> (numeral '1' replacing letter 'l'), <code>amazon-account-verify.net</code> (brand embedded in a longer domain), <code>google.com.secure-login.xyz</code> (brand in a subdomain rather than the registered domain). The vector scores proximity to brand patterns, weighting more heavily when the registered domain (not just the subdomain) contains the brand impersonation.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">4</div>
+      <div class="vector-content">
+        <strong>IP-in-URL Detection — Numeric Addresses Instead of Domains</strong>
+        <span>Legitimate web services use domain names. Malicious infrastructure frequently uses raw IP addresses in URLs — for example, <code>http://192.168.1.1/login</code> or <code>http://185.220.101.47/payload.exe</code> — because IP-based hosting is faster to deploy, harder to attribute, and does not require domain registration. The presence of a raw IPv4 or IPv6 address in the hostname portion of a URL is a strong signal of malicious intent. Vizoguard flags any URL containing an IP address in the host field as high-risk, with the severity scaled by additional context (file type being requested, presence of phishing keywords in the path, etc.).</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">5</div>
+      <div class="vector-content">
+        <strong>Excessive Subdomain Analysis — Deceptive URL Construction</strong>
+        <span>A legitimate domain like <code>mail.google.com</code> has one subdomain label before the registered domain. Malicious actors construct deeply nested subdomain chains specifically to confuse users who scan the beginning of a URL rather than the end: <code>login.secure.bank.account.verify.com.malicious-domain.xyz</code>. The actual registered domain here is <code>malicious-domain.xyz</code> — everything before it is attacker-controlled subdomain structure. Vizoguard counts subdomain depth, identifies high-value brand names embedded in subdomain labels, and cross-references the actual registered domain against the full subdomain chain. URLs with four or more subdomain labels receive elevated scores; URLs with brand names in subdomains and a mismatched registered domain receive near-maximum scores for this vector.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">6</div>
+      <div class="vector-content">
+        <strong>Dangerous Download Detection — Malware Delivery Vectors</strong>
+        <span>Malware distribution frequently occurs through direct file downloads from freshly-registered or compromised domains. Vizoguard inspects the URL path and query parameters for file extensions commonly associated with malware delivery: <code>.exe</code>, <code>.scr</code>, <code>.bat</code>, <code>.cmd</code>, <code>.com</code>, <code>.pif</code>, <code>.vbs</code>, <code>.ps1</code>, <code>.msi</code>, <code>.dll</code>, and JavaScript files served as downloads. The vector does not block all downloads of these types — trusted software distribution domains (major vendors, OS update servers, well-established software repositories) are whitelisted. The score is determined by combining file type risk with domain trust signals: age of domain registration, TLD risk, and blocklist presence. A day-old <code>.xyz</code> domain serving an <code>.exe</code> will score near-maximum; the same file type from microsoft.com scores zero.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">7</div>
+      <div class="vector-content">
+        <strong>Homoglyph Detection — Unicode Character Substitution</strong>
+        <span>Homoglyph attacks exploit the visual indistinguishability of characters from different Unicode scripts. A Cyrillic <code>а</code> (U+0430) is visually identical to a Latin <code>a</code> (U+0061) in every common screen font. Attackers register domains like <code>аррle.com</code> — where all three characters are Cyrillic — which resolves to an entirely different domain than <code>apple.com</code>. The human eye cannot distinguish them. Vizoguard decodes every domain's punycode representation (the <code>xn--</code> encoding used for internationalized domains), detects mixed-script usage (Latin and Cyrillic characters in the same label), identifies single-script substitution attacks, and scores mixed-script domains as high-risk. Pure internationalized domains (entirely in one non-Latin script, serving a legitimate market) are scored much lower than mixed-script domains, which are rarely legitimate.</span>
+      </div>
+    </li>
+    <li>
+      <div class="vector-num">8</div>
+      <div class="vector-content">
+        <strong>Phishing Keyword Pattern Matching — Urgency Signals in URLs</strong>
+        <span>Phishing URLs almost universally contain keywords in the domain or path that signal urgency, account action, or verification: <code>verify</code>, <code>confirm</code>, <code>suspended</code>, <code>update</code>, <code>secure</code>, <code>account</code>, <code>login</code>, <code>alert</code>, <code>urgent</code>, <code>limited</code>, <code>unusual</code>, <code>activity</code>. These keywords appear because they are placed there deliberately to prime the target's response before the page even loads. Vizoguard scans the full URL — domain, subdomain, path, query string — for clusters of phishing-associated keywords. A single instance of "login" is not meaningful. A URL containing <code>secure-account-verify-login-urgent</code> in a path segment on an unrecognized domain with a <code>.top</code> TLD triggers this vector at high confidence.</span>
+      </div>
+    </li>
+  </ul>
+
+  <!-- ===== SECTION 3 ===== -->
+  <h2>How It Works: Intercept, Analyze, Decide — in Under 20ms</h2>
+
+  <p>Understanding the architecture of how these 8 vectors are applied in practice clarifies why the protection is both comprehensive and fast. The analysis pipeline has four stages:</p>
+
+  <ol class="flow-steps">
+    <li>
+      <strong>URL Interception</strong>
+      <p>Vizoguard operates as a VPN. All network traffic from your device — browser, email client, apps, system connections — passes through the VPN tunnel. The tunnel's threat engine intercepts every outbound DNS query and HTTPS connection before the request leaves your device. There is no opt-in per-browser extension or manual configuration; the protection applies to all traffic automatically.</p>
+    </li>
+    <li>
+      <strong>Parallel Vector Analysis</strong>
+      <p>The destination URL (extracted from the DNS query or SNI field of the TLS handshake) is submitted to all 8 analysis vectors simultaneously. The vectors operate independently and in parallel — none waits for another to complete. Blocklist lookup hits the local Bloom filter. The heuristic vectors (TLD scoring, brand matching, homoglyph decode, subdomain depth, keyword scanning, etc.) execute their pattern recognition logic against the URL string. For the download detection vector, the file path is also inspected. This parallel execution is what keeps total analysis latency under 20 milliseconds.</p>
+    </li>
+    <li>
+      <strong>Score Aggregation</strong>
+      <p>Each vector produces a score from 0 (clean) to 1 (high confidence malicious). The composite threat score is a weighted combination of all 8 vector scores, with weights calibrated on a continuously updated dataset of confirmed phishing and malware URLs. A confirmed blocklist match instantly produces a score of 1 regardless of other vectors. For heuristic vectors, the weighting ensures that a URL must trigger multiple signals to be blocked — preventing single-signal false positives while maintaining sensitivity to multi-signal attacks.</p>
+    </li>
+    <li>
+      <strong>Block or Allow Decision</strong>
+      <p>If the composite score exceeds the blocking threshold, the connection is blocked and the user sees a warning page explaining which signals triggered the block. The warning page includes the option to proceed anyway (for users who are certain the site is safe) and a link to report a false positive. If the score is below the threshold, the connection proceeds normally — typically with total added latency under 20 milliseconds, imperceptible compared to normal DNS resolution times of 20–50 milliseconds.</p>
+    </li>
+  </ol>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'pro'})">Get Pro — AI Protection Included</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'basic'})">Compare All Plans</a>
+  </div>
+
+  <!-- ===== SECTION 4 ===== -->
+  <h2>What AI Threat Protection Catches That Blocklists Miss</h2>
+
+  <p>The practical value of multi-vector heuristic analysis becomes concrete when you look at the attack categories that evade blocklist-only defenses entirely.</p>
+
+  <h3>Zero-Day Phishing Domains</h3>
+  <p>A phishing campaign targeting a major bank can be launched in under an hour: register a domain, point it to a cloned login page hosted on a bulletproof server, buy traffic via targeted ads or spam, and start harvesting credentials. The domain may not appear on any threat feed for 6–72 hours. During that window, blocklist-based protection is completely blind to it.</p>
+  <p>Vizoguard's heuristic vectors detect this domain immediately. A freshly-registered <code>.xyz</code> domain with "bankname" and "verify" in the hostname, combined with a "login" path, triggers at minimum vectors 2, 3, and 8 — enough to produce a high composite threat score and block the connection before the page loads.</p>
+
+  <h3>Brand-New Malware Distribution Infrastructure</h3>
+  <p>Malware operators frequently rotate distribution domains to evade blocklists. Each new domain is clean for hours or days. Vizoguard's download detection vector (vector 6) evaluates the domain's trust context alongside the file type. A newly-registered domain with no established history serving an <code>.exe</code> or <code>.scr</code> file will be flagged regardless of whether it appears on a blocklist.</p>
+
+  <h3>Targeted Spear Phishing URLs</h3>
+  <p>Generic phishing sends millions of emails hoping a small percentage of recipients click. Spear phishing is targeted — crafted for a specific person or organization. Spear phishing domains are rarely on blocklists because they are used for a small number of attacks against a small number of targets and may never be widely reported. Vizoguard's brand impersonation and keyword pattern vectors catch these attacks based on their structural characteristics, not their notoriety.</p>
+
+  <h3>Homoglyph Domain Attacks</h3>
+  <p>These attacks are specifically designed to be invisible to blocklists — a Cyrillic-character domain that visually mimics a Latin-character brand is a completely different domain from a blocklist perspective. The target domain (<code>apple.com</code>) may be on a whitelist; the homoglyph (<code>аррle.com</code>) is not. Only a system that decodes the actual Unicode character composition of the domain can detect this. Vizoguard's vector 7 is specifically designed for this class of attack.</p>
+
+  <p>Learn more about specific attack types: <a href="/blog/how-to-block-phishing" style="color:var(--teal)">how phishing attacks work and how to block them</a> and <a href="/blog/what-is-malware" style="color:var(--teal)">what malware is and how it spreads</a>.</p>
+
+  <!-- ===== SECTION 5 ===== -->
+  <h2>AI Threat Protection vs Traditional Antivirus</h2>
+
+  <p>The two most common questions when explaining AI threat protection are: how is this different from antivirus, and does it replace antivirus? The answers reveal why network-level threat protection and endpoint antivirus are complementary rather than competing approaches.</p>
+
+  <div class="compare-table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Traditional Antivirus</th>
+          <th class="highlight-col">Vizoguard AI Threat Protection</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>When does it act?</td>
+          <td>After file is downloaded to device</td>
+          <td class="highlight-col"><span class="check">Before any content reaches device</span></td>
+        </tr>
+        <tr>
+          <td>Detection method</td>
+          <td>Signature matching against known malware hashes</td>
+          <td class="highlight-col"><span class="check">8-vector heuristic URL analysis</span></td>
+        </tr>
+        <tr>
+          <td>Zero-day protection</td>
+          <td><span class="cross">Limited — only heuristic AV has partial coverage</span></td>
+          <td class="highlight-col"><span class="check">Yes — structural analysis catches novel domains</span></td>
+        </tr>
+        <tr>
+          <td>Phishing page detection</td>
+          <td><span class="cross">No — antivirus scans files, not web pages</span></td>
+          <td class="highlight-col"><span class="check">Yes — URL analysis before browser loads page</span></td>
+        </tr>
+        <tr>
+          <td>Brand impersonation detection</td>
+          <td><span class="cross">No</span></td>
+          <td class="highlight-col"><span class="check">Yes — fuzzy brand name matching</span></td>
+        </tr>
+        <tr>
+          <td>Homoglyph detection</td>
+          <td><span class="cross">No</span></td>
+          <td class="highlight-col"><span class="check">Yes — Unicode punycode analysis</span></td>
+        </tr>
+        <tr>
+          <td>Works across all apps</td>
+          <td>Only for files — not network-level</td>
+          <td class="highlight-col"><span class="check">Yes — all traffic through VPN tunnel</span></td>
+        </tr>
+        <tr>
+          <td>Performance impact</td>
+          <td>Moderate — periodic full-system scans</td>
+          <td class="highlight-col"><span class="check">Under 20ms per URL, imperceptible</span></td>
+        </tr>
+        <tr>
+          <td>Catches existing device infections</td>
+          <td><span class="check">Yes — malware already on disk</span></td>
+          <td class="highlight-col"><span class="cross">No — network-level only</span></td>
+        </tr>
+        <tr>
+          <td>Requires user interaction</td>
+          <td>Yes — scans, updates, quarantine decisions</td>
+          <td class="highlight-col"><span class="check">No — fully automatic, no configuration</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The key architectural difference: antivirus is a <em>detection and remediation</em> tool that operates after content reaches your device. Vizoguard's AI threat protection is a <em>prevention</em> tool that operates before content reaches your device. Prevention is superior when possible — you cannot be infected by a phishing page that never loaded.</p>
+
+  <p>For comprehensive protection, Vizoguard Pro's threat detection handles the network layer while a traditional antivirus handles files already on disk. The two cover different threat vectors and reinforce each other rather than overlap.</p>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'pro'})">Get Pro — $99.99/yr</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'basic'})">Get Basic — $24.99/yr</a>
+  </div>
+
+  <!-- ===== SECTION 6 ===== -->
+  <h2>Who Needs AI Threat Protection?</h2>
+
+  <p>AI threat protection is not a feature for security professionals only. The attack categories it defends against — phishing, brand impersonation, malware delivery, zero-day domains — are the most common threats facing ordinary internet users in 2026. Here are the use cases where it provides the most value:</p>
+
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <strong>Remote Workers and Freelancers</strong>
+      <p>Working across multiple networks — home Wi-Fi, coffee shops, client offices — creates multiple opportunities for phishing and man-in-the-middle attacks. AI threat protection applies consistently regardless of what network you are on, because it operates at the VPN layer rather than the network layer.</p>
+    </div>
+    <div class="use-case-card">
+      <strong>Online Banking and Financial Transactions</strong>
+      <p>Financial services are the most-impersonated category in phishing attacks. Brand impersonation detection (vector 3) and keyword pattern matching (vector 8) are specifically calibrated to catch bank and payment processor spoofs — the domains that attackers spend the most effort crafting to evade detection.</p>
+    </div>
+    <div class="use-case-card">
+      <strong>Families with Children</strong>
+      <p>Children are statistically more likely to click unfamiliar links — in games, social platforms, YouTube comments, and peer messages. AI threat protection blocks malicious pages before they load, providing a safety layer that does not require children to exercise security judgment they do not yet have.</p>
+    </div>
+    <div class="use-case-card">
+      <strong>Frequent Travelers</strong>
+      <p>Public Wi-Fi at airports, hotels, and conference centers combines high attack surface with high-value targets. Vizoguard's VPN encrypts the connection while AI threat protection filters malicious destinations — addressing both the network-level risk (passive eavesdropping) and the application-level risk (phishing via captive portals and malicious redirects).</p>
+    </div>
+    <div class="use-case-card">
+      <strong>Small Business Owners</strong>
+      <p>Small businesses are increasingly targeted by sophisticated phishing attacks that impersonate suppliers, payment processors, and banks. Unlike enterprise security stacks, Vizoguard Pro provides network-level threat detection without requiring an IT team or security expertise to configure and maintain.</p>
+    </div>
+    <div class="use-case-card">
+      <strong>Anyone Who Has Been Phished Before</strong>
+      <p>Phishing victims are statistically more likely to be targeted again — their contact information is distributed and sold across criminal networks after the initial compromise. AI threat protection provides a systematic defense that does not rely on the user recognizing a phishing URL manually.</p>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 7 ===== -->
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq">
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is AI threat protection?</button>
+      <div class="faq-answer" role="region">
+        <p>AI threat protection is a real-time security system that analyzes URLs, domains, and network requests using multiple detection algorithms before your device connects to them. Unlike traditional blocklists that only catch known threats, AI-based detection can identify never-before-seen phishing sites, brand impersonation attempts, and zero-day malware delivery pages by examining structural and behavioral characteristics of the URL itself — not just whether it appears on a list.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">How does Vizoguard's AI threat protection work?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard intercepts every URL your device attempts to connect to before the browser loads the content. The URL is instantly passed through 8 parallel analysis vectors: blocklist matching, suspicious TLD detection, brand impersonation analysis, IP-in-URL detection, excessive subdomain analysis, dangerous download detection, homoglyph detection, and phishing keyword pattern matching. If any combination of vectors scores the URL as malicious, the connection is blocked and you see a warning page — typically in under 20 milliseconds.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Can AI threat protection stop zero-day phishing attacks?</button>
+      <div class="faq-answer" role="region">
+        <p>Yes. This is the primary advantage over blocklist-only approaches. A zero-day phishing site — one registered hours or days ago — will not appear on any blocklist yet. But it will exhibit structural signals that Vizoguard's analysis vectors detect: suspicious TLDs, brand name misspellings, excessive subdomains designed to look legitimate, and phishing keywords in the URL path. These heuristic signals allow Vizoguard to block new threats even before they are formally catalogued.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is homoglyph detection?</button>
+      <div class="faq-answer" role="region">
+        <p>Homoglyph attacks exploit the visual similarity between characters from different Unicode scripts. For example, a Cyrillic 'а' (Unicode U+0430) looks identical to a Latin 'a' (Unicode U+0061) in most fonts. An attacker can register аррlе.com using Cyrillic characters — which resolves to a completely different domain than apple.com — and it appears legitimate to the human eye. Vizoguard detects mixed-script domains and flags them as high-risk before any connection is made.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is brand impersonation detection?</button>
+      <div class="faq-answer" role="region">
+        <p>Brand impersonation detection identifies domains that closely mimic the names of well-known services and companies. Examples include paypa1.com (replacing 'l' with '1'), amazon-secure-login.com (legitimate brand embedded in a longer domain), or appleid-verify.net (combining a brand name with action words that suggest urgency). Vizoguard maintains a database of high-value brand targets and scores any domain that fuzzy-matches these targets against context signals like TLD, subdomain structure, and URL path keywords.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Does AI threat protection slow down my browsing?</button>
+      <div class="faq-answer" role="region">
+        <p>No. Vizoguard's threat analysis runs locally on your device in under 20 milliseconds for the heuristic vectors. Blocklist lookups are cached and compressed for minimal latency. Because the analysis happens inside the VPN tunnel before the connection is forwarded, there is no additional round-trip to an external server for each URL check. In practice, the latency introduced by threat analysis is imperceptible compared to normal network latency.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What types of malicious downloads does Vizoguard block?</button>
+      <div class="faq-answer" role="region">
+        <p>Vizoguard flags download URLs that point to executable file types commonly used to deliver malware: .exe, .scr, .bat, .cmd, .com, .pif, .vbs, .ps1, .msi, and .dll files originating from domains with no established trust history. The detection does not block all downloads of these types — trusted software distribution domains (Microsoft, Adobe, major app stores) are whitelisted to avoid false positives.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">How is AI threat protection different from antivirus software?</button>
+      <div class="faq-answer" role="region">
+        <p>Traditional antivirus operates after a file has been downloaded to your device — it scans the file against known malware signatures. Vizoguard's AI threat protection operates at the network level, before any file is downloaded or any malicious page is loaded. This means a zero-day exploit delivered via a phishing page is stopped before your browser renders a single byte of its content. The two approaches are complementary: antivirus handles files already on your device; AI threat protection prevents malicious content from reaching your device at all.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">What is an excessive subdomain attack?</button>
+      <div class="faq-answer" role="region">
+        <p>Attackers use long subdomain chains to make a malicious URL appear legitimate at a glance. A URL like login.secure.verify.account.paypal.com.malicious-domain.xyz looks like it might be PayPal-related when scanned quickly, but the actual registered domain is malicious-domain.xyz. Vizoguard's excessive subdomain analysis counts subdomain depth, looks for high-value brand names embedded in subdomain labels, and cross-references the actual registered domain against the full URL structure to surface these deceptive patterns.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" aria-expanded="false">Is AI threat protection available on all Vizoguard plans?</button>
+      <div class="faq-answer" role="region">
+        <p>AI threat protection — including all 8 analysis vectors — is available exclusively on Vizoguard Pro ($99.99/yr). The Basic plan ($24.99/yr) includes VPN encryption and a no-logs policy but does not include the AI security layer. If your primary concern is threat detection rather than just IP masking, Vizoguard Pro is the appropriate choice.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-row">
+    <a href="/pricing" class="btn" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'pro'})">Get Pro — $99.99/yr</a>
+    <a href="/pricing" class="btn btn-outline" onclick="gtag('event','seo_cta',{page:'ai-threat-protection',plan:'basic'})">Get Basic — $24.99/yr</a>
+  </div>
+
+  <!-- Related -->
+  <div style="margin-top:3em; padding-top:2em; border-top:1px solid var(--border,#2a2a3e);">
+    <h3>Related</h3>
+    <ul style="list-style:none; padding:0;">
+      <li style="margin-bottom:0.5em;"><a href="/features" style="color:var(--teal);">Vizoguard Features — Full Overview</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/pricing" style="color:var(--teal);">Pricing &amp; Plans — Basic vs Pro</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/blog/what-is-malware" style="color:var(--teal);">What Is Malware? Types, Examples, and How to Stay Safe</a></li>
+      <li style="margin-bottom:0.5em;"><a href="/blog/how-to-block-phishing" style="color:var(--teal);">How to Block Phishing Attacks — Practical Guide</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
+</footer>
+
+<script src="/js/main.js?v=20"></script>
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      // Toggle clicked
+      if (!isOpen) {
+        item.classList.add('open');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+</body>
+</html>
