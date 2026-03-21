@@ -15,9 +15,10 @@
 - https://vizoguard.com/hi/ — Hindi landing page (full Hindi SEO)
 - https://vizoguard.com/fr/ — French landing page (full French SEO)
 - https://vizoguard.com/es/ — Spanish landing page (full Spanish SEO)
-- Pricing: Basic ($24.99/yr, VPN only) and Pro ($99.99/yr, VPN + threat detection)
+- Pricing: Basic $24.99/yr (regular $49.99, 50% launch discount) and Pro $99.99/yr (regular $149.99, 33% launch discount)
+- Launch discount countdown ends April 4, 2026 — update date in ALL 7 landing page inline scripts + schema priceValidUntil
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: index, ar/index, hi/index, fr/index, es/index, setup, privacy, terms, thank-you (security page removed)
+- Pages: index, ar/index, hi/index, fr/index, es/index, tr/index, ru/index, setup, privacy, terms, thank-you, pricing, download, compare/vizoguard-vs-nordvpn, compare/vizoguard-vs-expressvpn, blog/what-is-vpn
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
@@ -95,8 +96,9 @@
 - Adding a new language: create `locales/<code>.json`, add code to `SUPPORTED`+`LANG_PATHS`+`LANG_LABELS` in `i18n.js`, create `/public/<code>/index.html`, update hreflang+og:locale:alternate+switcher on ALL existing pages, add to sw.js APP_SHELL
 
 ## CRO (Conversion Optimization)
-- Urgency banner: countdown timer (ends March 25, 2026) — update `end` date in inline script on ALL 5 language pages
-- Urgency date lives in FIVE inline `<script>` blocks (one per language page) — must update all or countdown is inconsistent
+- Urgency banner: countdown timer (ends April 4, 2026) — update `end` date in ALL 7 language page inline scripts
+- Urgency date lives in SEVEN inline `<script>` blocks (one per language page) — must update all or countdown is inconsistent
+- Strikethrough pricing: regular price with line-through + discount badge (`.price-regular` + `.discount-badge` in CSS)
 - Social proof bar: rating + guarantee + zero-logs — below hero on all language pages
 - Per-day price anchoring: "$2.08/month" / "$8.33/month" on pricing cards
 - 30-day money-back guarantee badge under pricing section
@@ -137,6 +139,14 @@
 - Webhook outer `catch` uses `if (!res.headersSent)` guard — checkout.session.completed responds early, so the catch must not double-send
 - Webhook Outline catch must call `stmts.resetOutlineClaim.run(newLicense.id)` — without this, failed provisioning permanently locks the license
 - `invoice.payment_succeeded` also calls `updateStatus("active")` to reactivate suspended licenses after payment recovery
+- Pricing changes touch 7 locale JSONs + 7 HTML pages + JSON-LD schemas (priceValidUntil) + sitemap — use `i18n-reviewer` + `seo-reviewer` subagents after changes
+- Countdown date must use UTC (`Z` suffix) and match across ALL 7 landing page scripts — banner auto-hides after expiry via `urgency-banner style.display=none`
+
+## SEO Pages
+- Comparison pages: `public/compare/vizoguard-vs-*.html` — use `/new-seo-page` skill, Article + FAQPage + BreadcrumbList schemas
+- Blog posts: `public/blog/*.html` — article layout 720px max-width, Article + FAQPage + BreadcrumbList schemas
+- All SEO pages share same header/footer/analytics/scripts as landing pages
+- Sitemap must be updated when adding any new page — currently 15 URLs
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo
