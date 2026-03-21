@@ -3,7 +3,7 @@
 **Date**: 2026-03-21
 **Phase**: 4 of 4 (Traffic → Conversion → International → **Engineering**)
 **Goal**: Add test coverage for critical backend paths + app-level Prometheus metrics for observability
-**Deliverables**: ~25-30 unit tests across 4 test files + prom-client metrics endpoint + Grafana datasource
+**Deliverables**: ~40 unit tests across 5 test files + prom-client metrics endpoint + Grafana datasource
 
 ---
 
@@ -204,7 +204,7 @@ Add scrape target to `/opt/outline/persisted-state/prometheus/config.yml`:
 
 ## Success Criteria
 
-- All ~25-30 tests pass: `node --test server/**/*.test.js`
+- All ~40 tests pass: `node --test server/**/*.test.js`
 - No test calls real external APIs (Stripe, Outline, SMTP)
 - `/metrics` endpoint returns valid Prometheus format
 - Prometheus scrapes `vizoguard-api` target successfully
