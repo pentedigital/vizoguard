@@ -91,10 +91,23 @@
 
       <p style="margin-top: 16px;"><a href="/setup.html" id="basic-setup-link" style="color: var(--teal);">Need help? Visit our setup guide</a></p>
 
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin:24px 0; text-align:left; max-width:400px; margin-left:auto; margin-right:auto;">
+        <h4 style="color:var(--text); font-size:0.95rem; margin-bottom:12px;">3 Things to Do Now</h4>
+        <ol style="color:var(--text-2); font-size:0.85rem; line-height:1.8; padding-left:20px; margin:0;">
+          <li><strong style="color:var(--text)">Connect your VPN</strong> — tap the button above</li>
+          <li><strong style="color:var(--text)">Browse normally</strong> — your traffic is now encrypted</li>
+          <li><strong style="color:var(--text)">Learn more</strong> — check our <a href="/setup" style="color:var(--teal)">setup guide</a> for tips</li>
+        </ol>
+      </div>
+
       <div class="upsell-box">
-        <h3>Want AI threat protection too?</h3>
-        <p>Upgrade to Pro and get real-time phishing detection, malware blocking, and self-healing protection — all on top of your VPN.</p>
-        <a href="/#pricing" class="btn" style="font-size: 0.8125rem; height: 40px; padding: 0 20px;">See Pro plan — $99.99/yr</a>
+        <h3>You're protected from tracking. Want to be protected from threats too?</h3>
+        <ul style="text-align:left; color:var(--text-2); font-size:0.85rem; line-height:1.8; padding-left:20px; margin:0 0 16px;">
+          <li>AI phishing detection — catches brand-new scam domains</li>
+          <li>Real-time malware blocking — stops threats before they load</li>
+          <li>Connection monitoring — see every app talking to the internet</li>
+        </ul>
+        <a href="/#pricing" class="btn" style="font-size: 0.8125rem; height: 40px; padding: 0 20px;">Upgrade to Pro — <span class="upsell-price">$99.99/yr</span></a>
       </div>
     </div>
   </div>
@@ -163,6 +176,8 @@
   </div>
 
 </section>
+
+<p style="color:var(--text-3); font-size:0.75rem; text-align:center; margin-top:32px;">Questions? Email <a href="mailto:support@vizoguard.com" style="color:var(--teal)">support@vizoguard.com</a> — we typically respond within 24 hours</p>
 
 <footer>
   <p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p>
@@ -317,6 +332,11 @@ if (!sessionId) {
   }
 
   pollLicense();
+}
+</script>
+<script>
+if (new Date() > new Date('2026-04-04T23:59:59Z')) {
+  document.querySelectorAll('.upsell-price').forEach(function(el) { el.textContent = '$149.99/yr'; });
 }
 </script>
 </body>
