@@ -206,6 +206,16 @@
       .seo-page h2 { font-size: 1.2rem; }
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Vizoguard", "item": "https://vizoguard.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Transparency Report", "item": "https://vizoguard.com/transparency" }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -228,7 +238,7 @@
 
   <p>Most VPN providers claim to have a "no-logs policy." Very few explain what that means in concrete terms. This page does. It lists every category of data we do not collect, every piece of data we do collect, and the specific reason we collect it. If something is not on the "do collect" list, we don't have it.</p>
 
-  <p>We are a small team. We don't have a marketing department writing this. This is what we actually do.</p>
+  <p>We don't have a marketing department writing this. This is what we actually do.</p>
 
   <div class="verdict-box">
     <h3>The short version</h3>
@@ -331,7 +341,7 @@
   <ul class="spec-list">
     <li><strong>Protocol: Shadowsocks (not OpenVPN or WireGuard)</strong> — Shadowsocks disguises your traffic as regular HTTPS. To a network observer, your VPN connection looks like ordinary encrypted web traffic. This makes it significantly harder to detect or block in restrictive network environments.</li>
     <li><strong>Encryption: AES-256-GCM or ChaCha20-Poly1305</strong> — Both are widely regarded as secure. ChaCha20-Poly1305 is the preferred cipher on devices where AES hardware acceleration is unavailable (older Android devices, for example). The encryption key is generated per-connection and derived from your access key — not stored on our server.</li>
-    <li><strong>Infrastructure: one well-secured server</strong> — We don't run 6,000 servers across 94 countries. We run one server, managed directly by our team, on a VPS with 200 GB NVMe, 16 TB bandwidth, and 16 GB RAM. We know exactly what is running on it. We are not leasing rented infrastructure in 60 jurisdictions with uneven security practices.</li>
+    <li><strong>Infrastructure: private, high-speed nodes</strong> — We don't compete on server count. We operate carefully selected servers, managed directly by our team, with 200 GB NVMe, 16 TB bandwidth, and 16 GB RAM per node. We know exactly what is running on every machine. No oversold infrastructure, no uneven security practices across dozens of jurisdictions.</li>
     <li><strong>No traffic inspection</strong> — Our server's role is to receive your encrypted connection, forward it to the destination, and return the response — all encrypted. It does not unpack, examine, or log the contents of your requests. It cannot. The payload arrives encrypted and leaves encrypted.</li>
   </ul>
 
@@ -359,7 +369,7 @@
       <div class="status-badge status-planned">Planned</div>
       <div class="item-content">
         <strong>Third-party audit</strong>
-        <span>We are a small team. We have not yet commissioned an independent audit of our no-logs claims or codebase. We know this is the gold standard — Mullvad and ProtonVPN have done it, and it matters. We are actively evaluating audit firms. When it happens, the results will be published here without redaction.</span>
+        <span>We have not yet commissioned an independent audit of our no-logs claims or codebase. We know this is the gold standard — Mullvad and ProtonVPN have done it, and it matters. We are actively evaluating audit firms. When it happens, the results will be published here without redaction.</span>
       </div>
     </li>
     <li>
@@ -383,7 +393,7 @@
   <h2>Our Commitment</h2>
 
   <div class="commitment-box">
-    <p>We're a small team at PRIME360 HOLDING LTD in Malta (EU). We built Vizoguard because we believe security software should be affordable and honest — not a race to the lowest price funded by selling user data, and not a premium product priced out of reach for most people.</p>
+    <p>We're a focused team at PRIME360 HOLDING LTD in Malta (EU). We built Vizoguard because we believe security software should be affordable and honest — not a race to the lowest price funded by selling user data, and not a premium product priced out of reach for most people.</p>
     <p style="margin-top: 14px;">We make money from subscriptions. That means our incentives are aligned with yours: if our product doesn't actually protect your privacy, you cancel. We don't have a fallback revenue stream that involves your browsing data. We don't serve ads. We don't have investors demanding we monetize your behavior.</p>
     <p style="margin-top: 14px;">If you have specific questions about our data practices that this page doesn't answer, email <a href="mailto:privacy@vizoguard.com">privacy@vizoguard.com</a>. We will respond, not a bot.</p>
   </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vg-v35';
+const CACHE_NAME = 'vg-v36';
 
 const APP_SHELL = [
   '/',
@@ -49,6 +49,14 @@ const APP_SHELL = [
   '/about.html',
   '/transparency.html',
   '/blog/vpn-glossary.html',
+  '/blog/is-chatgpt-safe.html',
+  '/blog/google-privacy.html',
+  '/blog/tiktok-privacy.html',
+  '/blog/whatsapp-privacy.html',
+  '/blog/youtube-privacy.html',
+  '/blog/amazon-privacy.html',
+  '/blog/discord-privacy.html',
+  '/blog/roblox-safety.html',
   '/setup.html',
   '/thank-you.html',
   '/privacy.html',
