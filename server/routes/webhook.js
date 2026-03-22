@@ -202,23 +202,32 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (renewResult.changes > 0) {
           const reactivatedLicense = stmts.findBySubscription.get(subId);
           if (reactivatedLicense && !reactivatedLicense.outline_key_id) {
+            stmts.resetStalePending.run(); // Clean up stale claims before CAS
             const claim = stmts.claimOutlineSlot.run(reactivatedLicense.id);
             if (claim.changes === 0) {
               console.log(`[i${INSTANCE}] Outline key already claimed for reactivated license ${reactivatedLicense.id}`);
             } else {
+              let result;
               try {
                 const bestNode = stmts.bestNode.get();
                 const apiUrl = bestNode ? bestNode.api_url : null;
-                const result = await outline.createAccessKey(reactivatedLicense.email, apiUrl);
+                result = await outline.createAccessKey(reactivatedLicense.email, apiUrl);
                 const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024;
                 outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
                   console.error(`[i${INSTANCE}] Failed to set data limit on reactivation:`, err.message);
                 });
-                stmts.setOutlineKey.run(result.accessUrl, result.id, reactivatedLicense.id);
-                if (bestNode) stmts.setLicenseNode.run(bestNode.id, reactivatedLicense.id);
+                try {
+                  stmts.setOutlineKey.run(result.accessUrl, result.id, reactivatedLicense.id);
+                  if (bestNode) stmts.setLicenseNode.run(bestNode.id, reactivatedLicense.id);
+                } catch (dbErr) {
+                  await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
+                  result = undefined;
+                  throw dbErr;
+                }
                 console.log(`[i${INSTANCE}] VPN key re-provisioned on payment recovery for ${subId}`);
                 stmts.insertAudit.run('vpn_key_reprovisioned', 'license', String(reactivatedLicense.id), `subscription=${subId}`, null);
               } catch (outlineErr) {
+                if (result?.id) await outline.deleteAccessKey(result.id).catch(() => {});
                 stmts.resetOutlineClaim.run(reactivatedLicense.id);
                 console.error(`[i${INSTANCE}] Failed to re-provision VPN key on recovery:`, outlineErr.stack || outlineErr);
               }
@@ -327,8 +336,14 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const sub = event.data.object;
         let updResult;
         if (sub.cancel_at_period_end) {
-          updResult = stmts.reactivateStatus.run("cancelled", sub.id);
-          console.log(`[i${INSTANCE}] Subscription set to cancel at period end: ${sub.id}`);
+          // Don't promote suspended licenses to cancelled — they need payment first
+          const existing = stmts.findBySubscription.get(sub.id);
+          if (existing && existing.status === 'suspended') {
+            console.log(`[i${INSTANCE}] Subscription cancel ignored — license is suspended (needs payment): ${sub.id}`);
+          } else {
+            updResult = stmts.reactivateStatus.run("cancelled", sub.id);
+            console.log(`[i${INSTANCE}] Subscription set to cancel at period end: ${sub.id}`);
+          }
         } else if (sub.status === "active") {
           updResult = stmts.reactivateStatus.run("active", sub.id);
           console.log(`[i${INSTANCE}] Subscription reactivated: ${sub.id}`);
