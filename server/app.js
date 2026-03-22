@@ -1,9 +1,17 @@
 require("dotenv").config();
 
 // Fail fast on missing critical env vars (#6)
-const REQUIRED_ENV = ['STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','STRIPE_PRICE_VPN','STRIPE_PRICE_SECURITY_VPN','OUTLINE_API_URL','APP_URL'];
+const REQUIRED_ENV = ['STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','STRIPE_PRICE_VPN','STRIPE_PRICE_SECURITY_VPN','OUTLINE_API_URL','APP_URL','SMTP_PASS'];
 const LAUNCH_DISCOUNT_END = process.env.LAUNCH_DISCOUNT_END ? new Date(process.env.LAUNCH_DISCOUNT_END) : null;
 for (const v of REQUIRED_ENV) { if (!process.env[v]) { console.error('FATAL: missing env var ' + v); process.exit(1); } }
+
+// Warn if regular prices not configured and discount will expire
+if (LAUNCH_DISCOUNT_END && !process.env.STRIPE_PRICE_VPN_REGULAR) {
+  console.warn('WARNING: STRIPE_PRICE_VPN_REGULAR not set — will fall back to discount price after ' + LAUNCH_DISCOUNT_END.toISOString());
+}
+if (LAUNCH_DISCOUNT_END && !process.env.STRIPE_PRICE_SECURITY_VPN_REGULAR) {
+  console.warn('WARNING: STRIPE_PRICE_SECURITY_VPN_REGULAR not set — will fall back to discount price after ' + LAUNCH_DISCOUNT_END.toISOString());
+}
 
 const express = require("express");
 const helmet = require("helmet");
@@ -99,7 +107,7 @@ app.post("/api/checkout", checkoutLimiter, async (req, res) => {
     res.json({ url: session.url });
     stripeCheckoutTotal.inc({ plan });
   } catch (err) {
-    console.error("Checkout error:", err.message);
+    console.error(`[i${INSTANCE}] Checkout error:`, err.stack || err);
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
@@ -121,15 +129,24 @@ app.get('/metrics', async (_req, res) => {
   res.end(await register.metrics());
 });
 
-// Health check with DB verification
-app.get("/api/health", (_req, res) => {
+// Health check with DB + VPN node verification
+app.get("/api/health", async (_req, res) => {
   try {
     db.prepare("SELECT 1").get();
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
   } catch (err) {
-    console.error("Health check DB failure:", err.message);
-    res.status(503).json({ status: "error", reason: "db_unavailable" });
+    console.error(`[i${INSTANCE}] Health check DB failure:`, err.stack || err);
+    return res.status(503).json({ status: "error", reason: "db_unavailable" });
   }
+  // Check VPN availability (best-effort, non-blocking)
+  let vpnStatus = "unknown";
+  try {
+    const outline = require("./outline");
+    await outline.getServer();
+    vpnStatus = "online";
+  } catch {
+    vpnStatus = "offline";
+  }
+  res.json({ status: "ok", vpn: vpnStatus, timestamp: new Date().toISOString() });
 });
 
 // Catch-all: hide framework fingerprint

@@ -92,7 +92,7 @@
         "name": "¿Tiene Vizoguard tantos servidores como NordVPN?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. NordVPN tiene más de 6.000 servidores en 111 países. Vizoguard opera actualmente en 1 región de servidores. Si necesitas acceso a docenas de países para streaming o desbloqueo geográfico, NordVPN tiene la ventaja. Vizoguard se centra en la protección de seguridad antes que en el número de servidores."
+          "text": "No. NordVPN tiene más de 6.000 servidores en 111 países. Vizoguard utiliza nodos privados de alta velocidad cuidadosamente seleccionados. Si necesitas acceso a docenas de países para streaming o desbloqueo geográfico, NordVPN tiene la ventaja. Vizoguard se centra en servidores nunca saturados y protección de seguridad antes que en el número de servidores."
         }
       },
       {
@@ -245,6 +245,12 @@
       .cta-row { flex-direction: column; }
       .cta-row .btn { width: 100%; text-align: center; }
     }
+    @media (max-width: 480px) {
+      .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table thead th { padding: 10px 8px; }
+      .compare-table tbody td { padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -297,8 +303,8 @@
         </tr>
         <tr>
           <td>Servidores VPN</td>
-          <td class="highlight-col">1 región</td>
-          <td class="highlight-col">1 región</td>
+          <td class="highlight-col">Nodos privados de alta velocidad</td>
+          <td class="highlight-col">Nodos privados de alta velocidad</td>
           <td><strong style="color:var(--text)">6.000+ en 111 países</strong></td>
         </tr>
         <tr>
@@ -362,7 +368,7 @@
 
   <h2>Rendimiento VPN</h2>
   <p>NordVPN tiene una ventaja clara aquí. Con <strong style="color:var(--text)">más de 6.000 servidores en 111 países</strong>, ofrece cobertura geográfica extensa, velocidades rápidas y acceso fiable al streaming.</p>
-  <p>Vizoguard opera actualmente en 1 región de servidores con 100 GB/mes de ancho de banda en el plan Basic. Usa el protocolo Outline (basado en Shadowsocks), muy resistente a la censura y detección.</p>
+  <p>Vizoguard utiliza servidores privados de alta velocidad nunca saturados con 100 GB/mes de ancho de banda en el plan Basic. Usa el protocolo Outline (basado en Shadowsocks), muy resistente a la censura y detección.</p>
 
   <div class="cta-row">
     <a href="/pricing" class="btn btn-secondary" onclick="gtag('event','compare_cta',{competitor:'nordvpn',plan:'basic'})">Obtener Basic — $24,99/año</a>
@@ -375,14 +381,14 @@
 
   <h2>Soporte de streaming</h2>
   <p>NordVPN tiene un gran rendimiento para <a href="/vpn-for-streaming" style="color:var(--teal)">VPN de streaming</a>. Desbloquea de forma fiable Netflix US, Netflix UK, BBC iPlayer, Disney+, Hulu, Amazon Prime Video y YouTube Premium en su red global.</p>
-  <p>Vizoguard opera actualmente en una región de servidores, lo que limita su capacidad de desbloqueo geográfico. La ventaja de Vizoguard está en sus funciones de seguridad, no en la amplitud del desbloqueo geográfico.</p>
+  <p>Vizoguard utiliza ubicaciones de servidores cuidadosamente seleccionadas, priorizando velocidad y fiabilidad sobre amplitud geográfica. La ventaja de Vizoguard está en sus funciones de seguridad y servidores nunca saturados.</p>
 
   <h2>Soporte de torrenting</h2>
   <p>NordVPN admite completamente P2P y <a href="/vpn-for-torrenting" style="color:var(--teal)">VPN de torrenting</a> con servidores dedicados P2P y política sin registros auditada independientemente.</p>
   <p>Vizoguard no tiene una política P2P específica y no está optimizado para torrenting. El límite de 100 GB/mes del plan Basic se consumiría rápidamente con uso intenso de torrent.</p>
 
   <h2>Ubicaciones de servidores</h2>
-  <p>NordVPN opera una de las redes VPN más grandes de la industria: <strong style="color:var(--text)">más de 6.000 servidores en 111 países</strong>. Vizoguard opera actualmente en 1 región de servidores. Somos transparentes al respecto.</p>
+  <p>NordVPN opera una de las redes VPN más grandes de la industria: <strong style="color:var(--text)">más de 6.000 servidores en 111 países</strong>. Vizoguard utiliza nodos privados de alta velocidad con ubicaciones cuidadosamente seleccionadas, priorizando calidad y seguridad sobre cantidad.</p>
 
   <h2>Aplicaciones y soporte de plataformas</h2>
   <p>NordVPN ofrece aplicaciones nativas pulidas para Windows, macOS, iOS, Android y Linux, además de extensiones de navegador para Chrome y Firefox, y soporte de firmware de router. NordVPN permite hasta 10 conexiones simultáneas por cuenta.</p>
@@ -450,7 +456,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">¿Tiene Vizoguard tantos servidores como NordVPN?</button>
-      <div class="faq-answer"><p>No. NordVPN tiene más de 6.000 servidores en 111 países. Vizoguard opera en 1 región. NordVPN tiene la ventaja para streaming y desbloqueo geográfico.</p></div>
+      <div class="faq-answer"><p>No. NordVPN tiene más de 6.000 servidores en 111 países. Vizoguard utiliza nodos privados de alta velocidad cuidadosamente seleccionados. NordVPN tiene la ventaja para streaming y desbloqueo geográfico.</p></div>
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">¿Tiene NordVPN detección de amenazas por IA?</button>

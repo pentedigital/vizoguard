@@ -279,8 +279,9 @@ describe('GET /lookup', () => {
     const res = await request(app, 'GET', '/lookup?session_id=cs_test_valid_session', null);
 
     assert.equal(res.status, 200);
-    assert.equal(res.body.key,   fakeLicense.key);
-    assert.equal(res.body.email, fakeLicense.email);
+    // Key and email are masked for security — full key sent via email
+    assert.equal(res.body.key,   'TEST-****-****-1234');
+    assert.equal(res.body.email, 'u***@example.com');
     assert.equal(res.body.plan,  fakeLicense.plan);
     assert.equal(res.body.expires, fakeLicense.expires_at);
     assert.equal(mockStripeSession.retrieve.mock.calls.length, 1);

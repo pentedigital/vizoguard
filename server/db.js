@@ -105,6 +105,9 @@ const stmts = {
   insertEvent: db.prepare("INSERT OR IGNORE INTO processed_events (event_id, event_type) VALUES (?, ?)"),
   eventExists: db.prepare("SELECT 1 FROM processed_events WHERE event_id = ?"),
 
+  // Plan update (subscription upgrade/downgrade)
+  updatePlan: db.prepare("UPDATE licenses SET plan = ? WHERE stripe_subscription_id = ?"),
+
   // Guarded status updates — prevent invalid transitions
   reactivateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ? AND status NOT IN ('expired')"),
 

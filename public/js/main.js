@@ -54,7 +54,7 @@ window.addEventListener('pageshow', function(e){
 
 // ── Pricing: check if launch discount is still active ────
 (function() {
-  fetch("/api/pricing").then(function(r){ return r.json(); }).then(function(data) {
+  fetch("/api/pricing").then(function(r){ if(!r.ok) throw new Error('Pricing API ' + r.status); return r.json(); }).then(function(data) {
     if (!data.discount) {
       // Discount expired — hide strikethrough prices and badges, update amounts
       document.querySelectorAll('.price-regular').forEach(function(el){ el.style.display = 'none'; });
@@ -68,7 +68,7 @@ window.addEventListener('pageshow', function(e){
       var banner = document.getElementById('urgency-banner');
       if (banner) banner.style.display = 'none';
     }
-  }).catch(function(){});
+  }).catch(function(err){ console.warn('Pricing fetch failed:', err); });
 })();
 
 // ── FAQ accordion ────────────────────────────

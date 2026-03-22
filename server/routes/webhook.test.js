@@ -471,4 +471,28 @@ describe("POST /webhook", () => {
     );
     assert.equal(calls.resetOutlineClaim[0][0], 77);
   });
+
+  // 12. charge.refunded → suspends license and revokes Outline key
+  it("charge.refunded → suspends license and revokes Outline key", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "charge.refunded",
+      data: { object: { id: "ch_refund", subscription: "sub_refund" } },
+    });
+    mockStmts.findBySubscription.get = () => ({
+      id: 10,
+      outline_key_id: "99",
+      vpn_node_id: null,
+    });
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.updateStatus.length, 1);
+    assert.equal(calls.updateStatus[0][0], "suspended");
+    assert.equal(calls.updateStatus[0][1], "sub_refund");
+    assert.equal(calls.deleteAccessKey.length, 1);
+    assert.equal(calls.deleteAccessKey[0][0], "99");
+    assert.equal(calls.clearOutlineKey.length, 1);
+  });
 });

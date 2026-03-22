@@ -191,6 +191,12 @@
       .cta-row { flex-direction: column; }
       .cta-row .btn { width: 100%; text-align: center; }
     }
+    @media (max-width: 480px) {
+      .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table thead th { padding: 10px 8px; }
+      .compare-table tbody td { padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -252,8 +258,8 @@
         </tr>
         <tr>
           <td>VPN Sunucuları</td>
-          <td class="highlight-col">1 bölge</td>
-          <td class="highlight-col">1 bölge</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
           <td><strong style="color:var(--text)">100'den fazla ülkede 4.800+</strong></td>
         </tr>
         <tr>
@@ -358,7 +364,7 @@
 
   <h2>Hız Karşılaştırması</h2>
   <p>ProtonVPN, ölçeğinden kaynaklanan belirgin bir hız avantajına sahiptir. WireGuard için optimize edilmiş 4.800'den fazla sunucuyla (VPN Accelerator teknolojisi özellikle verimi artırmak için tasarlanmıştır) ProtonVPN, bağımsız hız testlerinde sürekli olarak en hızlı VPN'ler arasında yer almaktadır. Avrupa ve Kuzey Amerika'daki kullanıcılar genellikle minimum hız kaybı yaşar — hızlı bir bağlantıda çoğunlukla yüzde 10'un altında.</p>
-  <p>Vizoguard, 1 sunucu bölgesinde çalışır ve Outline (Shadowsocks tabanlı) protokolünü kullanır. Shadowsocks hafif ve verimlidir — geleneksel VPN protokollerine kıyasla ek yükü en aza indirmek için tasarlanmıştır. Basic plan, ayda 100 GB bant genişliği içerir. Düzinelerce sunucu konumunda hız kıyaslamaları yerine öncelikli olarak gizlilik ve güvenlik isteyen kullanıcılar için Vizoguard güvenilir biçimde çalışır.</p>
+  <p>Vizoguard, özel yüksek hızlı sunucularda çalışır ve Outline (Shadowsocks tabanlı) protokolünü kullanır. Shadowsocks hafif ve verimlidir — geleneksel VPN protokollerine kıyasla ek yükü en aza indirmek için tasarlanmıştır. Basic plan, ayda 100 GB bant genişliği içerir ve sunucular asla aşırı satılmaz. Düzinelerce sunucu konumunda hız kıyaslamaları yerine öncelikli olarak gizlilik ve güvenlik isteyen kullanıcılar için Vizoguard güvenilir biçimde çalışır.</p>
 
   <h2>Güvenlik ve Şifreleme</h2>
   <p>Her iki hizmet de güçlü şifreleme kullanmaktadır: simetrik şifreleme için AES-256 ve geçici anahtar değişimi yoluyla ileri gizlilik. ProtonVPN'in amiral gemisi protokolleri, güçlü bir geçmişe sahip olan WireGuard ve OpenVPN'dir. Secure Core özelliği, çıkmadan önce trafiği gizlilik dostu ülkeler (İsviçre, İzlanda, İsveç) üzerinden yönlendirerek ele geçirilmiş çıkış düğümlerine karşı çift atlama koruması sağlar.</p>
@@ -371,7 +377,7 @@
 
   <h2>Yayın Akışı Desteği</h2>
   <p>ProtonVPN, yayın akışı için güçlü bir seçimdir. Plus planı; Netflix (birden fazla bölgesel kütüphane dahil), Disney+, BBC iPlayer, Amazon Prime Video, Hulu ve diğer coğrafi kısıtlamalı platformların engelini kaldırmayı destekler. 100'den fazla ülkede yayın akışı için özellikle optimize edilmiş sunucularla ProtonVPN, kullanıcılara geniş bir coğrafi içerik kütüphanesi erişimi sağlar.</p>
-  <p>Vizoguard, öncelikli olarak bir yayın akışı VPN'i değildir. 1 sunucu bölgesiyle özel yayın akışı için optimize edilmiş sunucular sunmaz. Yayın akışı temel kullanım senaryonuzsa ProtonVPN daha iyi bir araçtır.</p>
+  <p>Vizoguard, öncelikli olarak bir yayın akışı VPN'i değildir. Özenle seçilmiş sunucu konumlarıyla özel yayın akışı için optimize edilmiş sunucular sunmaz. Yayın akışı temel kullanım senaryonuzsa ProtonVPN daha iyi bir araçtır.</p>
 
   <h2>Torrent Desteği</h2>
   <p>Her iki hizmet de VPN bağlantıları üzerinden torrent (P2P trafiği) desteklemektedir. ProtonVPN'in özel P2P optimize edilmiş sunucuları ve yerleşik bir kill switch'i vardır. Vizoguard, tüm planlarda torrent desteği sunar — P2P dahil tüm trafik şifrelenmiş olup VPN tüneli üzerinden yönlendirilir.</p>
@@ -388,7 +394,7 @@
 
   <h2>Sunucu Konumları</h2>
   <p>ProtonVPN, 100'den fazla ülkede 4.800'den fazla sunucu işletmektedir. Bu ölçek, her büyük kıtayı kapsamakta ve kullanıcılara İsviçre, İzlanda ve İsveç gibi gizlilik dostu yargı yetkilerindeki sunuculara — Secure Core konumları dahil — erişim sunmaktadır.</p>
-  <p>Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Bu, ProtonVPN'e kıyasla gerçek bir kısıtlamadır. Çok ülkeli erişime ihtiyaç duymayan kullanıcılar — ki bunlar güvenlik odaklı kullanıcıların çoğunluğunu oluşturur — için güvenilir 1 sunucu bölgesi yeterlidir. Sunucu genişlemesi yol haritasında yer almaktadır.</p>
+  <p>Vizoguard, özenle seçilmiş sunucu konumlarında asla aşırı satılmayan özel yüksek hızlı düğümler kullanır. Çok ülkeli erişime ihtiyaç duymayan kullanıcılar — ki bunlar güvenlik odaklı kullanıcıların çoğunluğunu oluşturur — için Vizoguard'ın özel sunucuları güvenilir ve hızlı bağlantı sağlar.</p>
 
   <h2>Uygulamalar ve Platform Desteği</h2>
   <p>ProtonVPN, neredeyse tüm büyük platformları kapsamaktadır: Windows, macOS, Linux (yerel GUI), iOS, Android ve ChromeOS. Uygulamaları tamamen açık kaynaklı ve GitHub'da mevcuttur. ProtonVPN, Plus planında 10 eş zamanlı cihaz bağlantısını destekler.</p>

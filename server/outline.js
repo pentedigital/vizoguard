@@ -1,11 +1,36 @@
 const https = require("https");
 
+let outlineApiDuration, outlineApiTotal;
+try {
+  const metrics = require('./metrics');
+  outlineApiDuration = metrics.outlineApiDuration;
+  outlineApiTotal = metrics.outlineApiTotal;
+} catch { /* metrics not available in test */ }
+
 const DEFAULT_API_URL = process.env.OUTLINE_API_URL;
 
-function outlineFetch(apiUrl, path, method = "GET", body = null) {
-  return new Promise((resolve, reject) => {
-    if (!apiUrl) return reject(new Error("Outline API URL not configured"));
+// Circuit breaker state
+let cbFailures = 0;
+let cbState = "closed"; // closed | open | half-open
+let cbOpenedAt = 0;
+const CB_THRESHOLD = 5;
+const CB_TIMEOUT_MS = 30000;
 
+function outlineFetch(apiUrl, path, method = "GET", body = null) {
+  if (!apiUrl) return Promise.reject(new Error("Outline API URL not configured"));
+
+  // Circuit breaker check
+  if (cbState === "open") {
+    if (Date.now() - cbOpenedAt >= CB_TIMEOUT_MS) {
+      cbState = "half-open";
+    } else {
+      return Promise.reject(new Error("Outline API circuit breaker open"));
+    }
+  }
+
+  const wasHalfOpen = cbState === "half-open";
+
+  return new Promise((resolve, reject) => {
     const url = new URL(`${apiUrl}${path}`);
     const payload = body ? JSON.stringify(body) : null;
 
@@ -53,6 +78,19 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
     req.on("error", (err) => { clearTimeout(timeout); reject(err); });
     if (payload) req.write(payload);
     req.end();
+  }).then((result) => {
+    // Success: reset circuit breaker
+    cbFailures = 0;
+    cbState = "closed";
+    return result;
+  }, (err) => {
+    // Failure: update circuit breaker
+    cbFailures++;
+    if (wasHalfOpen || cbFailures >= CB_THRESHOLD) {
+      cbState = "open";
+      cbOpenedAt = Date.now();
+    }
+    throw err;
   });
 }
 
@@ -60,24 +98,42 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
 // Falls back to DEFAULT_API_URL (from .env) for backward compatibility
 
 async function createAccessKey(name, apiUrl) {
-  const url = apiUrl || DEFAULT_API_URL;
-  const key = await outlineFetch(url, "/access-keys", "POST");
-  if (!key || !key.id || !key.accessUrl) {
-    throw new Error("Outline API returned incomplete key response");
-  }
-  if (name) {
-    try {
-      await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });
-    } catch (nameErr) {
-      console.warn(`[outline] Failed to set key name (non-fatal):`, nameErr.message);
+  const start = process.hrtime.bigint();
+  try {
+    const url = apiUrl || DEFAULT_API_URL;
+    const key = await outlineFetch(url, "/access-keys", "POST");
+    if (!key || !key.id || !key.accessUrl) {
+      throw new Error("Outline API returned incomplete key response");
     }
+    if (name) {
+      try {
+        await outlineFetch(url, `/access-keys/${key.id}/name`, "PUT", { name });
+      } catch (nameErr) {
+        console.warn(`[outline] Failed to set key name (non-fatal):`, nameErr.message);
+      }
+    }
+    if (outlineApiTotal) outlineApiTotal.inc({ operation: 'createAccessKey', result: 'success' });
+    return { id: String(key.id), accessUrl: key.accessUrl };
+  } catch (err) {
+    if (outlineApiTotal) outlineApiTotal.inc({ operation: 'createAccessKey', result: 'error' });
+    throw err;
+  } finally {
+    if (outlineApiDuration) outlineApiDuration.observe({ method: 'POST', operation: 'createAccessKey' }, Number(process.hrtime.bigint() - start) / 1e9);
   }
-  return { id: String(key.id), accessUrl: key.accessUrl };
 }
 
 async function deleteAccessKey(id, apiUrl) {
   if (!/^\d+$/.test(String(id))) throw new Error("Invalid access key ID");
-  await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${id}`, "DELETE");
+  const start = process.hrtime.bigint();
+  try {
+    await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${id}`, "DELETE");
+    if (outlineApiTotal) outlineApiTotal.inc({ operation: 'deleteAccessKey', result: 'success' });
+  } catch (err) {
+    if (outlineApiTotal) outlineApiTotal.inc({ operation: 'deleteAccessKey', result: 'error' });
+    throw err;
+  } finally {
+    if (outlineApiDuration) outlineApiDuration.observe({ method: 'DELETE', operation: 'deleteAccessKey' }, Number(process.hrtime.bigint() - start) / 1e9);
+  }
 }
 
 async function listAccessKeys(apiUrl) {

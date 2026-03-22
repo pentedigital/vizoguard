@@ -191,6 +191,12 @@
       .cta-row { flex-direction: column; }
       .cta-row .btn { width: 100%; text-align: center; }
     }
+    @media (max-width: 480px) {
+      .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table thead th { padding: 10px 8px; }
+      .compare-table tbody td { padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -252,8 +258,8 @@
         </tr>
         <tr>
           <td>Serveurs VPN</td>
-          <td class="highlight-col">1 région</td>
-          <td class="highlight-col">1 région</td>
+          <td class="highlight-col">Nœuds privés haute vitesse</td>
+          <td class="highlight-col">Nœuds privés haute vitesse</td>
           <td><strong style="color:var(--text)">4 800+ dans 100+ pays</strong></td>
         </tr>
         <tr>
@@ -358,7 +364,7 @@
 
   <h2>Comparaison des vitesses</h2>
   <p>ProtonVPN bénéficie d'un avantage de vitesse clair grâce à son échelle. Avec 4 800+ serveurs optimisés pour WireGuard (sa technologie VPN Accelerator est spécifiquement conçue pour augmenter le débit), ProtonVPN se classe régulièrement parmi les VPN les plus rapides dans les tests de vitesse indépendants. Les utilisateurs en Europe et en Amérique du Nord observent généralement une perte de vitesse minimale — souvent inférieure à 10 % sur une connexion rapide.</p>
-  <p>Vizoguard opère dans 1 région de serveur et utilise le protocole Outline (basé sur Shadowsocks). Shadowsocks est léger et efficace — il a été conçu pour minimiser la surcharge par rapport aux protocoles VPN traditionnels. Le plan Basic inclut 100 Go/mois de bande passante. Pour les utilisateurs qui souhaitent principalement la confidentialité et la sécurité plutôt que des benchmarks de vitesse dans des dizaines de localisations de serveurs, Vizoguard est fiable.</p>
+  <p>Vizoguard utilise des serveurs privés haute vitesse et le protocole Outline (basé sur Shadowsocks). Shadowsocks est léger et efficace — il a été conçu pour minimiser la surcharge par rapport aux protocoles VPN traditionnels. Le plan Basic inclut 100 Go/mois de bande passante. Pour les utilisateurs qui souhaitent principalement la confidentialité et la sécurité plutôt que des benchmarks de vitesse dans des dizaines de localisations de serveurs, Vizoguard est fiable.</p>
 
   <h2>Sécurité et chiffrement</h2>
   <p>Les deux services utilisent un chiffrement robuste : AES-256 pour le chiffrement symétrique et la confidentialité persistante via l'échange de clés éphémères. Les protocoles phares de ProtonVPN sont WireGuard et OpenVPN. Sa fonctionnalité Secure Core route le trafic via des pays respectueux de la vie privée (Suisse, Islande, Suède) avant la sortie — offrant une protection double-saut contre les nœuds de sortie compromis.</p>
@@ -371,7 +377,7 @@
 
   <h2>Support streaming</h2>
   <p>ProtonVPN est un excellent choix pour le streaming. Son plan Plus prend en charge le déblocage de Netflix (y compris plusieurs bibliothèques régionales), Disney+, BBC iPlayer, Amazon Prime Video, Hulu et d'autres plateformes géo-restreintes. Avec des serveurs spécifiquement optimisés pour le streaming dans 100+ pays, ProtonVPN donne aux utilisateurs accès à une vaste gamme de bibliothèques de contenu géographiques.</p>
-  <p>Vizoguard n'est pas principalement un VPN de streaming. Avec 1 région de serveur, il ne propose pas de serveurs dédiés optimisés pour le streaming. Si le streaming est votre principal cas d'usage, ProtonVPN est l'outil recommandé.</p>
+  <p>Vizoguard n'est pas principalement un VPN de streaming. Ses serveurs privés haute vitesse sont optimisés pour la sécurité, pas pour le déblocage géographique. Si le streaming est votre principal cas d'usage, ProtonVPN est l'outil recommandé.</p>
 
   <h2>Support torrenting</h2>
   <p>Les deux services prennent en charge le torrenting (trafic P2P) via leurs connexions VPN. ProtonVPN dispose de serveurs dédiés P2P et d'un coupe-circuit intégré. Vizoguard prend en charge le torrenting sur tous les plans — tout le trafic, y compris le P2P, est chiffré et routé via le tunnel VPN.</p>
@@ -388,7 +394,7 @@
 
   <h2>Emplacements des serveurs</h2>
   <p>ProtonVPN exploite 4 800+ serveurs dans 100+ pays. Cette échelle couvre chaque continent majeur et donne aux utilisateurs accès à des serveurs dans des juridictions respectueuses de la vie privée comme la Suisse, l'Islande et la Suède.</p>
-  <p>Vizoguard opère actuellement dans 1 région de serveur. Il s'agit d'une véritable limitation par rapport à ProtonVPN. L'expansion des serveurs est sur la feuille de route. Pour les utilisateurs qui n'ont pas besoin d'accès multi-pays — ce qui est la majorité des utilisateurs axés sur la sécurité — 1 région de serveur fiable est suffisante.</p>
+  <p>Vizoguard utilise des nœuds privés haute vitesse avec des emplacements soigneusement sélectionnés. L'expansion des serveurs est sur la feuille de route. Pour les utilisateurs qui n'ont pas besoin d'accès multi-pays — ce qui est la majorité des utilisateurs axés sur la sécurité — des serveurs privés jamais surchargés offrent une meilleure expérience.</p>
 
   <h2>Applications et support des plateformes</h2>
   <p>ProtonVPN couvre pratiquement toutes les plateformes majeures : Windows, macOS, Linux (GUI natif), iOS, Android et ChromeOS. Ses applications sont entièrement open source et disponibles sur GitHub. ProtonVPN prend en charge jusqu'à 10 connexions d'appareils simultanées sur le plan Plus.</p>

@@ -514,17 +514,5 @@ if ('serviceWorker' in navigator) {
   }
 })();
 </script>
-<script>
-(function() {
-  if (new Date() > new Date('2026-04-04T23:59:59Z')) {
-    document.querySelectorAll('.urgency-banner, .discount-badge, .price-regular').forEach(function(el) {
-      el.style.display = 'none';
-    });
-    document.querySelectorAll('[data-regular-price]').forEach(function(el) {
-      el.textContent = el.getAttribute('data-regular-price');
-    });
-  }
-})();
-</script>
 </body>
 </html>

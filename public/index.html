@@ -526,7 +526,7 @@ if ('serviceWorker' in navigator) {
 // Countdown timer — ends April 4 2026
 (function(){
   var end = new Date('2026-04-04T23:59:59Z').getTime();
-  var timer = setInterval(update, 60000);
+  var timer = setInterval(update, 1000);
   function update(){
     var now = Date.now(), diff = end - now;
     if(diff <= 0){
@@ -554,17 +554,6 @@ if ('serviceWorker' in navigator) {
     checkSticky();
   }
 })();
-</script>
-<script>
-// Post-discount: hide urgency elements after April 4, 2026
-if (new Date() > new Date('2026-04-04T23:59:59Z')) {
-  document.querySelectorAll('.urgency-banner, .discount-badge, .price-regular').forEach(function(el) {
-    el.style.display = 'none';
-  });
-  document.querySelectorAll('[data-regular-price]').forEach(function(el) {
-    el.textContent = el.getAttribute('data-regular-price');
-  });
-}
 </script>
 </body>
 </html>

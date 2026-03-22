@@ -5,7 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
 const { sendLicenseEmail } = require("../email");
 const outline = require("../outline");
-const { webhookEventsTotal } = require('../metrics');
+const { webhookEventsTotal, emailSendsTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
@@ -29,7 +29,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
+    console.error(`[i${INSTANCE}] Webhook signature verification failed:`, err.message);
     return res.status(400).send("Webhook signature verification failed");
   }
 
@@ -46,7 +46,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const session = event.data.object;
         const email = session.customer_details?.email || session.customer_email;
         if (!email) {
-          console.error("No email in checkout session", session.id);
+          console.error(`[i${INSTANCE}] No email in checkout session`, session.id);
           break;
         }
 
@@ -67,7 +67,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
         const plan = session.metadata?.plan;
         if (!plan || !["vpn", "security_vpn"].includes(plan)) {
-          console.error(`Invalid or missing plan in checkout session ${session.id}: ${plan}`);
+          console.error(`[i${INSTANCE}] Invalid or missing plan in checkout session ${session.id}: ${plan}`);
           break;
         }
         const expiresAt = new Date();
@@ -138,13 +138,18 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
           if (newLicense) stmts.resetOutlineClaim.run(newLicense.id);
-          console.error(`[i${INSTANCE}] Failed to create Outline key:`, outlineErr);
+          console.error(`[i${INSTANCE}] Failed to create Outline key for license ${licenseKey}:`, outlineErr.stack || outlineErr);
+          webhookEventsTotal.inc({ event_type: 'outline_provision_failed', result: 'error' });
         }
 
         // Email failure is logged but non-fatal since Stripe already got 200 (#15)
-        await sendLicenseEmail(email, licenseKey, plan, accessUrl).catch((emailErr) => {
-          console.error(`[i${INSTANCE}] Failed to send license email:`, emailErr);
-        });
+        try {
+          await sendLicenseEmail(email, licenseKey, plan, accessUrl);
+          emailSendsTotal.inc({ result: 'success' });
+        } catch (emailErr) {
+          emailSendsTotal.inc({ result: 'error' });
+          console.error(`[i${INSTANCE}] Failed to send license email:`, emailErr.stack || emailErr);
+        }
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         return; // Already responded above
       }
@@ -238,6 +243,40 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         break;
       }
 
+      case "charge.refunded": {
+        const charge = event.data.object;
+        const subId = charge.subscription;
+        if (!subId) {
+          console.warn(`[i${INSTANCE}] charge.refunded: no subscription on charge ${charge.id}`);
+          break;
+        }
+
+        const refundedLicense = stmts.findBySubscription.get(subId);
+        const refResult = stmts.updateStatus.run("suspended", subId);
+        if (refResult.changes === 0) console.warn(`[i${INSTANCE}] charge.refunded: no license for subscription ${subId}`);
+
+        // Revoke Outline VPN key on refund
+        if (refundedLicense && refundedLicense.outline_key_id) {
+          try {
+            let revokeApiUrl = null;
+            if (refundedLicense.vpn_node_id) {
+              const node = stmts.findNodeById.get(refundedLicense.vpn_node_id);
+              if (node) revokeApiUrl = node.api_url;
+            }
+            await outline.deleteAccessKey(refundedLicense.outline_key_id, revokeApiUrl);
+            console.log(`[i${INSTANCE}] Outline key revoked on refund for ${subId}`);
+          } catch (err) {
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key on refund:`, err.message);
+          } finally {
+            stmts.clearOutlineKey.run(refundedLicense.id);
+          }
+        }
+
+        console.log(`[i${INSTANCE}] Charge refunded for subscription ${subId}, status set to suspended`);
+        webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
+        break;
+      }
+
       case "customer.subscription.updated": {
         const sub = event.data.object;
         let updResult;
@@ -256,6 +295,14 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         if (updResult && updResult.changes === 0) {
           console.warn(`[i${INSTANCE}] subscription.updated: no license for ${sub.id}`);
         }
+
+        // Detect plan change (upgrade/downgrade) from subscription metadata
+        const newPlan = sub.metadata?.plan;
+        if (newPlan && ["vpn", "security_vpn"].includes(newPlan)) {
+          const planResult = stmts.updatePlan.run(newPlan, sub.id);
+          if (planResult.changes > 0) console.log(`[i${INSTANCE}] Plan updated to ${newPlan} for ${sub.id}`);
+        }
+
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
       }

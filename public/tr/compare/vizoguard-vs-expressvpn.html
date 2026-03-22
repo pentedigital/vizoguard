@@ -100,7 +100,7 @@
         "name": "Vizoguard ExpressVPN kadar sunucuya sahip mi?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Hayır. ExpressVPN 105 ülkede 3.000'den fazla sunucu işletmektedir. Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Küresel yayın ve coğrafi engel kaldırma için ExpressVPN önemli bir avantaja sahiptir. Vizoguard, sunucu sayısı yerine AI güvenliğine odaklanmaktadır."
+          "text": "ExpressVPN 105 ülkede 3.000'den fazla sunucu işletmektedir. Vizoguard, asla aşırı satılmayan özel yüksek hızlı sunucular kullanır. Küresel yayın ve coğrafi engel kaldırma için ExpressVPN önemli bir avantaja sahiptir. Vizoguard, sunucu sayısı yerine AI güvenliğine odaklanmaktadır."
         }
       },
       {
@@ -140,7 +140,7 @@
         "name": "ExpressVPN'i yayın için kullanabilir miyim?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Evet — ExpressVPN en güvenilir yayın VPN'lerinden biridir. Netflix US, Netflix UK, BBC iPlayer, Disney+, Hulu ve Amazon Prime Video'nun engelini tutarlı biçimde kaldırır. Vizoguard, yayın coğrafi engel kaldırma için tasarlanmamış olup tek bir sunucu bölgesinde çalışır."
+          "text": "Evet — ExpressVPN en güvenilir yayın VPN'lerinden biridir. Netflix US, Netflix UK, BBC iPlayer, Disney+, Hulu ve Amazon Prime Video'nun engelini tutarlı biçimde kaldırır. Vizoguard, yayın coğrafi engel kaldırma yerine AI destekli güvenliğe odaklanmaktadır."
         }
       },
       {
@@ -245,6 +245,12 @@
       .cta-row { flex-direction: column; }
       .cta-row .btn { width: 100%; text-align: center; }
     }
+    @media (max-width: 480px) {
+      .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table thead th { padding: 10px 8px; }
+      .compare-table tbody td { padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -297,8 +303,8 @@
         </tr>
         <tr>
           <td>VPN Sunucuları</td>
-          <td class="highlight-col">1 bölge</td>
-          <td class="highlight-col">1 bölge</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
           <td><strong style="color:var(--text)">105 ülkede 3.000+</strong></td>
         </tr>
         <tr>
@@ -368,7 +374,7 @@
 
   <h2>VPN Performansı</h2>
   <p>ExpressVPN, VPN performansında belirgin bir avantaja sahiptir. <strong style="color:var(--text)">105 ülkede 3.000'den fazla sunucu</strong> ile sektördeki en hızlı hızlardan bazılarını, mükemmel yayın desteğini (Netflix, Disney+, BBC iPlayer) ve yalnızca belirli trafiği VPN üzerinden yönlendirmek için bölünmüş tüneli sunar.</p>
-  <p>Vizoguard şu anda Basic planda 100 GB/ay bant genişliğiyle 1 sunucu bölgesinde faaliyet göstermektedir. Ham hız yerine sansür direnci için tasarlanmış Outline protokolünü (Shadowsocks tabanlı) kullanır.</p>
+  <p>Vizoguard, Basic planda 100 GB/ay bant genişliğiyle özel yüksek hızlı sunucular kullanır. Ham hız yerine sansür direnci için tasarlanmış Outline protokolünü (Shadowsocks tabanlı) kullanır ve sunucular asla aşırı satılmaz.</p>
 
   <div class="cta-row">
     <a href="/pricing" class="btn btn-secondary" onclick="gtag('event','compare_cta',{competitor:'expressvpn',plan:'basic'})">Basic Alın — $24.99/yıl</a>
@@ -381,7 +387,7 @@
 
   <h2>Yayın Desteği</h2>
   <p>ExpressVPN, piyasadaki en iyi <a href="/vpn-for-streaming" style="color:var(--teal)">yayın için VPN</a> seçeneklerinden biridir. Netflix US, Netflix UK, Netflix Japan, BBC iPlayer, Disney+, Hulu, Amazon Prime Video ve YouTube Premium'un engelini tutarlı biçimde kaldırır.</p>
-  <p>Vizoguard şu anda tek bir sunucu bölgesinde çalışmakta olup coğrafi içerik engelini kaldırmayı önemli ölçüde kısıtlamaktadır. Yayın odaklı bir VPN olarak tasarlanmamıştır — gücü AI destekli güvenliktedir, 105 ülkedeki kitaplık erişiminde değil.</p>
+  <p>Vizoguard, özenle seçilmiş sunucu konumlarıyla çalışmakta olup yayın odaklı bir VPN olarak tasarlanmamıştır — gücü AI destekli güvenliktedir, 105 ülkedeki kitaplık erişiminde değil.</p>
 
   <h2>Torrent Desteği</h2>
   <p>ExpressVPN, tüm sunucularında kısıtlama olmaksızın P2P ve <a href="/vpn-for-torrenting" style="color:var(--teal)">torrent için VPN</a> desteği sunar. Zorunlu veri saklama yasaları olmayan British Virgin Islands'da bulunur ve bağımsız olarak denetlenen sıfır kayıt politikası torrent faaliyetini kapsar.</p>
@@ -389,7 +395,7 @@
 
   <h2>Sunucu Konumları</h2>
   <p>ExpressVPN, tüm kıtaları ve başlıca bölgeleri kapsayan <strong style="color:var(--text)">105 ülkede 3.000'den fazla sunucu</strong> işletmektedir. ExpressVPN, verileri kalıcı olarak depolayamayan ve her yeniden başlatmada tüm verileri silen yalnızca RAM altyapısında tüm sunucuları çalıştıran TrustedServer teknolojisini kullanır.</p>
-  <p>Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Bu, doğrudan kabul ettiğimiz dürüst bir kısıtlamadır. Vizoguard altyapısı, coğrafi genişlik yerine güvenlik derinliği için inşa edilmiştir.</p>
+  <p>Vizoguard, özenle seçilmiş sunucu konumlarında asla aşırı satılmayan özel yüksek hızlı düğümler kullanır. Vizoguard altyapısı, coğrafi genişlik yerine güvenlik derinliği için inşa edilmiştir.</p>
 
   <h2>Uygulamalar ve Platform Desteği</h2>
   <p>ExpressVPN, platformlar genelinde en iyi desteklenen VPN'lerden biridir. Windows, macOS, iOS, Android ve Linux için cilalı yerel uygulamalar sunar. DD-WRT, Tomato, Asus ve diğer yönlendiriciler için yönlendirici yazılımı sağlar; akıllı TV'ler, oyun konsolları ve IoT cihazları için VPN korumasına olanak tanır.</p>
@@ -462,7 +468,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">Vizoguard ExpressVPN kadar sunucuya sahip mi?</button>
-      <div class="faq-answer"><p>Hayır. ExpressVPN 105 ülkede 3.000'den fazla sunucu işletmektedir. Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Küresel yayın ve coğrafi engel kaldırma için ExpressVPN önemli bir avantaja sahiptir. Vizoguard, sunucu sayısı yerine AI güvenliğine odaklanmaktadır.</p></div>
+      <div class="faq-answer"><p>ExpressVPN 105 ülkede 3.000'den fazla sunucu işletmektedir. Vizoguard, asla aşırı satılmayan özel yüksek hızlı sunucular kullanır. Küresel yayın ve coğrafi engel kaldırma için ExpressVPN önemli bir avantaja sahiptir. Vizoguard, sunucu sayısı yerine AI güvenliğine odaklanmaktadır.</p></div>
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">Vizoguard ile bölünmüş tünel kullanabilir miyim?</button>
@@ -482,7 +488,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">ExpressVPN'i yayın için kullanabilir miyim?</button>
-      <div class="faq-answer"><p>Evet — ExpressVPN mevcut en güvenilir yayın VPN'lerinden biridir. 3.000'den fazla sunucudan oluşan ağı üzerinden Netflix US, Netflix UK, BBC iPlayer, Disney+, Hulu ve Amazon Prime Video'nun engelini tutarlı biçimde kaldırır. Vizoguard, yayın coğrafi engel kaldırma için tasarlanmamış olup tek bir sunucu bölgesinde çalışır.</p></div>
+      <div class="faq-answer"><p>Evet — ExpressVPN mevcut en güvenilir yayın VPN'lerinden biridir. 3.000'den fazla sunucudan oluşan ağı üzerinden Netflix US, Netflix UK, BBC iPlayer, Disney+, Hulu ve Amazon Prime Video'nun engelini tutarlı biçimde kaldırır. Vizoguard, yayın coğrafi engel kaldırma yerine AI destekli güvenliğe odaklanmaktadır.</p></div>
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">ExpressVPN torrent desteği sunuyor mu?</button>

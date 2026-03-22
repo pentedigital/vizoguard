@@ -45,11 +45,32 @@ const stripeCheckoutTotal = new client.Counter({
   labelNames: ['plan'],
 });
 
+// Outline API metrics
+const outlineApiDuration = new client.Histogram({
+  name: 'outline_api_duration_seconds',
+  help: 'Outline API call duration in seconds',
+  labelNames: ['method', 'operation'],
+  buckets: [0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+});
+
+const outlineApiTotal = new client.Counter({
+  name: 'outline_api_calls_total',
+  help: 'Outline API calls',
+  labelNames: ['operation', 'result'],
+});
+
+// Email metrics
+const emailSendsTotal = new client.Counter({
+  name: 'email_sends_total',
+  help: 'Email send attempts',
+  labelNames: ['result'],
+});
+
 // Middleware to track HTTP requests
 function metricsMiddleware(req, res, next) {
   const start = process.hrtime.bigint();
   res.on('finish', () => {
-    const route = req.route ? req.route.path : (res.statusCode === 404 ? 'unmatched' : req.path);
+    const route = req.route ? req.route.path : 'unmatched';
     const normalizedRoute = route.replace(/\?.*$/, '');
     httpRequestsTotal.inc({ method: req.method, route: normalizedRoute, status: res.statusCode });
     const duration = Number(process.hrtime.bigint() - start) / 1e9;
@@ -65,4 +86,7 @@ module.exports = {
   vpnKeysCreatedTotal,
   webhookEventsTotal,
   stripeCheckoutTotal,
+  outlineApiDuration,
+  outlineApiTotal,
+  emailSendsTotal,
 };

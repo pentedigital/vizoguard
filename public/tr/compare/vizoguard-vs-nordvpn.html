@@ -92,7 +92,7 @@
         "name": "Vizoguard, NordVPN kadar sunucuya sahip mi?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Hayır. NordVPN, 111 ülkede 6.000'den fazla sunucuya sahiptir. Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Yayın akışı veya coğrafi engel kaldırma için düzinelerce ülkeye erişim gerekiyorsa, NordVPN avantajlıdır."
+          "text": "NordVPN, 111 ülkede 6.000'den fazla sunucuya sahiptir. Vizoguard, asla aşırı satılmayan özel yüksek hızlı sunucular kullanır. Yayın akışı veya coğrafi engel kaldırma için düzinelerce ülkeye erişim gerekiyorsa, NordVPN avantajlıdır. Vizoguard, sunucu sayısı yerine güvenlik derinliğine odaklanır."
         }
       },
       {
@@ -245,6 +245,12 @@
       .cta-row { flex-direction: column; }
       .cta-row .btn { width: 100%; text-align: center; }
     }
+    @media (max-width: 480px) {
+      .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table thead th { padding: 10px 8px; }
+      .compare-table tbody td { padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -297,8 +303,8 @@
         </tr>
         <tr>
           <td>VPN Sunucuları</td>
-          <td class="highlight-col">1 bölge</td>
-          <td class="highlight-col">1 bölge</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
+          <td class="highlight-col">Özel yüksek hızlı düğümler</td>
           <td><strong style="color:var(--text)">111 ülkede 6.000+</strong></td>
         </tr>
         <tr>
@@ -362,7 +368,7 @@
 
   <h2>VPN Performansı</h2>
   <p>NordVPN burada açık bir avantaja sahiptir. <strong style="color:var(--text)">111 ülkede 6.000'den fazla sunucuyla</strong> kapsamlı coğrafi kapsama, hızlı hızlar ve güvenilir yayın akışı erişimi sunar.</p>
-  <p>Vizoguard şu anda Basic planda aylık 100 GB bant genişliğiyle 1 sunucu bölgesinde faaliyet göstermektedir. Sansür ve tespite karşı yüksek dirençli Outline protokolünü (Shadowsocks tabanlı) kullanır.</p>
+  <p>Vizoguard, Basic planda aylık 100 GB bant genişliğiyle özel yüksek hızlı sunucular kullanır. Sansür ve tespite karşı yüksek dirençli Outline protokolünü (Shadowsocks tabanlı) kullanır ve sunucular asla aşırı satılmaz.</p>
 
   <div class="cta-row">
     <a href="/pricing" class="btn btn-secondary" onclick="gtag('event','compare_cta',{competitor:'nordvpn',plan:'basic'})">Basic'i Alın — $24,99/yıl</a>
@@ -375,14 +381,14 @@
 
   <h2>Yayın Akışı Desteği</h2>
   <p>NordVPN, <a href="/vpn-for-streaming" style="color:var(--teal)">yayın akışı için VPN</a>'de güçlü bir performans sergiler. Küresel sunucu ağında Netflix ABD, Netflix İngiltere, BBC iPlayer, Disney+, Hulu, Amazon Prime Video ve YouTube Premium engelini güvenilir biçimde kaldırır.</p>
-  <p>Vizoguard şu anda bir sunucu bölgesinde faaliyet göstermekte olup coğrafi engel kaldırma kapasitesini sınırlar. Vizoguard'ın avantajı güvenlik özelliklerindedir, coğrafi engel kaldırmanın kapsamında değil.</p>
+  <p>Vizoguard, özenle seçilmiş sunucu konumlarında faaliyet göstermekte olup coğrafi engel kaldırma yerine güvenlik derinliğine odaklanır. Vizoguard'ın avantajı güvenlik özelliklerindedir, coğrafi engel kaldırmanın kapsamında değil.</p>
 
   <h2>Torrent Desteği</h2>
   <p>NordVPN, P2P ve <a href="/vpn-for-torrenting" style="color:var(--teal)">torrent için VPN</a>'i özel P2P optimize edilmiş sunucularla tam olarak destekler ve bağımsız olarak denetlenmiş kayıtsızlık politikasına sahiptir.</p>
   <p>Vizoguard'ın belirli bir P2P politikası yoktur ve torrent için optimize edilmemiştir. Basic plandaki 100 GB/ay bant genişliği sınırı, yoğun torrent kullanıcıları tarafından hızla tüketilecektir.</p>
 
   <h2>Sunucu Konumları</h2>
-  <p>NordVPN, sektörün en büyük VPN ağlarından birini işletir: <strong style="color:var(--text)">111 ülkede 6.000'den fazla sunucu</strong>. Vizoguard şu anda 1 sunucu bölgesinde faaliyet göstermektedir. Bunu açıkça belirtiyoruz.</p>
+  <p>NordVPN, sektörün en büyük VPN ağlarından birini işletir: <strong style="color:var(--text)">111 ülkede 6.000'den fazla sunucu</strong>. Vizoguard, özenle seçilmiş sunucu konumlarında asla aşırı satılmayan özel yüksek hızlı düğümler kullanır.</p>
 
   <h2>Uygulamalar ve Platform Desteği</h2>
   <p>NordVPN, Windows, macOS, iOS, Android ve Linux için gelişmiş yerel uygulamalar, Chrome ve Firefox için tarayıcı uzantıları ve yönlendirici desteği sunar. NordVPN, hesap başına 10 eş zamanlı bağlantıya izin verir.</p>
@@ -449,7 +455,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">Vizoguard, NordVPN kadar sunucuya sahip mi?</button>
-      <div class="faq-answer"><p>Hayır. NordVPN, 111 ülkede 6.000'den fazla sunucuya sahiptir. Vizoguard 1 sunucu bölgesinde faaliyet göstermektedir. Yayın akışı ve coğrafi engel kaldırma için NordVPN avantajlıdır.</p></div>
+      <div class="faq-answer"><p>NordVPN, 111 ülkede 6.000'den fazla sunucuya sahiptir. Vizoguard, asla aşırı satılmayan özel yüksek hızlı sunucular kullanır. Yayın akışı ve coğrafi engel kaldırma için NordVPN avantajlıdır. Vizoguard, sunucu sayısı yerine güvenlik derinliğine odaklanır.</p></div>
     </div>
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">NordVPN'de AI tehdit tespiti var mı?</button>
