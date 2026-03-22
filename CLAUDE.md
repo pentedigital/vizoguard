@@ -6,7 +6,7 @@
 - Routes: `server/routes/` — vpn, license, webhook
 - Database: `server/db.js` — SQLite (better-sqlite3), WAL mode, at `data/vizoguard.db`
 - Email: `server/email.js` — nodemailer via Hostinger SMTP
-- Outline VPN: `server/outline.js` — manages access keys via Outline Server API (self-signed cert)
+- Outline VPN: `server/outline.js` — manages access keys via Outline Server API (self-signed cert, circuit breaker: 5 failures → 30s cooldown)
 - Public site: `public/` — landing page, setup guide, privacy/terms
 
 ## Live Site
@@ -20,7 +20,7 @@
 - Pricing: Basic $24.99/yr (regular $49.99, 50% launch discount) and Pro $99.99/yr (regular $149.99, 33% launch discount)
 - Launch discount countdown ends April 4, 2026 — update date in ALL 7 landing page inline scripts + schema priceValidUntil
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: 112 HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
+- Pages: 124 HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
@@ -47,15 +47,17 @@
 - `POST /api/vpn/get` — retrieve existing VPN key (params: `key`, `device_id` — 403 on mismatch)
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
 - `GET /api/vpn/status` — health only (`{"status":"online|offline"}` — no node details)
-- `GET /api/health` — API health check
+- `GET /api/health` — API + VPN node health check (`{"status":"ok","vpn":"online|offline"}`)
 - `GET /metrics` — Prometheus metrics (blocked externally by nginx)
 
 ## Stripe Integration
 - Checkout: `POST /api/checkout` — creates Stripe Checkout session with plan metadata
-- Webhook events handled: `checkout.session.completed`, `invoice.payment_succeeded`, `invoice.payment_failed`, `customer.subscription.deleted`, `customer.subscription.updated`
+- Webhook events handled: `checkout.session.completed`, `invoice.payment_succeeded`, `invoice.payment_failed`, `customer.subscription.deleted`, `customer.subscription.updated`, `charge.refunded`
 - Webhook route MUST be before `express.json()` middleware (needs raw body for signature verification)
 - Webhook returns 500 on processing errors (Stripe retries with exponential backoff up to 72h)
 - `invoice.payment_failed` revokes Outline VPN key on suspension (not just on deletion)
+- `charge.refunded` suspends license and revokes Outline VPN key
+- `customer.subscription.updated` detects plan changes from metadata and updates license plan
 - Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
 - Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `updateStatus` only for terminal states
 - Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes
@@ -143,7 +145,7 @@
 - `stmts` in db.js must include all prepared statements — never call `db.prepare()` inside route handlers (perf + consistency)
 - PM2 cluster: rate limiters are per-process (in-memory store) — effective limit = max × instance count; nginx `limit_req_zone` is the authoritative limiter
 - PM2 cluster: logs include `[i${INSTANCE}]` prefix from `process.env.NODE_APP_INSTANCE` — preserve this in all console.log/error calls
-- `/api/license/lookup` intentionally does NOT return `access_url` — VPN credentials only via `/api/vpn/get` with device_id verification
+- `/api/license/lookup` returns masked key + email (e.g., `VIZO-****-****-7890`, `u***@example.com`) — full key sent via email only
 - `device_id` format validation: `/^[a-zA-Z0-9\-]{16,64}$/` — enforced on POST /api/license only
 - Adding a new language requires updating 7+ locations (see i18n section) — use `i18n-reviewer` subagent after changes
 - Webhook outer `catch` uses `if (!res.headersSent)` guard — checkout.session.completed responds early, so the catch must not double-send
@@ -153,7 +155,7 @@
 - Countdown date must use UTC (`Z` suffix) and match across ALL 7 landing page scripts — banner auto-hides after expiry via `urgency-banner style.display=none`
 - Subagents need explicit `Write`, `Read`, `Edit`, `Bash` permissions in `settings.local.json` — descriptive text like "Allow subagents writing..." doesn't work, must use exact tool names
 - When creating many pages via subagents, batch by page (6 languages per batch) not by language — avoids git conflicts
-- Post-discount JS date check pattern: `if (new Date() > new Date('2026-04-04T23:59:59Z'))` — used on pricing.html, thank-you.html, and all 7 landing pages
+- Post-discount JS date check pattern: `if (new Date() > new Date('2026-04-04T23:59:59Z'))` — used on thank-you.html only (landing pages + pricing.html use `/api/pricing` as single source of truth)
 - SEO page creation templates: `free-vpn.html` for core SEO, `what-is-vpn.html` for blog, `vizoguard-vs-nordvpn.html` for comparisons
 - VPN route `license` variable was scoped inside `try{}` making it invisible in `catch{}` — found and fixed by test suite (Phase 4)
 
@@ -165,7 +167,7 @@
 - Blog authors: alternate between "Terry M Lisa" and "Marron J Washington"
 - All SEO pages: Article + FAQPage + BreadcrumbList JSON-LD schemas, same header/footer/analytics as landing pages
 - CRO: Pricing page has testimonials (placeholder), trust badges, 11 FAQ questions, post-discount state after April 4 2026
-- Post-discount: JS date-check on pricing.html, thank-you.html, and all 7 landing pages auto-hides urgency/discount elements after April 4 2026, updates prices to $49.99/$149.99
+- Post-discount: `/api/pricing` endpoint is the single source of truth for discount state; `main.js` fetches it and hides discount UI. Only `thank-you.html` has a separate inline date-check for upsell pricing
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
 - Sitemap: 109 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
@@ -174,14 +176,16 @@
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
 - Run: `cd server && npm test` or `node --test **/*.test.js`
-- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (12), `routes/vpn.test.js` (11), `outline.test.js` (11), `app.test.js` (4) — 47 tests total
+- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (12), `routes/vpn.test.js` (11), `outline.test.js` (11), `app.test.js` (4) — 32 tests in runner
 - All tests mock external APIs (Stripe, Outline, SMTP) — no real calls
 
 ## Monitoring
 - Metrics: `prom-client` on `GET /metrics` (blocked externally by nginx `deny all`)
 - Prometheus: scrapes `vizoguard-api` at `127.0.0.1:3000/metrics` every 15s
 - Grafana: `localhost:3001`, Prometheus datasource at `host.docker.internal:9090`, "Vizoguard API" dashboard
-- Counters: `http_requests_total`, `license_validations_total`, `vpn_keys_created_total`, `webhook_events_total`, `stripe_checkout_sessions_total`
+- Counters: `http_requests_total`, `license_validations_total`, `vpn_keys_created_total`, `webhook_events_total`, `stripe_checkout_sessions_total`, `outline_api_calls_total`, `email_sends_total`
+- Histograms: `http_request_duration_seconds`, `outline_api_duration_seconds`
+- Alerts: 6 rules in `/opt/outline/persisted-state/prometheus/alert_rules.yml` (APIHighErrorRate, WebhookProcessingFailures, VPNKeyProvisioningFailures, HighRequestLatency, ProcessRestarted, APIDown)
 
 ## nginx Config (Version Controlled)
 - Source of truth: `nginx/security-headers.conf` and `nginx/vizoguard.conf` in this repo

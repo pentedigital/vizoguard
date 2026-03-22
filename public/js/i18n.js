@@ -108,6 +108,7 @@
   }
 
   var LANG_LABELS = { "en": "EN", "ar": "العربية", "hi": "हिन्दी", "fr": "FR", "es": "ES", "tr": "TR", "ru": "RU" };
+  var dropdownInitialized = false;
 
   function updateLangSwitcher(lang) {
     document.querySelectorAll("[data-lang-switch]").forEach(function (el) {
@@ -125,6 +126,8 @@
 
   // Dropdown open/close
   function initDropdown() {
+    if (dropdownInitialized) return;
+    dropdownInitialized = true;
     var switcher = document.getElementById("lang-switcher");
     if (!switcher) return;
     var toggle = switcher.querySelector(".lang-switcher-toggle");
@@ -142,6 +145,28 @@
 
     switcher.querySelector(".lang-dropdown").addEventListener("click", function (e) {
       e.stopPropagation();
+    });
+
+    // Keyboard navigation: Escape closes, Arrow Up/Down cycles items
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && switcher.classList.contains("open")) {
+        switcher.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+      if (!switcher.classList.contains("open")) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        var items = Array.prototype.slice.call(switcher.querySelectorAll(".lang-dropdown a, .lang-dropdown button"));
+        if (!items.length) return;
+        var idx = items.indexOf(document.activeElement);
+        if (e.key === "ArrowDown") {
+          idx = (idx + 1) % items.length;
+        } else {
+          idx = (idx - 1 + items.length) % items.length;
+        }
+        items[idx].focus();
+      }
     });
   }
 

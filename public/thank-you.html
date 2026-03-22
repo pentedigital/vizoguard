@@ -67,7 +67,7 @@
     <p>License sent to <strong style="color: var(--ice);" id="basic-email"></strong>.</p>
 
     <div class="license-box">
-      <label>Your License Key</label>
+      <label for="basic-license-key">Your License Key</label>
       <div class="license-key" id="basic-license-key"></div>
     </div>
 
@@ -121,7 +121,7 @@
     <p>License sent to <strong style="color: var(--ice);" id="pro-email"></strong>.</p>
 
     <div class="license-box">
-      <label>Your License Key</label>
+      <label for="basic-license-key">Your License Key</label>
       <div class="license-key" id="pro-license-key"></div>
     </div>
 
@@ -192,9 +192,21 @@ if ('serviceWorker' in navigator) {
 }
 
 let vpnAccessUrl = null;
+var connectFallback = null;
+
+function cancelFallback() {
+  clearTimeout(connectFallback);
+  window.removeEventListener('blur', cancelFallback);
+  document.removeEventListener('visibilitychange', onVisChange);
+}
+
+function onVisChange() { if (document.hidden) cancelFallback(); }
 
 function connectVPN(e) {
-  if (!vpnAccessUrl) return;
+  if (!vpnAccessUrl) {
+    alert('VPN key not yet available — check your email for setup instructions.');
+    return;
+  }
   e.preventDefault();
 
   // Try deep link — if Outline is installed, it opens and imports the key
@@ -202,7 +214,7 @@ function connectVPN(e) {
 
   // Fallback: if nothing happened after 1.5s, redirect to Outline download
   // Cancel if window loses focus (means Outline app opened successfully)
-  var fallback = setTimeout(function() {
+  connectFallback = setTimeout(function() {
     var ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad/.test(ua)) {
       window.location.href = "https://apps.apple.com/app/outline-app/id1356177741";
@@ -213,18 +225,16 @@ function connectVPN(e) {
     }
   }, 1500);
   // Use both blur and visibilitychange for cross-platform reliability (iOS Safari needs visibilitychange)
-  function cancelFallback() {
-    clearTimeout(fallback);
-    window.removeEventListener('blur', cancelFallback);
-    document.removeEventListener('visibilitychange', onVisChange);
-  }
-  function onVisChange() { if (document.hidden) cancelFallback(); }
+  document.removeEventListener('visibilitychange', onVisChange);
   window.addEventListener('blur', cancelFallback, { once: true });
   document.addEventListener('visibilitychange', onVisChange);
 }
 
 function copyKey() {
-  if (!vpnAccessUrl) return;
+  if (!vpnAccessUrl) {
+    alert('VPN key not yet available — check your email for setup instructions.');
+    return;
+  }
   const showCopied = () => {
     const btns = document.querySelectorAll('.copy-btn');
     btns.forEach(b => { b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy access key', 2000); });
@@ -319,6 +329,9 @@ if (!sessionId) {
 } else {
   let attempts = 0;
   const maxAttempts = 10;
+  var pollTimeoutId = null;
+
+  window.addEventListener('beforeunload', function() { clearTimeout(pollTimeoutId); });
 
   async function pollLicense() {
     attempts++;
@@ -333,7 +346,7 @@ if (!sessionId) {
       }
 
       if (data.pending && attempts < maxAttempts) {
-        setTimeout(pollLicense, 3000);
+        pollTimeoutId = setTimeout(pollLicense, 3000);
         return;
       }
 
@@ -341,7 +354,7 @@ if (!sessionId) {
       document.getElementById("pending").style.display = "block";
     } catch (err) {
       if (attempts < maxAttempts) {
-        setTimeout(pollLicense, 3000);
+        pollTimeoutId = setTimeout(pollLicense, 3000);
         return;
       }
       document.getElementById("loading").style.display = "none";

@@ -88,6 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Escape key closes open FAQ item
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".faq-item.open").forEach((item) => {
+        item.classList.remove("open");
+        item.querySelector(".faq-question").setAttribute("aria-expanded", "false");
+      });
+    }
+  });
+
   // ── Scroll-triggered animations ──────────────
   const observer = new IntersectionObserver(
     (entries) => {
