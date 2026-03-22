@@ -131,8 +131,7 @@ router.get("/lookup", async (req, res) => {
 
     // Mask sensitive data — full key is sent via email, not exposed here
     const maskedKey = license.key.slice(0, 5) + "****-****-****-" + license.key.slice(-4);
-    const chars = Array.from(license.email.split('@')[0]);
-    const maskedEmail = chars[0] + '***@' + license.email.split('@')[1];
+    const maskedEmail = license.email.replace(/^(.).+@/, '$1***@');
     res.json({
       key: maskedKey,
       email: maskedEmail,

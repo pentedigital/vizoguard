@@ -227,7 +227,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
                 console.log(`[i${INSTANCE}] VPN key re-provisioned on payment recovery for ${subId}`);
                 stmts.insertAudit.run('vpn_key_reprovisioned', 'license', String(reactivatedLicense.id), `subscription=${subId}`, null);
               } catch (outlineErr) {
-                if (result?.id) await outline.deleteAccessKey(result.id).catch(() => {});
+                if (result?.id) await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
                 stmts.resetOutlineClaim.run(reactivatedLicense.id);
                 console.error(`[i${INSTANCE}] Failed to re-provision VPN key on recovery:`, outlineErr.stack || outlineErr);
               }
