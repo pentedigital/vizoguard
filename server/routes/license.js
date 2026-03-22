@@ -5,6 +5,8 @@ const { licenseValidationsTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
+const KEY_REGEX = /^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/;
+const DEVICE_ID_REGEX = /^[a-zA-Z0-9\-]{16,64}$/;
 
 // POST /api/license — validate + bind device
 router.post("/", (req, res) => {
@@ -17,32 +19,36 @@ router.post("/", (req, res) => {
     if (key.length > 24 || device_id.length > 64) {
       return res.status(400).json({ valid: false, error: "Invalid input" });
     }
-    if (!/^[a-zA-Z0-9\-]{16,64}$/.test(device_id)) {
+    if (!DEVICE_ID_REGEX.test(device_id)) {
       return res.status(400).json({ valid: false, error: "Invalid device_id format" });
     }
 
-    if (!/^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/.test(key)) {
+    if (!KEY_REGEX.test(key)) {
       return res.status(400).json({ valid: false, error: "Invalid key format" });
     }
 
     const license = stmts.findByKey.get(key);
     if (!license) {
       licenseValidationsTotal.inc({ result: 'invalid' });
+      console.warn(`[i${INSTANCE}] Invalid key attempt from ip=${req.ip}`);
       return res.status(404).json({ valid: false, error: "License not found" });
     }
 
     if (license.status === "expired") {
       licenseValidationsTotal.inc({ result: 'expired' });
+      console.warn(`[i${INSTANCE}] Expired license attempt: licenseId=${license.id} ip=${req.ip}`);
       return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
     }
 
     if (license.status === "suspended") {
       licenseValidationsTotal.inc({ result: 'suspended' });
+      console.warn(`[i${INSTANCE}] Suspended license attempt: licenseId=${license.id} ip=${req.ip}`);
       return res.status(403).json({ valid: false, error: "Payment failed — please update your payment method at vizoguard.com", status: "suspended" });
     }
 
     if (license.expires_at && new Date(license.expires_at) < new Date()) {
       licenseValidationsTotal.inc({ result: 'expired' });
+      console.warn(`[i${INSTANCE}] Expired license attempt: licenseId=${license.id} ip=${req.ip}`);
       return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
     }
 
@@ -52,7 +58,7 @@ router.post("/", (req, res) => {
       if (result.changes === 0) {
         const updated = stmts.findByKey.get(key);
         if (updated && updated.device_id !== device_id) {
-          console.warn(`[i${INSTANCE}] Device mismatch: licenseId=${license.id}`);
+          console.warn(`[i${INSTANCE}] Device mismatch: licenseId=${license.id} ip=${req.ip}`);
           return res.status(403).json({
             valid: false,
             error: "License is bound to a different device. Contact support@vizoguard.com to transfer.",
@@ -91,7 +97,7 @@ router.post("/", (req, res) => {
 // GET /api/license/lookup?session_id=xxx — for thank-you page
 router.get("/lookup", async (req, res) => {
   const { session_id } = req.query;
-  if (!session_id || typeof session_id !== "string" || !session_id.startsWith("cs_") || session_id.length > 128) {
+  if (!session_id || typeof session_id !== "string" || !session_id.startsWith("cs_") || session_id.length < 20 || session_id.length > 128) {
     return res.status(400).json({ error: "Missing or invalid session_id" });
   }
 
@@ -125,7 +131,8 @@ router.get("/lookup", async (req, res) => {
 
     // Mask sensitive data — full key is sent via email, not exposed here
     const maskedKey = license.key.slice(0, 5) + "****-****-" + license.key.slice(-4);
-    const maskedEmail = license.email.replace(/^(.).+@/, "$1***@");
+    const chars = Array.from(license.email.split('@')[0]);
+    const maskedEmail = chars[0] + '***@' + license.email.split('@')[1];
     res.json({
       key: maskedKey,
       email: maskedEmail,

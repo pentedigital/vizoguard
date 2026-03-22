@@ -18,11 +18,15 @@ async function startCheckout(plan) {
       'items': [{ 'item_name': 'Vizoguard ' + planLabel, 'price': planValue, 'quantity': 1 }],
       'language': lang
     });
+    var controller = new AbortController();
+    var timeout = setTimeout(function() { controller.abort(); }, 15000);
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ plan }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       alert(err.error || "Something went wrong. Please try again.");
@@ -39,7 +43,11 @@ async function startCheckout(plan) {
     }
   } catch (err) {
     console.error("Checkout error:", err);
-    alert("Something went wrong. Please try again.");
+    if (err.name === 'AbortError') {
+      alert("Request timed out. Please check your connection and try again.");
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
     _resetBtns(btns);
   }
 }
@@ -54,7 +62,9 @@ window.addEventListener('pageshow', function(e){
 
 // ── Pricing: check if launch discount is still active ────
 (function() {
-  fetch("/api/pricing").then(function(r){ if(!r.ok) throw new Error('Pricing API ' + r.status); return r.json(); }).then(function(data) {
+  var pricingController = new AbortController();
+  var pricingTimeout = setTimeout(function() { pricingController.abort(); }, 15000);
+  fetch("/api/pricing", { signal: pricingController.signal }).then(function(r){ clearTimeout(pricingTimeout); if(!r.ok) throw new Error('Pricing API ' + r.status); return r.json(); }).then(function(data) {
     if (!data.discount) {
       // Discount expired — hide strikethrough prices and badges, update amounts
       document.querySelectorAll('.price-regular').forEach(function(el){ el.style.display = 'none'; });

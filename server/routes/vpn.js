@@ -5,8 +5,15 @@ const { vpnKeysCreatedTotal } = require('../metrics');
 
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
+const KEY_REGEX = /^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/;
+const DEVICE_ID_REGEX = /^[a-zA-Z0-9\-]{16,64}$/;
 
 const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+
+// vpnStatus cache (10s TTL)
+let vpnStatusCache = null;
+let vpnStatusCacheTime = 0;
+const VPN_STATUS_TTL = 10000;
 
 // bestNode cache (30s TTL)
 let bestNodeCache = null;
@@ -40,7 +47,7 @@ function requireVpnLicense(req, res, next) {
   try {
     const { key } = req.body;
     if (!key || typeof key !== "string" || key.length > 24) return res.status(400).json({ error: "Missing or invalid license key" });
-    if (!/^VIZO-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/.test(key)) return res.status(400).json({ error: "Invalid key format" });
+    if (!KEY_REGEX.test(key)) return res.status(400).json({ error: "Invalid key format" });
 
     const license = stmts.findByKey.get(key);
     if (!license) return res.status(404).json({ error: "License not found" });
@@ -114,10 +121,12 @@ router.post("/create", requireVpnLicense, async (req, res) => {
   try {
     ({ apiUrl, nodeId } = getNodeApiUrl(license));
     result = await outline.createAccessKey(license.email, apiUrl);
-    await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
 
     try {
       stmts.setOutlineKey.run(result.accessUrl, result.id, license.id);
+      outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
+        console.error(`[i${INSTANCE}] Failed to set data limit for key ${result.id}:`, err.message);
+      });
       if (nodeId) {
         stmts.setLicenseNode.run(nodeId, license.id);
         // Invalidate bestNode cache since node load changed
@@ -194,21 +203,33 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
 
 // GET /api/vpn/status — public health check (no infrastructure details)
 router.get("/status", async (_req, res) => {
+  const now = Date.now();
+  if (vpnStatusCache && (now - vpnStatusCacheTime) < VPN_STATUS_TTL) {
+    return res.json(vpnStatusCache);
+  }
+
   try {
     const nodes = stmts.listActiveNodes.all();
+    let result;
     if (nodes.length === 0) {
       await outline.getServer();
-      return res.json({ status: "online" });
+      result = { status: "online" };
+    } else {
+      const results = await Promise.allSettled(
+        nodes.map((n) => outline.getServer(n.api_url))
+      );
+      const onlineCount = results.filter((r) => r.status === "fulfilled").length;
+      result = { status: onlineCount > 0 ? "online" : "offline" };
     }
 
-    const results = await Promise.allSettled(
-      nodes.map((n) => outline.getServer(n.api_url))
-    );
-
-    const onlineCount = results.filter((r) => r.status === "fulfilled").length;
-    res.json({ status: onlineCount > 0 ? "online" : "offline" });
+    vpnStatusCache = result;
+    vpnStatusCacheTime = Date.now();
+    res.json(result);
   } catch {
-    res.json({ status: "offline" });
+    const result = { status: "offline" };
+    vpnStatusCache = result;
+    vpnStatusCacheTime = Date.now();
+    res.json(result);
   }
 });
 

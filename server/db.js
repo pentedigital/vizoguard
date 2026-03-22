@@ -122,7 +122,7 @@ const stmts = {
     SELECT n.*, COUNT(l.id) AS active_keys
     FROM vpn_nodes n
     LEFT JOIN licenses l ON l.vpn_node_id = n.id AND l.status IN ('active', 'cancelled')
-    WHERE n.status = 'active'
+    WHERE n.status = 'active' AND n.max_keys > 0
     GROUP BY n.id
     HAVING active_keys < n.max_keys
     ORDER BY active_keys ASC

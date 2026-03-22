@@ -10,6 +10,14 @@ const { webhookEventsTotal, emailSendsTotal } = require('../metrics');
 const router = Router();
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
 
+function getNodeApiUrlForLicense(license) {
+  if (license.vpn_node_id) {
+    const node = stmts.findNodeById.get(license.vpn_node_id);
+    if (node) return node.api_url;
+  }
+  return null;
+}
+
 function generateKey() {
   const segments = [];
   for (let i = 0; i < 4; i++) {
@@ -75,7 +83,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
         // Retry key generation on UNIQUE constraint collision (max 3 attempts)
         let licenseKey;
-        for (let attempt = 0; attempt < 3; attempt++) {
+        for (let attempt = 0; attempt < 5; attempt++) {
           licenseKey = generateKey();
           try {
             stmts.insert.run({
@@ -93,7 +101,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
               console.log(`[i${INSTANCE}] Duplicate webhook for subscription ${session.subscription}, skipping`);
               return res.json({ received: true });
             }
-            if (attempt === 2 || !insertErr.message.includes("UNIQUE")) throw insertErr;
+            if (attempt === 4 || !insertErr.message.includes("UNIQUE")) throw insertErr;
             console.warn(`[i${INSTANCE}] Key collision on attempt ${attempt + 1}, retrying`);
           }
         }
@@ -127,9 +135,11 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           const result = await outline.createAccessKey(email, apiUrl);
           try {
             const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
-            await outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl);
             stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
             if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
+            outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
+              console.error(`[i${INSTANCE}] Failed to set data limit for key ${result.id}:`, err.message);
+            });
           } catch (innerErr) {
             await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
             throw innerErr;
@@ -196,11 +206,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const suspendedLicense = stmts.findBySubscription.get(subId);
         if (suspendedLicense && suspendedLicense.outline_key_id) {
           try {
-            let revokeApiUrl = null;
-            if (suspendedLicense.vpn_node_id) {
-              const node = stmts.findNodeById.get(suspendedLicense.vpn_node_id);
-              if (node) revokeApiUrl = node.api_url;
-            }
+            const revokeApiUrl = getNodeApiUrlForLicense(suspendedLicense);
             await outline.deleteAccessKey(suspendedLicense.outline_key_id, revokeApiUrl);
             console.log(`[i${INSTANCE}] Outline key revoked on suspension for ${subId}`);
           } catch (err) {
@@ -224,11 +230,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         // Revoke Outline VPN access (use correct node for multi-node)
         if (expiredLicense && expiredLicense.outline_key_id) {
           try {
-            let revokeApiUrl = null;
-            if (expiredLicense.vpn_node_id) {
-              const node = stmts.findNodeById.get(expiredLicense.vpn_node_id);
-              if (node) revokeApiUrl = node.api_url;
-            }
+            const revokeApiUrl = getNodeApiUrlForLicense(expiredLicense);
             await outline.deleteAccessKey(expiredLicense.outline_key_id, revokeApiUrl);
             console.log(`[i${INSTANCE}] Outline key revoked for subscription ${sub.id}`);
           } catch (err) {
@@ -258,11 +260,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         // Revoke Outline VPN key on refund
         if (refundedLicense && refundedLicense.outline_key_id) {
           try {
-            let revokeApiUrl = null;
-            if (refundedLicense.vpn_node_id) {
-              const node = stmts.findNodeById.get(refundedLicense.vpn_node_id);
-              if (node) revokeApiUrl = node.api_url;
-            }
+            const revokeApiUrl = getNodeApiUrlForLicense(refundedLicense);
             await outline.deleteAccessKey(refundedLicense.outline_key_id, revokeApiUrl);
             console.log(`[i${INSTANCE}] Outline key revoked on refund for ${subId}`);
           } catch (err) {

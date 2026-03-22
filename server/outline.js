@@ -123,7 +123,7 @@ async function createAccessKey(name, apiUrl) {
 }
 
 async function deleteAccessKey(id, apiUrl) {
-  if (!/^\d+$/.test(String(id))) throw new Error("Invalid access key ID");
+  if (!/^\d+$/.test(String(id)) || String(id) === '0') throw new Error("Invalid access key ID");
   const start = process.hrtime.bigint();
   try {
     await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${id}`, "DELETE");
@@ -142,7 +142,7 @@ async function listAccessKeys(apiUrl) {
 }
 
 async function setDataLimit(keyId, bytes, apiUrl) {
-  if (!/^\d+$/.test(String(keyId))) throw new Error("Invalid access key ID");
+  if (!/^\d+$/.test(String(keyId)) || String(keyId) === '0') throw new Error("Invalid access key ID");
   await outlineFetch(apiUrl || DEFAULT_API_URL, `/access-keys/${keyId}/data-limit`, "PUT", { limit: { bytes } });
 }
 

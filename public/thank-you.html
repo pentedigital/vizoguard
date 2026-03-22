@@ -330,10 +330,18 @@ if (!sessionId) {
   let attempts = 0;
   const maxAttempts = 10;
   var pollTimeoutId = null;
+  var lastPollKey = 'vg_poll_' + sessionId;
 
   window.addEventListener('beforeunload', function() { clearTimeout(pollTimeoutId); });
+  window.addEventListener('pagehide', function() { clearTimeout(pollTimeoutId); });
+  window.addEventListener('pageshow', function(e) { if (e.persisted) { clearTimeout(pollTimeoutId); } });
 
   async function pollLicense() {
+    // Coordinate across tabs — skip if another tab polled within 2s
+    var lastPoll = parseInt(localStorage.getItem(lastPollKey) || '0');
+    if (Date.now() - lastPoll < 2000) { pollTimeoutId = setTimeout(pollLicense, 3000); return; }
+    localStorage.setItem(lastPollKey, Date.now());
+
     attempts++;
     try {
       const res = await fetch(`/api/license/lookup?session_id=${encodeURIComponent(sessionId)}`);

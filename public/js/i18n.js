@@ -181,8 +181,10 @@
     if (cache[lang] === '__loading__') return; // already fetching
 
     cache[lang] = '__loading__'; // prevent duplicate in-flight fetches
-    fetch("/locales/" + lang + ".json")
-      .then(function (res) { return res.json(); })
+    var i18nController = new AbortController();
+    var i18nTimeout = setTimeout(function() { i18nController.abort(); }, 10000);
+    fetch("/locales/" + lang + ".json", { signal: i18nController.signal })
+      .then(function (res) { clearTimeout(i18nTimeout); return res.json(); })
       .then(function (data) {
         cache[lang] = data;
         applyTranslations(data);
