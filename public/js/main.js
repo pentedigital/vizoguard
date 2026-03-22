@@ -11,7 +11,9 @@ async function startCheckout(plan) {
   try {
     var lang = document.documentElement.lang || 'en';
     var planLabel = plan === 'security_vpn' ? 'Pro' : 'Basic';
-    var planValue = plan === 'security_vpn' ? 99.99 : 24.99;
+    var planValue = (window._vgPricing)
+      ? (plan === 'security_vpn' ? window._vgPricing.pro : window._vgPricing.basic)
+      : (plan === 'security_vpn' ? 99.99 : 24.99);
     gtag('event', 'begin_checkout', {
       'currency': 'USD',
       'value': planValue,
@@ -65,6 +67,8 @@ window.addEventListener('pageshow', function(e){
   var pricingController = new AbortController();
   var pricingTimeout = setTimeout(function() { pricingController.abort(); }, 15000);
   fetch("/api/pricing", { signal: pricingController.signal }).then(function(r){ clearTimeout(pricingTimeout); if(!r.ok) throw new Error('Pricing API ' + r.status); return r.json(); }).then(function(data) {
+    // Store pricing data globally for accurate analytics events
+    window._vgPricing = { basic: data.basic.price, pro: data.pro.price };
     if (!data.discount) {
       // Discount expired — hide strikethrough prices and badges, update amounts
       document.querySelectorAll('.price-regular').forEach(function(el){ el.style.display = 'none'; });

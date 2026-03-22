@@ -58,7 +58,6 @@ const APP_SHELL = [
   '/blog/discord-privacy.html',
   '/blog/roblox-safety.html',
   '/setup.html',
-  '/thank-you.html',
   '/privacy.html',
   '/terms.html',
   '/manifest.json'
@@ -101,6 +100,11 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(fetch(request));
     return;
+  }
+
+  // Network-only for thank-you page — never cache to prevent conversion re-fires
+  if (url.pathname.includes('thank-you')) {
+    return fetch(request);
   }
 
   // Network-first for HTML pages (ensures updates are immediate)

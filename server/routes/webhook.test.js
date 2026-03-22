@@ -25,6 +25,7 @@ const mockStmts = {
   insert:             { run: null },
   insertEvent:        { run: null },
   insertAudit:        { run: null },
+  claimOutlineSlot:   { run: null },
   updateExpiry:       { run: null },
   updateStatus:       { run: null },
   updatePlan:         { run: null },
@@ -52,6 +53,7 @@ const calls = {
   insert:            [],
   insertEvent:       [],
   insertAudit:       [],
+  claimOutlineSlot:  [],
   updatePlan:        [],
   findBySubscription:[],
   findByCustomer:    [],
@@ -88,6 +90,7 @@ function makeFakeModule(id, exports) {
 
 // stripe — webhook.js does: require("stripe")(process.env.STRIPE_SECRET_KEY)
 const stripeModId = require.resolve("stripe");
+const mockStripeInvoices = { retrieve: async () => ({}) };
 makeFakeModule(stripeModId, function stripeFactory() {
   return {
     webhooks: {
@@ -96,6 +99,8 @@ makeFakeModule(stripeModId, function stripeFactory() {
         return mockConstructEvent.impl(...args);
       },
     },
+    invoices: mockStripeInvoices,
+    subscriptions: { retrieve: async () => ({ status: 'active' }) },
   };
 });
 
@@ -105,7 +110,7 @@ const dbModId = require.resolve("../db", { paths: [__dirname] });
 const stmtsProxy = {};
 [
   "findBySubscription", "findByCustomer", "findByKey", "bestNode",
-  "insert", "insertEvent", "insertAudit", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus",
+  "insert", "insertEvent", "insertAudit", "claimOutlineSlot", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus",
   "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "findNodeById",
 ].forEach((name) => {
   stmtsProxy[name] = {
@@ -175,6 +180,7 @@ function resetAll() {
   mockStmts.insert.run             = () => ({ lastInsertRowid: 1 });
   mockStmts.insertEvent.run        = () => ({ changes: 1 });
   mockStmts.insertAudit.run        = () => ({});
+  mockStmts.claimOutlineSlot.run   = () => ({ changes: 1 });
   mockStmts.updatePlan.run         = () => ({ changes: 0 });
   mockStmts.reactivateStatus.run   = () => ({ changes: 1 });
   mockStmts.updateExpiry.run       = () => ({ changes: 1 });
@@ -482,8 +488,9 @@ describe("POST /webhook", () => {
   it("charge.refunded → suspends license and revokes Outline key", async () => {
     mockConstructEvent.impl = () => ({
       type: "charge.refunded",
-      data: { object: { id: "ch_refund", subscription: "sub_refund" } },
+      data: { object: { id: "ch_refund", invoice: "in_refund" } },
     });
+    mockStripeInvoices.retrieve = async () => ({ subscription: "sub_refund" });
     mockStmts.findBySubscription.get = () => ({
       id: 10,
       outline_key_id: "99",

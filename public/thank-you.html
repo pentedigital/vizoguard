@@ -264,12 +264,16 @@ function showQR(canvasId, text) {
   } catch (e) { /* QR library not loaded — skip */ }
 }
 
-function showSuccess(data) {
+async function showSuccess(data) {
   document.getElementById("loading").style.display = "none";
   vpnAccessUrl = data.access_url || null;
 
-  // Google Ads purchase conversion + enhanced conversions
-  var conversionValue = data.plan === "security_vpn" ? 99.99 : 24.99;
+  // Fetch current price for accurate conversion tracking
+  var pricingRes = await fetch('/api/pricing');
+  var pricing = pricingRes.ok ? await pricingRes.json() : null;
+  var conversionValue = pricing
+    ? (data.plan === "security_vpn" ? pricing.pro.price : pricing.basic.price)
+    : (data.plan === "security_vpn" ? 99.99 : 24.99);
   var planLabel = data.plan === "security_vpn" ? "Pro" : "Basic";
   gtag('set', 'user_data', { 'email': data.email || '' });
   gtag('event', 'conversion', {

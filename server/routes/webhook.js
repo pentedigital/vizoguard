@@ -14,6 +14,7 @@ function getNodeApiUrlForLicense(license) {
   if (license.vpn_node_id) {
     const node = stmts.findNodeById.get(license.vpn_node_id);
     if (node) return node.api_url;
+    console.warn(`[i${INSTANCE}] Node ${license.vpn_node_id} not found for license ${license.id} — falling back to default`);
   }
   return null;
 }
@@ -132,22 +133,27 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         try {
           newLicense = stmts.findByKey.get(licenseKey);
           if (!newLicense) throw new Error("License not found after insert");
-          const bestNode = stmts.bestNode.get();
-          const apiUrl = bestNode ? bestNode.api_url : null;
-          const result = await outline.createAccessKey(email, apiUrl);
-          try {
-            const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
-            stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
-            if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
-            outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
-              console.error(`[i${INSTANCE}] Failed to set data limit for key ${result.id}:`, err.message);
-            });
-          } catch (innerErr) {
-            await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
-            throw innerErr;
+          const claim = stmts.claimOutlineSlot.run(newLicense.id);
+          if (claim.changes === 0) {
+            console.log(`[i${INSTANCE}] Outline key already claimed for license ${newLicense.id}, skipping`);
+          } else {
+            const bestNode = stmts.bestNode.get();
+            const apiUrl = bestNode ? bestNode.api_url : null;
+            const result = await outline.createAccessKey(email, apiUrl);
+            try {
+              const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+              stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
+              if (bestNode) stmts.setLicenseNode.run(bestNode.id, newLicense.id);
+              outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
+                console.error(`[i${INSTANCE}] Failed to set data limit for key ${result.id}:`, err.message);
+              });
+            } catch (innerErr) {
+              await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
+              throw innerErr;
+            }
+            accessUrl = result.accessUrl;
+            console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
           }
-          accessUrl = result.accessUrl;
-          console.log(`[i${INSTANCE}] Outline key provisioned (node=${bestNode ? bestNode.name : 'default'})`);
         } catch (outlineErr) {
           if (newLicense) stmts.resetOutlineClaim.run(newLicense.id);
           console.error(`[i${INSTANCE}] Failed to create Outline key for license ${licenseKey}:`, outlineErr.stack || outlineErr);
@@ -191,6 +197,29 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         // Reactivate if suspended (payment recovered after failure) — guards against un-expiring deleted subs
         const renewResult = stmts.reactivateStatus.run("active", subId);
         if (renewResult.changes > 0) console.log(`[i${INSTANCE}] Subscription reactivated on renewal: ${subId}`);
+
+        // Re-provision VPN key if it was revoked during suspension
+        if (renewResult.changes > 0) {
+          const reactivatedLicense = stmts.findBySubscription.get(subId);
+          if (reactivatedLicense && !reactivatedLicense.outline_key_id) {
+            try {
+              const bestNode = stmts.bestNode.get();
+              const apiUrl = bestNode ? bestNode.api_url : null;
+              const result = await outline.createAccessKey(reactivatedLicense.email, apiUrl);
+              const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024;
+              outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
+                console.error(`[i${INSTANCE}] Failed to set data limit on reactivation:`, err.message);
+              });
+              stmts.setOutlineKey.run(result.accessUrl, result.id, reactivatedLicense.id);
+              if (bestNode) stmts.setLicenseNode.run(bestNode.id, reactivatedLicense.id);
+              console.log(`[i${INSTANCE}] VPN key re-provisioned on payment recovery for ${subId}`);
+              stmts.insertAudit.run('vpn_key_reprovisioned', 'license', String(reactivatedLicense.id), `subscription=${subId}`, null);
+            } catch (outlineErr) {
+              console.error(`[i${INSTANCE}] Failed to re-provision VPN key on recovery:`, outlineErr.stack || outlineErr);
+            }
+          }
+        }
+
         console.log(`[i${INSTANCE}] Subscription renewed: ${subId}, new expiry: ${expiresAt.toISOString()}`);
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
@@ -250,9 +279,18 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
       case "charge.refunded": {
         const charge = event.data.object;
-        const subId = charge.subscription;
+        // Stripe Charge doesn't have .subscription directly — get it via invoice
+        let subId = null;
+        if (charge.invoice) {
+          try {
+            const invoice = await stripe.invoices.retrieve(charge.invoice);
+            subId = invoice.subscription;
+          } catch (invErr) {
+            console.error(`[i${INSTANCE}] charge.refunded: failed to retrieve invoice ${charge.invoice}:`, invErr.message);
+          }
+        }
         if (!subId) {
-          console.warn(`[i${INSTANCE}] charge.refunded: no subscription on charge ${charge.id}`);
+          console.warn(`[i${INSTANCE}] charge.refunded: no subscription found for charge ${charge.id}`);
           break;
         }
 

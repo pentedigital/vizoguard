@@ -79,6 +79,8 @@
 
       var attr = el.getAttribute("data-i18n-attr");
       if (attr) {
+        // Sanitize href/src to prevent javascript: URI injection from translation files
+        if ((attr === 'href' || attr === 'src') && !/^(https?:\/\/|\/)/.test(val)) return;
         el.setAttribute(attr, val);
       } else if (el.hasAttribute("data-i18n-html")) {
         // Sanitize before inserting — only allow whitelisted tags
