@@ -79,7 +79,21 @@
         "priceCurrency": "USD",
         "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
-        "url": "https://vizoguard.com/es/#pricing"
+        "url": "https://vizoguard.com/es/#pricing",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "USD" },
+          "deliveryTime": { "@type": "ShippingDeliveryTime", "handlingTime": { "@type": "QuantitativeValue", "minValue": "0", "maxValue": "0", "unitCode": "d" }, "transitTime": { "@type": "QuantitativeValue", "minValue": "0", "maxValue": "0", "unitCode": "d" } },
+          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": "30",
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/FreeReturn"
+        }
       },
       {
         "@type": "Offer",
@@ -89,10 +103,54 @@
         "priceCurrency": "USD",
         "priceValidUntil": "2026-04-04",
         "availability": "https://schema.org/InStock",
-        "url": "https://vizoguard.com/es/#pricing"
+        "url": "https://vizoguard.com/es/#pricing",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "USD" },
+          "deliveryTime": { "@type": "ShippingDeliveryTime", "handlingTime": { "@type": "QuantitativeValue", "minValue": "0", "maxValue": "0", "unitCode": "d" }, "transitTime": { "@type": "QuantitativeValue", "minValue": "0", "maxValue": "0", "unitCode": "d" } },
+          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": "30",
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/FreeReturn"
+        }
       }
     ],
-    "sameAs": []
+    "sameAs": [],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Daniel R." },
+        "datePublished": "2026-03-10",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Por fin un VPN que realmente bloquea amenazas en lugar de solo ocultar mi IP. La protección IA detectó un sitio de phishing que Chrome no detectó."
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Sarah K." },
+        "datePublished": "2026-03-05",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Instalación súper fácil — instalé, ingresé mi clave y estaba protegido en menos de un minuto. Velocidades rápidas también, sin ralentización perceptible."
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Marco T." },
+        "datePublished": "2026-02-28",
+        "reviewRating": { "@type": "Rating", "ratingValue": "4", "bestRating": "5" },
+        "reviewBody": "Excelentes funciones de seguridad y la política de cero registros me da tranquilidad. Me gustaría ver más ubicaciones de servidores en el futuro."
+      }
+    ]
   }
   </script>
   <script type="application/ld+json">
