@@ -24,8 +24,10 @@ const mockStmts = {
   bestNode:           { get: null },
   insert:             { run: null },
   insertEvent:        { run: null },
+  insertAudit:        { run: null },
   updateExpiry:       { run: null },
   updateStatus:       { run: null },
+  updatePlan:         { run: null },
   reactivateStatus:   { run: null },
   setOutlineKey:      { run: null },
   setLicenseNode:     { run: null },
@@ -49,6 +51,8 @@ const calls = {
   constructEvent:    [],
   insert:            [],
   insertEvent:       [],
+  insertAudit:       [],
+  updatePlan:        [],
   findBySubscription:[],
   findByCustomer:    [],
   findByKey:         [],
@@ -101,7 +105,7 @@ const dbModId = require.resolve("../db", { paths: [__dirname] });
 const stmtsProxy = {};
 [
   "findBySubscription", "findByCustomer", "findByKey", "bestNode",
-  "insert", "insertEvent", "updateExpiry", "updateStatus", "reactivateStatus",
+  "insert", "insertEvent", "insertAudit", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus",
   "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "findNodeById",
 ].forEach((name) => {
   stmtsProxy[name] = {
@@ -170,6 +174,8 @@ function resetAll() {
   mockStmts.bestNode.get           = () => null;
   mockStmts.insert.run             = () => ({ lastInsertRowid: 1 });
   mockStmts.insertEvent.run        = () => ({ changes: 1 });
+  mockStmts.insertAudit.run        = () => ({});
+  mockStmts.updatePlan.run         = () => ({ changes: 0 });
   mockStmts.reactivateStatus.run   = () => ({ changes: 1 });
   mockStmts.updateExpiry.run       = () => ({ changes: 1 });
   mockStmts.updateStatus.run       = () => ({ changes: 1 });

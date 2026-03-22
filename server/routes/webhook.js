@@ -106,7 +106,9 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           }
         }
 
-        console.log(`[i${INSTANCE}] License created for ${email} (plan: ${plan})`);
+        const redactedEmail = email.replace(/^.+@/, '***@');
+        console.log(`[i${INSTANCE}] License created for ${redactedEmail} (plan: ${plan})`);
+        stmts.insertAudit.run('license_created', 'license', licenseKey, `plan=${plan}`, null);
 
         // Respond to Stripe immediately — don't risk 20s timeout (#19)
         res.json({ received: true });
@@ -216,6 +218,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           }
         }
 
+        stmts.insertAudit.run('license_suspended', 'subscription', subId, 'payment_failed', null);
         console.log(`[i${INSTANCE}] Payment failed for subscription ${subId}, status set to suspended`);
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
@@ -270,6 +273,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           }
         }
 
+        stmts.insertAudit.run('license_refunded', 'subscription', subId, 'charge_refunded', null);
         console.log(`[i${INSTANCE}] Charge refunded for subscription ${subId}, status set to suspended`);
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         break;
@@ -298,7 +302,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const newPlan = sub.metadata?.plan;
         if (newPlan && ["vpn", "security_vpn"].includes(newPlan)) {
           const planResult = stmts.updatePlan.run(newPlan, sub.id);
-          if (planResult.changes > 0) console.log(`[i${INSTANCE}] Plan updated to ${newPlan} for ${sub.id}`);
+          if (planResult.changes > 0) {
+            stmts.insertAudit.run('plan_changed', 'subscription', sub.id, `new_plan=${newPlan}`, null);
+            console.log(`[i${INSTANCE}] Plan updated to ${newPlan} for ${sub.id}`);
+          }
         }
 
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });

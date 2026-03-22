@@ -170,7 +170,7 @@
 - Post-discount: `/api/pricing` endpoint is the single source of truth for discount state; `main.js` fetches it and hides discount UI. Only `thank-you.html` has a separate inline date-check for upsell pricing
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
-- Sitemap: 109 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
+- Sitemap: 121 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
 - Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v36'`
 
 ## Backend Tests

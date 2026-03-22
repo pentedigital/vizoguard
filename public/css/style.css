@@ -15,7 +15,7 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 104px; }
 
 /* Accessibility: focus styles (with fallback for older browsers) */
 :focus {
@@ -59,6 +59,12 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 ::selection { background: var(--accent); color: #000; }
+
+/* ── Inputs (prevent iOS zoom) ── */
+input, select, textarea {
+  font-size: 16px;
+  -webkit-appearance: none;
+}
 
 /* ── Header ───────────────────── */
 header {
@@ -659,6 +665,7 @@ footer a:hover { color: var(--text-2); text-decoration: none; }
   color: var(--text);
   letter-spacing: 0.06em;
   word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .download-buttons {
@@ -895,6 +902,9 @@ noscript .animate-up { opacity: 1; transform: none; }
   margin-bottom: 16px;
 }
 
+/* ── Table overflow (ultra-wide) ── */
+table { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
 /* SEO Pages */
 .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
 .seo-page h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
@@ -1100,4 +1110,14 @@ noscript .animate-up { opacity: 1; transform: none; }
 
   .trust-badges { gap: 20px; }
   .trust-badge { font-size: 0.7rem; }
+}
+
+/* ── Print ───────────────────── */
+@media print {
+  body { background: #fff; color: #000; }
+  header, footer, .urgency-banner, .sticky-cta, .skip-nav, .lang-switcher { display: none; }
+  main { padding-top: 0; }
+  a { color: #000; text-decoration: underline; }
+  .btn, .btn-secondary { background: none; color: #000; border: 1px solid #000; }
+  .pricing-card { background: #fff; border: 1px solid #ccc; }
 }

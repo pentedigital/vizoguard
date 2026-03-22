@@ -93,8 +93,11 @@ router.post("/create", requireVpnLicense, async (req, res) => {
 
   // Re-fetch license for fresh status — prevents TOCTOU race with concurrent webhooks (#15)
   const freshLicense = stmts.findByKey.get(req.body.key);
-  if (!freshLicense || (freshLicense.status !== "active" && freshLicense.status !== "cancelled")) {
-    return res.status(403).json({ error: "License is " + (freshLicense?.status || "not found") });
+  if (!freshLicense) {
+    return res.status(404).json({ error: "License not found" });
+  }
+  if (freshLicense.status !== "active" && freshLicense.status !== "cancelled") {
+    return res.status(403).json({ error: "License is " + freshLicense.status });
   }
 
   // Only active licenses can create new keys (#13)

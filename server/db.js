@@ -76,6 +76,27 @@ db.exec(`
   );
 `);
 
+// Audit log for key events (no PII)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS audit_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    action TEXT NOT NULL,
+    entity_type TEXT,
+    entity_id TEXT,
+    details TEXT,
+    ip TEXT,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+`);
+
+// Schema version tracking
+db.exec("CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)");
+
+const currentVersion = db.prepare("SELECT MAX(version) as v FROM schema_version").get()?.v || 0;
+if (currentVersion < 1) {
+  db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (1)").run();
+}
+
 // Prune processed events older than 7 days (beyond Stripe's 72h retry window)
 db.prepare("DELETE FROM processed_events WHERE processed_at < datetime('now', '-7 days')").run();
 
@@ -100,6 +121,9 @@ const stmts = {
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
   claimOutlineSlot: db.prepare("UPDATE licenses SET outline_key_id = 'pending' WHERE id = ? AND outline_key_id IS NULL"),
   resetOutlineClaim: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE id = ? AND outline_key_id = 'pending'"),
+
+  // Audit log
+  insertAudit: db.prepare("INSERT INTO audit_log (action, entity_type, entity_id, details, ip) VALUES (?, ?, ?, ?, ?)"),
 
   // Webhook idempotency
   insertEvent: db.prepare("INSERT OR IGNORE INTO processed_events (event_id, event_type) VALUES (?, ?)"),

@@ -14,6 +14,7 @@ if (LAUNCH_DISCOUNT_END && !process.env.STRIPE_PRICE_SECURITY_VPN_REGULAR) {
 }
 
 const express = require("express");
+const crypto = require("crypto");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
@@ -53,12 +54,18 @@ app.use(express.json({ limit: "16kb" }));
 
 app.use(metricsMiddleware);
 
+// Request ID for correlation
+app.use((req, res, next) => {
+  req.id = crypto.randomUUID().slice(0, 8);
+  next();
+});
+
 // Request logging (no secrets)
 app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
     if (req.path.startsWith("/api/")) {
-      console.log(`[i${INSTANCE}] ${req.method} ${req.path} ${res.statusCode} ${Date.now() - start}ms ip=${req.ip}`);
+      console.log(`[i${INSTANCE}] [${req.id}] ${req.method} ${req.path} ${res.statusCode} ${Date.now() - start}ms ip=${req.ip}`);
     }
   });
   next();
