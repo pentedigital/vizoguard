@@ -23,8 +23,10 @@ const mockStmts = {
   findByKey:          { get: null },
   bestNode:           { get: null },
   insert:             { run: null },
+  insertEvent:        { run: null },
   updateExpiry:       { run: null },
   updateStatus:       { run: null },
+  reactivateStatus:   { run: null },
   setOutlineKey:      { run: null },
   setLicenseNode:     { run: null },
   clearOutlineKey:    { run: null },
@@ -46,12 +48,14 @@ const mockEmail = {
 const calls = {
   constructEvent:    [],
   insert:            [],
+  insertEvent:       [],
   findBySubscription:[],
   findByCustomer:    [],
   findByKey:         [],
   bestNode:          [],
   updateExpiry:      [],
   updateStatus:      [],
+  reactivateStatus:  [],
   setOutlineKey:     [],
   setLicenseNode:    [],
   clearOutlineKey:   [],
@@ -97,8 +101,8 @@ const dbModId = require.resolve("../db", { paths: [__dirname] });
 const stmtsProxy = {};
 [
   "findBySubscription", "findByCustomer", "findByKey", "bestNode",
-  "insert", "updateExpiry", "updateStatus", "setOutlineKey", "setLicenseNode",
-  "clearOutlineKey", "resetOutlineClaim", "findNodeById",
+  "insert", "insertEvent", "updateExpiry", "updateStatus", "reactivateStatus",
+  "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "findNodeById",
 ].forEach((name) => {
   stmtsProxy[name] = {
     get: (...args) => { calls[name].push(args); return mockStmts[name].get(...args); },
@@ -165,6 +169,8 @@ function resetAll() {
   mockStmts.findByKey.get          = () => ({ id: 1, outline_key_id: null, vpn_node_id: null });
   mockStmts.bestNode.get           = () => null;
   mockStmts.insert.run             = () => ({ lastInsertRowid: 1 });
+  mockStmts.insertEvent.run        = () => ({ changes: 1 });
+  mockStmts.reactivateStatus.run   = () => ({ changes: 1 });
   mockStmts.updateExpiry.run       = () => ({ changes: 1 });
   mockStmts.updateStatus.run       = () => ({ changes: 1 });
   mockStmts.setOutlineKey.run      = () => ({});
@@ -303,9 +309,9 @@ describe("POST /webhook", () => {
     assert.equal(subId, "sub_renew");
     assert.ok(expiryIso.startsWith("2027"), `expected 2027 expiry, got ${expiryIso}`);
 
-    assert.equal(calls.updateStatus.length, 1, "updateStatus should be called");
-    assert.equal(calls.updateStatus[0][0], "active");
-    assert.equal(calls.updateStatus[0][1], "sub_renew");
+    assert.equal(calls.reactivateStatus.length, 1, "reactivateStatus should be called");
+    assert.equal(calls.reactivateStatus[0][0], "active");
+    assert.equal(calls.reactivateStatus[0][1], "sub_renew");
   });
 
   // 5. invoice.payment_failed → sets status suspended, revokes Outline key
@@ -361,7 +367,10 @@ describe("POST /webhook", () => {
         data: { object: subObj },
       });
       await invoke(makeReq(), makeRes());
-      return calls.updateStatus[0] ? calls.updateStatus[0][0] : null;
+      // cancel_at_period_end and active use reactivateStatus; past_due/unpaid use updateStatus
+      const reactivate = calls.reactivateStatus[0] ? calls.reactivateStatus[0][0] : null;
+      const update = calls.updateStatus[0] ? calls.updateStatus[0][0] : null;
+      return reactivate || update;
     }
 
     assert.equal(

@@ -12,6 +12,7 @@ const assert = require("node:assert/strict");
 const stmts = {
   findByKey: { get: () => null },
   claimOutlineSlot: { run: () => ({ changes: 1 }) },
+  resetStalePending: { run: () => {} },
   setOutlineKey: { run: () => {} },
   setLicenseNode: { run: () => {} },
   clearOutlineKey: { run: () => {} },
@@ -110,7 +111,7 @@ async function callRoute(method, path, req, res) {
 function activeLicense(overrides = {}) {
   return {
     id: 1,
-    key: "TESTKEY1234567890123456",
+    key: "VIZO-ABCD-1234-EF56-7890",
     email: "test@example.com",
     plan: "vpn",
     status: "active",

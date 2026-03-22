@@ -94,7 +94,7 @@ function resetMocks() {
 }
 
 // ── Shared valid inputs ──────────────────────────────────────────────────────
-const VALID_KEY       = 'ABCD-1234-EFGH-5678';
+const VALID_KEY       = 'VIZO-ABCD-1234-EF56-7890';
 const VALID_DEVICE_ID = 'device-abc123def456ghi';
 
 // Future expiry date

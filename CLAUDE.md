@@ -20,7 +20,7 @@
 - Pricing: Basic $24.99/yr (regular $49.99, 50% launch discount) and Pro $99.99/yr (regular $149.99, 33% launch discount)
 - Launch discount countdown ends April 4, 2026 — update date in ALL 7 landing page inline scripts + schema priceValidUntil
 - Legal entity: PRIME360 HOLDING LTD (Malta)
-- Pages: 100+ HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
+- Pages: 112 HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
@@ -168,13 +168,13 @@
 - Post-discount: JS date-check on pricing.html, thank-you.html, and all 7 landing pages auto-hides urgency/discount elements after April 4 2026, updates prices to $49.99/$149.99
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
-- Sitemap: 99 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v34'`
+- Sitemap: 109 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v36'`
 
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
 - Run: `cd server && npm test` or `node --test **/*.test.js`
-- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (11), `routes/vpn.test.js` (10), `outline.test.js` (6), `app.test.js` (4) — 40 tests total
+- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (12), `routes/vpn.test.js` (11), `outline.test.js` (11), `app.test.js` (4) — 47 tests total
 - All tests mock external APIs (Stripe, Outline, SMTP) — no real calls
 
 ## Monitoring
