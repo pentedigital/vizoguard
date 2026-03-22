@@ -26,6 +26,8 @@
 ## Database
 - `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id
 - `vpn_nodes` table: multi-node VPN (region, host, api_url, status, max_keys)
+- `audit_log` table: action, entity_type, entity_id, details, ip, created_at
+- `schema_version` table: tracks DB migration version (currently v1)
 - Plans: `vpn` (Basic) and `security_vpn` (Pro)
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
 
@@ -42,7 +44,7 @@
 ## API Routes
 - `POST /api/checkout` — create Stripe Checkout session (params: `plan`)
 - `POST /api/license` — validate + bind device (params: `key`, `device_id`)
-- `GET /api/license/lookup?session_id=` — retrieve license + VPN URL after checkout (gated by Stripe session_id, not device_id)
+- `GET /api/license/lookup?session_id=` — retrieve masked license info after checkout (key + email redacted, gated by Stripe session_id)
 - `POST /api/vpn/create` — create Outline access key (params: `key`, `device_id`)
 - `POST /api/vpn/get` — retrieve existing VPN key (params: `key`, `device_id` — 403 on mismatch)
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
@@ -61,11 +63,18 @@
 - Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
 - Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `updateStatus` only for terminal states
 - Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes
+- Webhook Outline provisioning uses `claimOutlineSlot` CAS pattern (same as VPN route) to prevent duplicate keys in PM2 cluster
+- `invoice.payment_succeeded` re-provisions VPN key automatically when suspended license is reactivated (payment recovery)
+- `charge.refunded` retrieves subscription ID via `stripe.invoices.retrieve(charge.invoice)` — Stripe Charge objects don't have `.subscription` directly
 
 ## Security Rules
-- Never log license keys, VPN access URLs, or Stripe secrets
+- Never log license keys, VPN access URLs, email addresses, or Stripe secrets
+- Email addresses redacted in webhook logs (`***@domain.com`)
 - Outline API uses `rejectUnauthorized: false` — scoped to self-signed Outline server only
 - All API routes are rate-limited
+- Request ID correlation: every request gets `req.id` (8-char UUID) logged as `[i${INSTANCE}] [${req.id}]`
+- `data-i18n-attr` in i18n.js sanitizes `href`/`src` values — rejects `javascript:` URIs
+- Failed license validations logged with `req.ip` for abuse detection
 
 ## Infrastructure
 - Production path: `/var/www/vizoguard/` — `public/` and `server/` are symlinks to `/root/vizoguard/`
@@ -150,7 +159,7 @@
 - Adding a new language requires updating 7+ locations (see i18n section) — use `i18n-reviewer` subagent after changes
 - Webhook outer `catch` uses `if (!res.headersSent)` guard — checkout.session.completed responds early, so the catch must not double-send
 - Webhook Outline catch must call `stmts.resetOutlineClaim.run(newLicense.id)` — without this, failed provisioning permanently locks the license
-- `invoice.payment_succeeded` also calls `updateStatus("active")` to reactivate suspended licenses after payment recovery
+- `invoice.payment_succeeded` calls `reactivateStatus("active")` and auto-provisions a new VPN key if the old one was revoked during suspension
 - Pricing changes touch 7 locale JSONs + 7 HTML pages + JSON-LD schemas (priceValidUntil) + sitemap — use `i18n-reviewer` + `seo-reviewer` subagents after changes
 - Countdown date must use UTC (`Z` suffix) and match across ALL 7 landing page scripts — banner auto-hides after expiry via `urgency-banner style.display=none`
 - Subagents need explicit `Write`, `Read`, `Edit`, `Bash` permissions in `settings.local.json` — descriptive text like "Allow subagents writing..." doesn't work, must use exact tool names

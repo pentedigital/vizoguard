@@ -81,9 +81,8 @@ self.addEventListener('activate', (event) => {
           .filter((key) => key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 // Fetch strategy
@@ -104,7 +103,8 @@ self.addEventListener('fetch', (event) => {
 
   // Network-only for thank-you page — never cache to prevent conversion re-fires
   if (url.pathname.includes('thank-you')) {
-    return fetch(request);
+    event.respondWith(fetch(request));
+    return;
   }
 
   // Network-first for HTML pages (ensures updates are immediate)

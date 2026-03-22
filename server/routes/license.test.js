@@ -280,7 +280,7 @@ describe('GET /lookup', () => {
 
     assert.equal(res.status, 200);
     // Key and email are masked for security — full key sent via email
-    assert.equal(res.body.key,   'TEST-****-****-1234');
+    assert.equal(res.body.key,   'TEST-****-****-****-1234');
     assert.equal(res.body.email, 'u***@example.com');
     assert.equal(res.body.plan,  fakeLicense.plan);
     assert.equal(res.body.expires, fakeLicense.expires_at);
