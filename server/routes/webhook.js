@@ -305,6 +305,12 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
 
       case "charge.refunded": {
         const charge = event.data.object;
+        // Only act on full refunds — partial refunds (goodwill credits) should not revoke access
+        if (charge.amount_refunded < charge.amount_captured) {
+          console.log(`[i${INSTANCE}] charge.refunded: partial refund for charge ${charge.id}, skipping suspension`);
+          webhookEventsTotal.inc({ event_type: event.type, result: 'skipped' });
+          break;
+        }
         // Stripe Charge doesn't have .subscription directly — get it via invoice
         let subId = null;
         if (charge.invoice) {
