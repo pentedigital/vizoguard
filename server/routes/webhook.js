@@ -229,11 +229,13 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
                 // Send email with new VPN key
                 const reactivatedEmail = reactivatedLicense.email;
                 if (reactivatedEmail && result.accessUrl) {
-                  sendLicenseEmail(reactivatedEmail, reactivatedLicense.key, reactivatedLicense.plan, result.accessUrl).catch((emailErr) => {
+                  try {
+                    await sendLicenseEmail(reactivatedEmail, reactivatedLicense.key, reactivatedLicense.plan, result.accessUrl);
+                    emailSendsTotal.inc({ result: 'success' });
+                  } catch (emailErr) {
                     emailSendsTotal.inc({ result: 'error' });
                     console.error(`[i${INSTANCE}] Failed to send reactivation email:`, emailErr.message);
-                  });
-                  emailSendsTotal.inc({ result: 'success' });
+                  }
                 }
               } catch (outlineErr) {
                 if (result?.id) await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
