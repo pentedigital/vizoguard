@@ -28,6 +28,7 @@
 - `vpn_nodes` table: multi-node VPN (region, host, api_url, status, max_keys)
 - `audit_log` table: action, entity_type, entity_id, details, ip, created_at
 - `schema_version` table: tracks DB migration version (currently v1)
+- `circuit_breaker` table: shared Outline API circuit breaker state (name, failures, state, opened_at)
 - Plans: `vpn` (Basic) and `security_vpn` (Pro)
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
 
@@ -66,6 +67,17 @@
 - Webhook Outline provisioning uses `claimOutlineSlot` CAS pattern (same as VPN route) to prevent duplicate keys in PM2 cluster
 - `invoice.payment_succeeded` re-provisions VPN key automatically when suspended license is reactivated (payment recovery)
 - `charge.refunded` retrieves subscription ID via `stripe.invoices.retrieve(charge.invoice)` — Stripe Charge objects don't have `.subscription` directly
+
+## Architectural Rules
+- Clients must validate license with server before every VPN connect — never trust cached credentials
+- VPN access URL must be cleared from client cache on any status change (suspension, expiry, recovery)
+- UI must never show "Protected" as default state — always start with "Checking..." and update from server
+- PII (email) must never be passed to Outline API — use `lic-{id}` as key name
+- Circuit breaker state stored in SQLite `circuit_breaker` table (shared across PM2 cluster)
+- Health endpoint returns 503 when VPN offline or disk >90% — never lie about system state
+- `updateStatus` for terminal state changes, `reactivateStatus` only for recovery (guards against un-expiring)
+- Webhook Outline provisioning uses `claimOutlineSlot` CAS + `resetStalePending` before every provision
+- `/api/vpn/delete` only clears DB after successful Outline API delete — prevents orphaned keys
 
 ## Security Rules
 - Never log license keys, VPN access URLs, email addresses, or Stripe secrets
