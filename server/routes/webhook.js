@@ -119,7 +119,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           try {
             const sub = await stripe.subscriptions.retrieve(session.subscription);
             if (sub.status !== 'active' && sub.status !== 'trialing') {
-              stmts.reactivateStatus.run('expired', session.subscription);
+              stmts.updateStatus.run('expired', session.subscription);
               console.warn(`[i${INSTANCE}] Subscription ${session.subscription} already ${sub.status}, marking expired`);
             }
           } catch (subErr) {
@@ -139,7 +139,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           } else {
             const bestNode = stmts.bestNode.get();
             const apiUrl = bestNode ? bestNode.api_url : null;
-            const result = await outline.createAccessKey(email, apiUrl);
+            const result = await outline.createAccessKey(`lic-${newLicense.id}`, apiUrl);
             try {
               const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
               stmts.setOutlineKey.run(result.accessUrl, result.id, newLicense.id);
@@ -211,7 +211,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
               try {
                 const bestNode = stmts.bestNode.get();
                 const apiUrl = bestNode ? bestNode.api_url : null;
-                result = await outline.createAccessKey(reactivatedLicense.email, apiUrl);
+                result = await outline.createAccessKey(`lic-${reactivatedLicense.id}`, apiUrl);
                 const DATA_LIMIT_BYTES = 100 * 1024 * 1024 * 1024;
                 outline.setDataLimit(result.id, DATA_LIMIT_BYTES, apiUrl).catch(err => {
                   console.error(`[i${INSTANCE}] Failed to set data limit on reactivation:`, err.message);
@@ -226,6 +226,15 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
                 }
                 console.log(`[i${INSTANCE}] VPN key re-provisioned on payment recovery for ${subId}`);
                 stmts.insertAudit.run('vpn_key_reprovisioned', 'license', String(reactivatedLicense.id), `subscription=${subId}`, null);
+                // Send email with new VPN key
+                const reactivatedEmail = reactivatedLicense.email;
+                if (reactivatedEmail && result.accessUrl) {
+                  sendLicenseEmail(reactivatedEmail, reactivatedLicense.key, reactivatedLicense.plan, result.accessUrl).catch((emailErr) => {
+                    emailSendsTotal.inc({ result: 'error' });
+                    console.error(`[i${INSTANCE}] Failed to send reactivation email:`, emailErr.message);
+                  });
+                  emailSendsTotal.inc({ result: 'success' });
+                }
               } catch (outlineErr) {
                 if (result?.id) await outline.deleteAccessKey(result.id, apiUrl).catch(() => {});
                 stmts.resetOutlineClaim.run(reactivatedLicense.id);

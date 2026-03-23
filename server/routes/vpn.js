@@ -115,7 +115,7 @@ router.post("/create", requireVpnLicense, async (req, res) => {
   let result, apiUrl, nodeId;
   try {
     ({ apiUrl, nodeId } = getNodeApiUrl(license));
-    result = await outline.createAccessKey(license.email, apiUrl);
+    result = await outline.createAccessKey(`lic-${license.id}`, apiUrl);
 
     try {
       stmts.setOutlineKey.run(result.accessUrl, result.id, license.id);
@@ -180,13 +180,8 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
     }
 
     const { apiUrl } = getNodeApiUrl(license);
-    try {
-      await outline.deleteAccessKey(license.outline_key_id, apiUrl);
-    } catch (delErr) {
-      console.error(`[i${INSTANCE}] Outline delete failed:`, delErr.message);
-    } finally {
-      stmts.clearOutlineKey.run(license.id);
-    }
+    await outline.deleteAccessKey(license.outline_key_id, apiUrl);
+    stmts.clearOutlineKey.run(license.id);
 
     console.log(`[i${INSTANCE}] VPN key deleted via API: licenseId=${license.id}`);
     res.json({ success: true });

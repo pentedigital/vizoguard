@@ -153,7 +153,9 @@ app.get("/api/health", async (_req, res) => {
   } catch {
     vpnStatus = "offline";
   }
-  res.json({ status: "ok", vpn: vpnStatus, timestamp: new Date().toISOString() });
+  const overallStatus = vpnStatus === "online" ? "ok" : "degraded";
+  const httpCode = vpnStatus === "online" ? 200 : 503;
+  res.status(httpCode).json({ status: overallStatus, vpn: vpnStatus, timestamp: new Date().toISOString() });
 });
 
 // Catch-all: hide framework fingerprint
