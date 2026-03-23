@@ -153,9 +153,16 @@ app.get("/api/health", async (_req, res) => {
   } catch {
     vpnStatus = "offline";
   }
-  const overallStatus = vpnStatus === "online" ? "ok" : "degraded";
-  const httpCode = vpnStatus === "online" ? 200 : 503;
-  res.status(httpCode).json({ status: overallStatus, vpn: vpnStatus, timestamp: new Date().toISOString() });
+  // Check disk space
+  let diskOk = true;
+  try {
+    const df = require('child_process').execSync("df --output=pcent / | tail -1").toString().trim();
+    const usedPct = parseInt(df);
+    if (usedPct > 90) diskOk = false;
+  } catch {}
+  const overallStatus = vpnStatus === "online" && diskOk ? "ok" : "degraded";
+  const httpCode = overallStatus === "ok" ? 200 : 503;
+  res.status(httpCode).json({ status: overallStatus, vpn: vpnStatus, disk: diskOk ? "ok" : "low", timestamp: new Date().toISOString() });
 });
 
 // Catch-all: hide framework fingerprint

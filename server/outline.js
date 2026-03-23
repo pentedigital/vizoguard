@@ -9,26 +9,37 @@ try {
 
 const DEFAULT_API_URL = process.env.OUTLINE_API_URL;
 
-// Circuit breaker state
-let cbFailures = 0;
-let cbState = "closed"; // closed | open | half-open
-let cbOpenedAt = 0;
+// Circuit breaker constants
 const CB_THRESHOLD = 5;
 const CB_TIMEOUT_MS = 30000;
+
+// SQLite-backed circuit breaker (shared across PM2 cluster instances via prepared stmts)
+let cbStmts;
+try { cbStmts = require('./db').stmts; } catch { /* db not available in test */ }
+
+function getCBState() {
+  if (!cbStmts) return { failures: 0, state: 'closed', opened_at: 0 };
+  return cbStmts.getCB.get('outline') || { failures: 0, state: 'closed', opened_at: 0 };
+}
+function updateCBState(failures, state, openedAt) {
+  if (cbStmts) cbStmts.updateCB.run(failures, state, openedAt, 'outline');
+}
 
 function outlineFetch(apiUrl, path, method = "GET", body = null) {
   if (!apiUrl) return Promise.reject(new Error("Outline API URL not configured"));
 
-  // Circuit breaker check
-  if (cbState === "open") {
-    if (Date.now() - cbOpenedAt >= CB_TIMEOUT_MS) {
-      cbState = "half-open";
+  // Circuit breaker check (DB-backed, shared across cluster)
+  let cb = getCBState();
+  if (cb.state === "open") {
+    if (Date.now() - cb.opened_at >= CB_TIMEOUT_MS) {
+      cb.state = "half-open";
+      updateCBState(cb.failures, "half-open", cb.opened_at);
     } else {
       return Promise.reject(new Error("Outline API circuit breaker open"));
     }
   }
 
-  const wasHalfOpen = cbState === "half-open";
+  const wasHalfOpen = cb.state === "half-open";
 
   return new Promise((resolve, reject) => {
     const url = new URL(`${apiUrl}${path}`);
@@ -80,15 +91,16 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
     req.end();
   }).then((result) => {
     // Success: reset circuit breaker
-    cbFailures = 0;
-    cbState = "closed";
+    updateCBState(0, "closed", 0);
     return result;
   }, (err) => {
     // Failure: update circuit breaker
-    cbFailures++;
-    if (wasHalfOpen || cbFailures >= CB_THRESHOLD) {
-      cbState = "open";
-      cbOpenedAt = Date.now();
+    const current = getCBState();
+    const newFailures = current.failures + 1;
+    if (wasHalfOpen || newFailures >= CB_THRESHOLD) {
+      updateCBState(newFailures, "open", Date.now());
+    } else {
+      updateCBState(newFailures, current.state, current.opened_at);
     }
     throw err;
   });

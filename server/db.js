@@ -67,6 +67,17 @@ if (!cols.includes("vpn_node_id")) {
 db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_vpn_node ON licenses(vpn_node_id)");
 db.exec("CREATE INDEX IF NOT EXISTS idx_licenses_status ON licenses(status)");
 
+// Circuit breaker state (shared across PM2 cluster instances)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS circuit_breaker (
+    name TEXT PRIMARY KEY,
+    failures INTEGER DEFAULT 0,
+    state TEXT DEFAULT 'closed',
+    opened_at INTEGER DEFAULT 0
+  );
+  INSERT OR IGNORE INTO circuit_breaker (name) VALUES ('outline');
+`);
+
 // Add processed_events table for webhook idempotency
 db.exec(`
   CREATE TABLE IF NOT EXISTS processed_events (
@@ -121,6 +132,10 @@ const stmts = {
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
   claimOutlineSlot: db.prepare("UPDATE licenses SET outline_key_id = 'pending' WHERE id = ? AND outline_key_id IS NULL"),
   resetOutlineClaim: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE id = ? AND outline_key_id = 'pending'"),
+
+  // Circuit breaker
+  getCB: db.prepare("SELECT * FROM circuit_breaker WHERE name = ?"),
+  updateCB: db.prepare("UPDATE circuit_breaker SET failures = ?, state = ?, opened_at = ? WHERE name = ?"),
 
   // Audit log
   insertAudit: db.prepare("INSERT INTO audit_log (action, entity_type, entity_id, details, ip) VALUES (?, ?, ?, ?, ?)"),

@@ -352,13 +352,18 @@ if (!sessionId) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      if (data.key) {
-        showSuccess(data);
+      if (data.pending && attempts < maxAttempts) {
+        pollTimeoutId = setTimeout(pollLicense, 3000);
         return;
       }
 
-      if (data.pending && attempts < maxAttempts) {
-        pollTimeoutId = setTimeout(pollLicense, 3000);
+      if (data.key) {
+        try {
+          await showSuccess(data);
+        } catch (renderErr) {
+          console.error('Success render error:', renderErr);
+          // Don't retry polling — the license was found
+        }
         return;
       }
 
