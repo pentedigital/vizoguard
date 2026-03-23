@@ -127,6 +127,7 @@ const stmts = {
   updateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ?"),
   updateLastCheck: db.prepare("UPDATE licenses SET last_check = datetime('now') WHERE id = ?"),
   clearDevice: db.prepare("UPDATE licenses SET device_id = NULL WHERE id = ?"),
+  transferDevice: db.prepare("UPDATE licenses SET device_id = ? WHERE id = ? AND key = ?"),
   setOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = ?, outline_key_id = ? WHERE id = ?"),
   clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL WHERE id = ?"),
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),

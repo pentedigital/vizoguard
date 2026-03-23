@@ -144,4 +144,47 @@ router.get("/lookup", async (req, res) => {
   }
 });
 
+// POST /api/license/transfer — move license to a new device
+router.post("/transfer", (req, res) => {
+  try {
+    const { key, device_id } = req.body;
+
+    if (!key || !device_id || typeof key !== "string" || typeof device_id !== "string") {
+      return res.status(400).json({ error: "Missing key or device_id" });
+    }
+    if (!KEY_REGEX.test(key)) {
+      return res.status(400).json({ error: "Invalid key format" });
+    }
+    if (!DEVICE_ID_REGEX.test(device_id)) {
+      return res.status(400).json({ error: "Invalid device_id format" });
+    }
+
+    const license = stmts.findByKey.get(key);
+    if (!license) {
+      return res.status(404).json({ error: "License not found" });
+    }
+
+    if (license.status !== "active") {
+      return res.status(403).json({ error: "License is not active", status: license.status });
+    }
+
+    // Transfer device binding
+    const oldDevice = license.device_id;
+    stmts.transferDevice.run(device_id, license.id, key);
+
+    // Clear VPN key — new device needs a fresh one
+    if (license.outline_key_id) {
+      stmts.clearOutlineKey.run(license.id);
+    }
+
+    console.log(`[i${INSTANCE}] Device transferred: licenseId=${license.id} old=${oldDevice ? oldDevice.slice(0, 8) + '...' : 'none'} new=${device_id.slice(0, 8)}...`);
+    stmts.insertAudit.run("device_transfer", "license", String(license.id), `old=${oldDevice || 'none'}`, req.ip);
+
+    res.json({ success: true, message: "License transferred to this device" });
+  } catch (err) {
+    console.error(`[i${INSTANCE}] Device transfer error:`, err.stack || err);
+    res.status(500).json({ error: "Transfer failed" });
+  }
+});
+
 module.exports = router;
