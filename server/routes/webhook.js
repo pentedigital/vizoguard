@@ -327,8 +327,14 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         }
 
         const refundedLicense = stmts.findBySubscription.get(subId);
-        const refResult = stmts.updateStatus.run("suspended", subId);
-        if (refResult.changes === 0) console.warn(`[i${INSTANCE}] charge.refunded: no license for subscription ${subId}`);
+        const refResult = stmts.suspendStatus.run(subId);
+        if (refResult.changes === 0) {
+          if (refundedLicense) {
+            console.log(`[i${INSTANCE}] charge.refunded: license for ${subId} is '${refundedLicense.status}', not overwriting with suspended`);
+          } else {
+            console.warn(`[i${INSTANCE}] charge.refunded: no license for subscription ${subId}`);
+          }
+        }
 
         // Revoke Outline VPN key on refund
         if (refundedLicense && refundedLicense.outline_key_id) {

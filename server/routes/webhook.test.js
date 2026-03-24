@@ -30,6 +30,7 @@ const mockStmts = {
   updateStatus:       { run: null },
   updatePlan:         { run: null },
   reactivateStatus:   { run: null },
+  suspendStatus:      { run: null },
   setOutlineKey:      { run: null },
   setLicenseNode:     { run: null },
   clearOutlineKey:    { run: null },
@@ -62,6 +63,7 @@ const calls = {
   updateExpiry:      [],
   updateStatus:      [],
   reactivateStatus:  [],
+  suspendStatus:     [],
   setOutlineKey:     [],
   setLicenseNode:    [],
   clearOutlineKey:   [],
@@ -110,7 +112,7 @@ const dbModId = require.resolve("../db", { paths: [__dirname] });
 const stmtsProxy = {};
 [
   "findBySubscription", "findByCustomer", "findByKey", "bestNode",
-  "insert", "insertEvent", "insertAudit", "claimOutlineSlot", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus",
+  "insert", "insertEvent", "insertAudit", "claimOutlineSlot", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus", "suspendStatus",
   "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "findNodeById",
 ].forEach((name) => {
   stmtsProxy[name] = {
@@ -183,6 +185,7 @@ function resetAll() {
   mockStmts.claimOutlineSlot.run   = () => ({ changes: 1 });
   mockStmts.updatePlan.run         = () => ({ changes: 0 });
   mockStmts.reactivateStatus.run   = () => ({ changes: 1 });
+  mockStmts.suspendStatus.run      = () => ({ changes: 1 });
   mockStmts.updateExpiry.run       = () => ({ changes: 1 });
   mockStmts.updateStatus.run       = () => ({ changes: 1 });
   mockStmts.setOutlineKey.run      = () => ({});
@@ -501,9 +504,8 @@ describe("POST /webhook", () => {
     await invoke(makeReq(), res);
 
     assert.equal(res._status, 200);
-    assert.equal(calls.updateStatus.length, 1);
-    assert.equal(calls.updateStatus[0][0], "suspended");
-    assert.equal(calls.updateStatus[0][1], "sub_refund");
+    assert.equal(calls.suspendStatus.length, 1);
+    assert.equal(calls.suspendStatus[0][0], "sub_refund");
     assert.equal(calls.deleteAccessKey.length, 1);
     assert.equal(calls.deleteAccessKey[0][0], "99");
     assert.equal(calls.clearOutlineKey.length, 1);

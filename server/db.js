@@ -100,12 +100,35 @@ db.exec(`
   );
 `);
 
+// Devices table — tracks device activity per license for abuse detection
+db.exec(`
+  CREATE TABLE IF NOT EXISTS devices (
+    id          TEXT    NOT NULL,
+    license_id  INTEGER NOT NULL,
+    platform    TEXT,
+    first_seen  TEXT    NOT NULL DEFAULT (datetime('now')),
+    last_seen   TEXT    NOT NULL DEFAULT (datetime('now')),
+    last_ip     TEXT,
+    PRIMARY KEY (id, license_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_devices_license ON devices(license_id);
+`);
+
 // Schema version tracking
 db.exec("CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)");
 
 const currentVersion = db.prepare("SELECT MAX(version) as v FROM schema_version").get()?.v || 0;
 if (currentVersion < 1) {
   db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (1)").run();
+}
+
+// Migration v2: add last_transfer_at to licenses for transfer cooldown
+if (currentVersion < 2) {
+  const licCols = db.prepare("PRAGMA table_info(licenses)").all().map(c => c.name);
+  if (!licCols.includes("last_transfer_at")) {
+    db.exec("ALTER TABLE licenses ADD COLUMN last_transfer_at TEXT");
+  }
+  db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (2)").run();
 }
 
 // Prune processed events older than 7 days (beyond Stripe's 72h retry window)
@@ -127,7 +150,7 @@ const stmts = {
   updateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ?"),
   updateLastCheck: db.prepare("UPDATE licenses SET last_check = datetime('now') WHERE id = ?"),
   clearDevice: db.prepare("UPDATE licenses SET device_id = NULL WHERE id = ?"),
-  transferDevice: db.prepare("UPDATE licenses SET device_id = ? WHERE id = ? AND key = ?"),
+  transferDevice: db.prepare("UPDATE licenses SET device_id = ? WHERE id = ? AND key = ? AND status = 'active'"),
   setOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = ?, outline_key_id = ? WHERE id = ?"),
   clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL WHERE id = ?"),
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
@@ -149,10 +172,17 @@ const stmts = {
   updatePlan: db.prepare("UPDATE licenses SET plan = ? WHERE stripe_subscription_id = ?"),
 
   // Guarded status updates — prevent invalid transitions
-  reactivateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ? AND status NOT IN ('expired')"),
+  // Note: 'cancelled' is excluded so late payment retries don't un-cancel explicit cancellations.
+  // Legitimate reactivation (user re-subscribes) creates a new Stripe subscription, not a retry on the old one.
+  reactivateStatus: db.prepare("UPDATE licenses SET status = ? WHERE stripe_subscription_id = ? AND status NOT IN ('expired', 'cancelled')"),
+  // Suspend only non-terminal statuses — refunds arriving after expiry must not resurrect the license
+  suspendStatus: db.prepare("UPDATE licenses SET status = 'suspended' WHERE stripe_subscription_id = ? AND status NOT IN ('expired')"),
 
   // Stale pending cleanup
   resetStalePending: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE outline_key_id = 'pending' AND (last_check < datetime('now', '-5 minutes') OR (last_check IS NULL AND created_at < datetime('now', '-5 minutes')))"),
+
+  // Expired license cleanup — find licenses past expiry that still have Outline keys
+  findExpiredWithKeys: db.prepare("SELECT id, outline_key_id, vpn_node_id FROM licenses WHERE expires_at < datetime('now') AND outline_key_id IS NOT NULL AND outline_key_id != 'pending' AND status IN ('expired', 'cancelled', 'suspended')"),
 
   // VPN nodes
   insertNode: db.prepare("INSERT INTO vpn_nodes (region, name, host, api_url, max_keys) VALUES (@region, @name, @host, @api_url, @max_keys)"),
@@ -170,6 +200,23 @@ const stmts = {
   `),
   updateNodeStatus: db.prepare("UPDATE vpn_nodes SET status = ? WHERE id = ?"),
   nodeKeyCount: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE vpn_node_id = ? AND status IN ('active', 'cancelled')"),
+
+  // Devices — upsert on validation, query for abuse detection
+  upsertDevice: db.prepare(`
+    INSERT INTO devices (id, license_id, platform, last_ip)
+    VALUES (?, ?, ?, ?)
+    ON CONFLICT(id, license_id) DO UPDATE SET last_seen = datetime('now'), last_ip = excluded.last_ip
+  `),
+  getDevicesByLicense: db.prepare("SELECT * FROM devices WHERE license_id = ? ORDER BY last_seen DESC"),
+  countDevicesByLicense: db.prepare("SELECT COUNT(*) AS count FROM devices WHERE license_id = ?"),
+
+  // Transfer cooldown
+  setTransferTime: db.prepare("UPDATE licenses SET last_transfer_at = datetime('now') WHERE id = ?"),
+  getTransferCooldown: db.prepare("SELECT last_transfer_at FROM licenses WHERE id = ?"),
+
+  // Gauge metrics — license/key counts for drift detection
+  countActiveLicenses: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE status IN ('active', 'cancelled') AND expires_at > datetime('now')"),
+  countActiveOutlineKeys: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE outline_key_id IS NOT NULL AND outline_key_id != 'pending'"),
 };
 
 module.exports = { db, stmts };

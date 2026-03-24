@@ -46,7 +46,7 @@ function getNodeApiUrl(license) {
 function requireVpnLicense(req, res, next) {
   try {
     const { key } = req.body;
-    if (!key || typeof key !== "string" || key.length > 24) return res.status(400).json({ error: "Missing or invalid license key" });
+    if (!key || typeof key !== "string" || key.length > 64) return res.status(400).json({ error: "Missing or invalid license key" });
     if (!KEY_REGEX.test(key)) return res.status(400).json({ error: "Invalid key format" });
 
     const license = stmts.findByKey.get(key);

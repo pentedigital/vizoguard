@@ -66,6 +66,31 @@ const emailSendsTotal = new client.Counter({
   labelNames: ['result'],
 });
 
+// License/key drift gauges — detect orphaned Outline keys
+const activeLicensesGauge = new client.Gauge({
+  name: 'active_licenses',
+  help: 'Licenses with valid status and future expiry',
+  collect() {
+    try {
+      const { stmts } = require('./db');
+      const row = stmts.countActiveLicenses.get();
+      this.set(row ? row.count : 0);
+    } catch { this.set(0); }
+  },
+});
+
+const activeOutlineKeysGauge = new client.Gauge({
+  name: 'active_outline_keys',
+  help: 'Licenses with a provisioned Outline key in DB',
+  collect() {
+    try {
+      const { stmts } = require('./db');
+      const row = stmts.countActiveOutlineKeys.get();
+      this.set(row ? row.count : 0);
+    } catch { this.set(0); }
+  },
+});
+
 // Middleware to track HTTP requests
 function metricsMiddleware(req, res, next) {
   const start = process.hrtime.bigint();

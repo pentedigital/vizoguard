@@ -14,12 +14,14 @@ if (LAUNCH_DISCOUNT_END && !process.env.STRIPE_PRICE_SECURITY_VPN_REGULAR) {
 }
 
 const express = require("express");
+const { exec } = require("child_process");
 const crypto = require("crypto");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const { db } = require('./db');
+const { db, stmts } = require('./db');
+const outline = require("./outline");
 const webhookRouter = require("./routes/webhook");
 const licenseRouter = require("./routes/license");
 const vpnRouter = require("./routes/vpn");
@@ -29,6 +31,48 @@ const { register, metricsMiddleware, stripeCheckoutTotal } = require('./metrics'
 const app = express();
 const PORT = process.env.PORT || 3000;
 const INSTANCE = process.env.NODE_APP_INSTANCE || '0';
+
+// Cached disk usage (updated every 60s, non-blocking)
+let cachedDiskOk = true;
+function updateDiskUsage() {
+  exec("df --output=pcent / | tail -1", (err, stdout) => {
+    if (err) return;
+    const usedPct = parseInt(stdout.trim());
+    cachedDiskOk = isNaN(usedPct) || usedPct <= 90;
+  });
+}
+updateDiskUsage();
+const diskCheckInterval = setInterval(updateDiskUsage, 60000);
+diskCheckInterval.unref();
+
+// Revoke Outline keys for expired licenses (runs hourly, instance 0 only)
+async function cleanupExpiredKeys() {
+  if (INSTANCE !== '0') return; // Only one worker runs cleanup
+  try {
+    const expired = stmts.findExpiredWithKeys.all();
+    for (const lic of expired) {
+      try {
+        let apiUrl = null;
+        if (lic.vpn_node_id) {
+          const node = stmts.findNodeById.get(lic.vpn_node_id);
+          if (node && node.status === 'active') apiUrl = node.api_url;
+        }
+        await outline.deleteAccessKey(lic.outline_key_id, apiUrl);
+        stmts.clearOutlineKey.run(lic.id);
+        stmts.insertAudit.run('expired_key_cleanup', 'license', String(lic.id), `outline_key=${lic.outline_key_id}`, 'system');
+        console.log(`[i${INSTANCE}] Cleanup: revoked expired Outline key ${lic.outline_key_id} for licenseId=${lic.id}`);
+      } catch (err) {
+        console.error(`[i${INSTANCE}] Cleanup: failed to revoke key for licenseId=${lic.id}:`, err.message);
+      }
+    }
+    if (expired.length > 0) console.log(`[i${INSTANCE}] Cleanup: processed ${expired.length} expired license(s)`);
+  } catch (err) {
+    console.error(`[i${INSTANCE}] Cleanup error:`, err.message);
+  }
+}
+const cleanupInterval = setInterval(cleanupExpiredKeys, 3600000); // Every hour
+cleanupInterval.unref();
+setTimeout(cleanupExpiredKeys, 30000); // First run 30s after startup
 
 // Trust nginx reverse proxy (needed for rate limiting with X-Forwarded-For)
 app.set("trust proxy", 1);
@@ -147,19 +191,13 @@ app.get("/api/health", async (_req, res) => {
   // Check VPN availability (best-effort, non-blocking)
   let vpnStatus = "unknown";
   try {
-    const outline = require("./outline");
     await outline.getServer();
     vpnStatus = "online";
   } catch {
     vpnStatus = "offline";
   }
-  // Check disk space
-  let diskOk = true;
-  try {
-    const df = require('child_process').execSync("df --output=pcent / | tail -1").toString().trim();
-    const usedPct = parseInt(df);
-    if (usedPct > 90) diskOk = false;
-  } catch {}
+  // Check disk space (cached, updated every 60s)
+  const diskOk = cachedDiskOk;
   const overallStatus = vpnStatus === "online" && diskOk ? "ok" : "degraded";
   const httpCode = overallStatus === "ok" ? 200 : 503;
   res.status(httpCode).json({ status: overallStatus, vpn: vpnStatus, disk: diskOk ? "ok" : "low", timestamp: new Date().toISOString() });

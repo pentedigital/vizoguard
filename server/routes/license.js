@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { stmts } = require("../db");
+const outline = require("../outline");
 const { licenseValidationsTotal } = require('../metrics');
 
 const router = Router();
@@ -16,7 +17,7 @@ router.post("/", (req, res) => {
     if (!key || !device_id || typeof key !== "string" || typeof device_id !== "string") {
       return res.status(400).json({ valid: false, error: "Missing key or device_id" });
     }
-    if (key.length > 24 || device_id.length > 64) {
+    if (key.length > 64 || device_id.length > 64) {
       return res.status(400).json({ valid: false, error: "Invalid input" });
     }
     if (!DEVICE_ID_REGEX.test(device_id)) {
@@ -80,7 +81,23 @@ router.post("/", (req, res) => {
     // Re-fetch for fresh state after potential concurrent webhook updates (#17)
     const fresh = stmts.findByKey.get(key);
     if (!fresh) return res.status(404).json({ valid: false, error: "License not found" });
+
+    // Re-validate status after re-fetch — webhook may have changed it during binding
+    if (fresh.status === "expired" || fresh.status === "suspended") {
+      licenseValidationsTotal.inc({ result: fresh.status });
+      return res.status(403).json({ valid: false, error: `License ${fresh.status}`, status: fresh.status });
+    }
+    if (fresh.expires_at && new Date(fresh.expires_at) < new Date()) {
+      licenseValidationsTotal.inc({ result: 'expired' });
+      return res.status(403).json({ valid: false, error: "License expired", status: "expired" });
+    }
+
     stmts.updateLastCheck.run(fresh.id);
+
+    // Track device activity (platform from User-Agent)
+    const ua = req.headers["user-agent"] || "";
+    const platform = ua.includes("Electron") ? "desktop" : ua.includes("Android") ? "android" : "unknown";
+    try { stmts.upsertDevice.run(device_id, fresh.id, platform, req.ip); } catch {}
 
     licenseValidationsTotal.inc({ result: 'valid' });
     res.json({
@@ -145,18 +162,21 @@ router.get("/lookup", async (req, res) => {
 });
 
 // POST /api/license/transfer — move license to a new device
-router.post("/transfer", (req, res) => {
+router.post("/transfer", async (req, res) => {
   try {
-    const { key, device_id } = req.body;
+    const { key, device_id, current_device_id } = req.body;
 
-    if (!key || !device_id || typeof key !== "string" || typeof device_id !== "string") {
-      return res.status(400).json({ error: "Missing key or device_id" });
+    if (!key || !device_id || !current_device_id || typeof key !== "string" || typeof device_id !== "string" || typeof current_device_id !== "string") {
+      return res.status(400).json({ error: "Missing key, device_id, or current_device_id" });
     }
     if (!KEY_REGEX.test(key)) {
       return res.status(400).json({ error: "Invalid key format" });
     }
     if (!DEVICE_ID_REGEX.test(device_id)) {
       return res.status(400).json({ error: "Invalid device_id format" });
+    }
+    if (!DEVICE_ID_REGEX.test(current_device_id)) {
+      return res.status(400).json({ error: "Invalid current_device_id format" });
     }
 
     const license = stmts.findByKey.get(key);
@@ -168,16 +188,50 @@ router.post("/transfer", (req, res) => {
       return res.status(403).json({ error: "License is not active", status: license.status });
     }
 
-    // Transfer device binding
-    const oldDevice = license.device_id;
-    stmts.transferDevice.run(device_id, license.id, key);
+    // Verify current device ownership — prevents unauthorized transfers
+    if (!license.device_id || license.device_id !== current_device_id) {
+      console.warn(`[i${INSTANCE}] Transfer denied: device mismatch licenseId=${license.id} ip=${req.ip}`);
+      return res.status(403).json({ error: "Current device does not match license binding" });
+    }
 
-    // Clear VPN key — new device needs a fresh one
-    if (license.outline_key_id) {
+    // Transfer cooldown — 3 days between transfers to prevent license sharing
+    const TRANSFER_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000;
+    if (license.last_transfer_at) {
+      const elapsed = Date.now() - new Date(license.last_transfer_at).getTime();
+      if (elapsed < TRANSFER_COOLDOWN_MS) {
+        const hoursLeft = Math.ceil((TRANSFER_COOLDOWN_MS - elapsed) / 3600000);
+        console.warn(`[i${INSTANCE}] Transfer denied: cooldown licenseId=${license.id} ip=${req.ip}`);
+        return res.status(429).json({ error: `Transfer cooldown — try again in ${hoursLeft}h` });
+      }
+    }
+
+    // Transfer device binding (atomic — WHERE status='active' prevents TOCTOU with webhooks)
+    const oldDevice = license.device_id;
+    const transferResult = stmts.transferDevice.run(device_id, license.id, key);
+    if (transferResult.changes === 0) {
+      // Status changed between findByKey and transferDevice (webhook race)
+      return res.status(403).json({ error: "License is no longer active" });
+    }
+
+    // Delete Outline VPN key from server before clearing DB — prevents orphaned keys
+    if (license.outline_key_id && license.outline_key_id !== 'pending') {
+      try {
+        let apiUrl = null;
+        if (license.vpn_node_id) {
+          const node = stmts.findNodeById.get(license.vpn_node_id);
+          if (node && node.status === "active") apiUrl = node.api_url;
+        }
+        await outline.deleteAccessKey(license.outline_key_id, apiUrl);
+        console.log(`[i${INSTANCE}] Transfer: Outline key ${license.outline_key_id} deleted for licenseId=${license.id}`);
+      } catch (outlineErr) {
+        console.error(`[i${INSTANCE}] Transfer: failed to delete Outline key ${license.outline_key_id} for licenseId=${license.id}:`, outlineErr.message);
+        // Continue with transfer — DB clear still needed so new device gets a fresh key
+      }
       stmts.clearOutlineKey.run(license.id);
     }
 
-    console.log(`[i${INSTANCE}] Device transferred: licenseId=${license.id} old=${oldDevice ? oldDevice.slice(0, 8) + '...' : 'none'} new=${device_id.slice(0, 8)}...`);
+    stmts.setTransferTime.run(license.id);
+    console.log(`[i${INSTANCE}] Device transferred: licenseId=${license.id} old=${oldDevice.slice(0, 8)}... new=${device_id.slice(0, 8)}...`);
     stmts.insertAudit.run("device_transfer", "license", String(license.id), `old=${oldDevice || 'none'}`, req.ip);
 
     res.json({ success: true, message: "License transferred to this device" });

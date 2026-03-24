@@ -24,6 +24,7 @@ const mockStmts = {
   updateLastCheck:    { run: mock.fn() },
   findBySubscription: { get: mock.fn() },
   findByCustomer:     { get: mock.fn() },
+  upsertDevice:       { run: mock.fn() },
 };
 const dbModulePath = require.resolve('../db');
 require.cache[dbModulePath] = {
@@ -90,6 +91,7 @@ function resetMocks() {
   mockStmts.updateLastCheck.run.mock.resetCalls();
   mockStmts.findBySubscription.get.mock.resetCalls();
   mockStmts.findByCustomer.get.mock.resetCalls();
+  mockStmts.upsertDevice.run.mock.resetCalls();
   mockStripeSession.retrieve.mock.resetCalls();
 }
 
