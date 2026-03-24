@@ -13,6 +13,7 @@ const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
 db.pragma("synchronous = NORMAL");
 db.pragma("foreign_keys = ON");
+db.pragma("busy_timeout = 5000"); // Wait up to 5s for locks (PM2 cluster concurrent writes)
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS licenses (
