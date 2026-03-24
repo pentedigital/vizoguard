@@ -54,10 +54,13 @@
             }
             node.removeChild(child);
           } else {
-            // Remove all attributes except href on <a>
+            // Remove all attributes except href on <a> (with scheme validation)
             var attrs = Array.prototype.slice.call(child.attributes);
             attrs.forEach(function (a) {
-              if (child.tagName === "A" && a.name === "href") return;
+              if (child.tagName === "A" && a.name === "href") {
+                if (!/^(https?:\/\/|\/)/.test(a.value)) child.removeAttribute(a.name);
+                return;
+              }
               child.removeAttribute(a.name);
             });
             clean(child);
