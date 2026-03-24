@@ -1,0 +1,63 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Run tests
+        working-directory: server
+        run: node --test **/*.test.js
+
+      - name: Audit dependencies
+        working-directory: server
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  deploy:
+    name: Deploy to VPS
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/vizoguard
+            git pull origin main
+            cd server && npm ci --production
+            pm2 reload vizoguard-api
