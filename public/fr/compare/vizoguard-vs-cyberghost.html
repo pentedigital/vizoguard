@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Vizoguard vs CyberGhost — Comparatif complet pour 2026</title>
   <meta name="description" content="Vizoguard vs CyberGhost : securite IA + VPN a partir de 24,99 $/an contre VPN streaming a partir de 26,28 $/an. Comparez vitesse, securite et fonctionnalites.">
   <meta name="keywords" content="Vizoguard vs CyberGhost, alternative CyberGhost, comparatif VPN 2026, meilleur VPN streaming 2026">
@@ -74,7 +74,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .compare-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -168,5 +169,10 @@
 
 <footer><p>&copy; 2026 Vizoguard &nbsp;&middot;&nbsp; <a href="/privacy.html">Confidentialite</a> &nbsp;&middot;&nbsp; <a href="/terms.html">Conditions</a> &nbsp;&middot;&nbsp; <a href="mailto:support@vizoguard.com">support@vizoguard.com</a></p></footer>
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

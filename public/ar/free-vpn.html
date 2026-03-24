@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VPN مجاني: هل الشبكات الافتراضية الخاصة المجانية آمنة في 2026؟ | Vizoguard</title>
   <meta name="description" content="هل الشبكة الافتراضية الخاصة المجانية آمنة؟ تعرّف على كيفية ربح الـ VPN المجاني، ومخاطر استخدامه، ولماذا يُعدّ الـ VPN المدفوع الخيار الأكثر أمانًا في 2026.">
   <meta name="keywords" content="VPN مجاني, شبكة VPN مجانية, مخاطر VPN المجاني, VPN مجاني مقابل مدفوع, VPN رخيص, أفضل VPN مجاني 2026, تجربة VPN مجانية">
@@ -154,7 +154,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <link rel="stylesheet" href="/css/rtl.css">
   <style>
@@ -660,6 +661,11 @@
       }
     });
   });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>

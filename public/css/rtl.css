@@ -61,7 +61,7 @@
   text-align: right;
 }
 [dir="rtl"] .lang-switcher-toggle {
-  padding: 4px 10px 4px 24px;
+  padding: 10px 10px 10px 24px;
 }
 [dir="rtl"] .lang-switcher-toggle::after {
   right: auto;
@@ -102,6 +102,19 @@
 [dir="rtl"] .legal ul {
   padding-left: 0;
   padding-right: 20px;
+}
+
+/* Tablet portrait RTL adjustments */
+@media (max-width: 768px) {
+  [dir="rtl"] nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  [dir="rtl"] .pricing-tag {
+    left: 12px;
+    right: auto;
+  }
 }
 
 /* Small phone RTL adjustments */

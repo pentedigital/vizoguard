@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Vizoguard बनाम ProtonVPN — 2026 के लिए पूर्ण तुलना | Vizoguard</title>
   <meta name="description" content="Vizoguard बनाम ProtonVPN: AI सुरक्षा + VPN $24.99/वर्ष बनाम गोपनीयता-केंद्रित VPN $47.88/वर्ष। सुविधाएं, मूल्य निर्धारण और सुरक्षा की तुलना करें।">
   <meta name="keywords" content="vizoguard बनाम protonvpn, protonvpn विकल्प, protonvpn तुलना, सर्वश्रेष्ठ गोपनीयता vpn 2026">
@@ -164,7 +164,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .compare-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -539,5 +540,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

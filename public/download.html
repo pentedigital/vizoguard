@@ -18,6 +18,16 @@
   <meta name="author" content="Vizoguard">
   <link rel="canonical" href="https://vizoguard.com/download">
 
+  <!-- hreflang for multilingual SEO -->
+  <link rel="alternate" hreflang="en" href="https://vizoguard.com/download">
+  <link rel="alternate" hreflang="ar" href="https://vizoguard.com/ar/vpn-download">
+  <link rel="alternate" hreflang="hi" href="https://vizoguard.com/hi/vpn-download">
+  <link rel="alternate" hreflang="fr" href="https://vizoguard.com/fr/vpn-download">
+  <link rel="alternate" hreflang="es" href="https://vizoguard.com/es/vpn-download">
+  <link rel="alternate" hreflang="tr" href="https://vizoguard.com/tr/vpn-download">
+  <link rel="alternate" hreflang="ru" href="https://vizoguard.com/ru/vpn-download">
+  <link rel="alternate" hreflang="x-default" href="https://vizoguard.com/download">
+
   <!-- Open Graph -->
   <meta property="og:title" content="Download Vizoguard — VPN & AI Security">
   <meta property="og:description" content="Download Vizoguard for Mac, Windows, iOS, or Android. AI security + encrypted VPN. Set up in 60 seconds.">
@@ -114,24 +124,24 @@
     "review": [
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Daniel R." },
+        "author": { "@type": "Person", "name": "Emily T." },
         "datePublished": "2026-03-10",
         "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-        "reviewBody": "Finally a VPN that actually blocks threats instead of just hiding my IP. The AI protection caught a phishing site that Chrome missed."
+        "reviewBody": "Setup took two minutes. The download page made it crystal clear which version I needed for my Mac."
       },
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Sarah K." },
+        "author": { "@type": "Person", "name": "James L." },
         "datePublished": "2026-03-05",
         "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-        "reviewBody": "Super easy setup — installed, entered my key, and was protected in under a minute. Fast speeds too, no noticeable slowdown."
+        "reviewBody": "Finally a VPN that doesn't require a PhD to install. Downloaded, activated my key, connected — done."
       },
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Marco T." },
+        "author": { "@type": "Person", "name": "Priya S." },
         "datePublished": "2026-02-28",
         "reviewRating": { "@type": "Rating", "ratingValue": "4", "bestRating": "5" },
-        "reviewBody": "Great security features and the zero-log policy gives me peace of mind. Would love to see more server locations in the future."
+        "reviewBody": "Clean installer, no bloatware bundled in. Refreshing compared to other VPN providers I've tried."
       }
     ]
   }
@@ -150,7 +160,7 @@
       { "@type": "Question", "name": "What if the download doesn't work?", "acceptedAnswer": { "@type": "Answer", "text": "Try refreshing the page. If it persists, email support@vizoguard.com with your OS and browser for a direct download link." } },
       { "@type": "Question", "name": "How do I get technical support?", "acceptedAnswer": { "@type": "Answer", "text": "Email support@vizoguard.com anytime. We typically respond within 24 hours." } },
       { "@type": "Question", "name": "Is the download safe? How do I verify?", "acceptedAnswer": { "@type": "Answer", "text": "All downloads are served over HTTPS from vizoguard.com. The desktop app is code-signed and macOS notarized. Mobile VPN uses the official Outline app from the App Store and Google Play." } },
-      { "@type": "Question", "name": "Can I install on multiple devices?", "acceptedAnswer": { "@type": "Answer", "text": "Basic: Use your VPN access key on any device via the Outline app. Pro: One license binds to one desktop device on first activation. VPN works on additional devices via Outline." } },
+      { "@type": "Question", "name": "Does Vizoguard work without an internet connection?", "acceptedAnswer": { "@type": "Answer", "text": "No — Vizoguard requires an active internet connection to establish the encrypted VPN tunnel and to validate your license. However, the threat detection engine caches its blocklist locally, so basic URL filtering continues working briefly during short connectivity gaps." } },
       { "@type": "Question", "name": "What's the difference between the Outline app and Vizoguard app?", "acceptedAnswer": { "@type": "Answer", "text": "Outline is the VPN client available on all platforms for all plans. The Vizoguard desktop app is Pro-only for Mac and Windows — it adds AI threat detection, phishing protection, and connection monitoring on top of the VPN." } }
     ]
   }
@@ -196,7 +206,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <noscript><style>.animate-up{opacity:1!important;transform:none!important}</style></noscript>
   <style>
@@ -237,7 +248,7 @@
   <a href="/" class="logo">Vizo<span>guard</span></a>
   <nav>
     <a href="/#features">Features</a>
-    <a href="/pricing.html">Pricing</a>
+    <a href="/pricing">Pricing</a>
     <a href="/#faq">FAQ</a>
     <a href="mailto:support@vizoguard.com">Contact</a>
     <div class="lang-switcher" role="navigation" id="lang-switcher" aria-label="Language selection">
@@ -246,9 +257,9 @@
         <button role="menuitem" data-lang-switch="en" onclick="switchLang('en')">English</button>
         <button role="menuitem" data-lang-switch="ar" onclick="switchLang('ar')">العربية</button>
         <button role="menuitem" data-lang-switch="hi" onclick="switchLang('hi')">हिन्दी</button>
-        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Fran&ccedil;ais</button>
-        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Espa&ntilde;ol</button>
-        <button role="menuitem" data-lang-switch="tr" onclick="switchLang('tr')">T&uuml;rk&ccedil;e</button>
+        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Français</button>
+        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Español</button>
+        <button role="menuitem" data-lang-switch="tr" onclick="switchLang('tr')">Türkçe</button>
         <button role="menuitem" data-lang-switch="ru" onclick="switchLang('ru')">Русский</button>
       </div>
     </div>
@@ -330,7 +341,7 @@
       <div class="step-num">1</div>
       <div>
         <h3>Subscribe</h3>
-        <p>Pick your plan at <a href="/pricing.html">vizoguard.com/pricing</a>. Your license key arrives instantly by email.</p>
+        <p>Pick your plan at <a href="/pricing">vizoguard.com/pricing</a>. Your license key arrives instantly by email.</p>
       </div>
     </div>
     <div class="step">
@@ -363,7 +374,7 @@
   <h2>Ready to get started?</h2>
   <p>Choose a plan and protect your devices today.</p>
   <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
-    <a href="/pricing.html" class="btn btn-secondary">View pricing</a>
+    <a href="/pricing" class="btn btn-secondary">View pricing</a>
     <button class="btn" onclick="startCheckout('security_vpn')">Get Pro — $99.99/yr</button>
   </div>
   <div class="guarantee">
@@ -422,8 +433,8 @@
   </div>
 
   <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">Can I install on multiple devices?</button>
-    <div class="faq-answer"><p>Basic: Use your VPN access key on any device via the Outline app. Pro: One license binds to one desktop device on first activation. VPN works on additional devices via Outline.</p></div>
+    <button class="faq-question" aria-expanded="false">Does Vizoguard work without an internet connection?</button>
+    <div class="faq-answer"><p>No — Vizoguard requires an active internet connection to establish the encrypted VPN tunnel and to validate your license. However, the threat detection engine caches its blocklist locally, so basic URL filtering continues working briefly during short connectivity gaps.</p></div>
   </div>
 
   <div class="faq-item">

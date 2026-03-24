@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>How Does a VPN Work? A Simple Guide | Vizoguard</title>
   <meta name="description" content="How does a VPN work? A simple guide to VPN tunneling, encryption, and protocols — learn what happens to your data when you connect to a VPN.">
   <meta name="keywords" content="how does vpn work, vpn explained, vpn tunneling, vpn encryption, vpn protocol">
@@ -171,7 +171,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
 
   <style>
@@ -320,6 +321,7 @@
 
   <p>A VPN protocol is the rulebook that governs how the tunnel is established, how keys are exchanged, and how data packets are formatted and encrypted. Different protocols make very different tradeoffs between speed, security, compatibility, and detectability. Here's the honest rundown:</p>
 
+  <div style="overflow-x:auto">
   <table class="protocol-table">
     <thead>
       <tr>
@@ -361,6 +363,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <p><strong>WireGuard</strong> is the protocol you want if you value speed and simplicity. Its entire codebase is roughly 4,000 lines of code — compared to OpenVPN's 100,000+. Less code means a smaller attack surface and much easier security auditing. WireGuard has become the default for most reputable VPN providers, and for good reason: it's blazing fast, uses modern cryptography exclusively, and has been publicly audited.</p>
 
@@ -492,5 +495,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

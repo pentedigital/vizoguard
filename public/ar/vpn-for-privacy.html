@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VPN للخصوصية: كيف تحمي الشبكة الافتراضية الخاصة خصوصيتك على الإنترنت | Vizoguard</title>
   <meta name="description" content="كيف تحمي VPN خصوصيتك على الإنترنت؟ تعرّف على البيانات التي يجمعها مزود الإنترنت، وما تخفيه VPN، وقيودها، وكيفية اختيار VPN تركّز على الخصوصية.">
   <meta name="keywords" content="vpn للخصوصية, خصوصية vpn, خصوصية الإنترنت, إخفاء عنوان IP, تتبع مزود الإنترنت, vpn بدون سجلات, vpn مجهول">
@@ -130,7 +130,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <link rel="stylesheet" href="/css/rtl.css?v=20">
   <style>
@@ -709,6 +710,11 @@
       }
     });
   });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>

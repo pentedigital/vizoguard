@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VPN vs Proxy: What's the Difference? | Vizoguard</title>
   <meta name="description" content="VPN vs proxy — what's the difference? Compare encryption, speed, privacy, and use cases to decide which is right for you.">
   <meta name="keywords" content="vpn vs proxy, proxy vs vpn, vpn or proxy, proxy server, vpn proxy difference">
@@ -171,7 +171,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
 
   <style>
@@ -294,6 +295,7 @@
 
   <p>Before diving into the details, here is the full feature matrix side by side:</p>
 
+  <div style="overflow-x:auto">
   <table class="comparison-table" aria-label="VPN vs Proxy feature comparison">
     <thead>
       <tr>
@@ -365,6 +367,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <h2 id="encryption-security">Encryption &amp; Security</h2>
 
@@ -501,5 +504,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

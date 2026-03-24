@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VPN Gratuit : Les VPN Gratuits Sont-ils Sûrs en 2026 ? | Vizoguard</title>
   <meta name="description" content="Les VPN gratuits sont-ils sûrs ? Découvrez comment les VPN gratuits gagnent de l'argent, leurs risques, et pourquoi un VPN payant abordable est le meilleur choix en 2026.">
   <meta name="keywords" content="vpn gratuit, vpn gratuit sûr, risques vpn gratuit, vpn gratuit vs payant, vpn pas cher, meilleur vpn gratuit 2026, essai gratuit vpn">
@@ -155,7 +155,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -659,6 +660,11 @@
       }
     });
   });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>

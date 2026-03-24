@@ -18,6 +18,10 @@
   <meta name="author" content="Vizoguard">
   <link rel="canonical" href="https://vizoguard.com/pricing">
 
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="en" href="https://vizoguard.com/pricing">
+  <link rel="alternate" hreflang="x-default" href="https://vizoguard.com/pricing">
+
   <!-- Open Graph -->
   <meta property="og:title" content="Vizoguard Pricing — VPN from $24.99/yr">
   <meta property="og:description" content="Basic VPN $24.99/yr or Pro AI security + VPN $99.99/yr. 30-day money-back guarantee. Cancel anytime.">
@@ -208,7 +212,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <noscript><style>.animate-up{opacity:1!important;transform:none!important}</style></noscript>
   <style>
@@ -249,7 +254,7 @@
   <a href="/" class="logo">Vizo<span>guard</span></a>
   <nav>
     <a href="/#features">Features</a>
-    <a href="/pricing.html">Pricing</a>
+    <a href="/pricing">Pricing</a>
     <a href="/#faq">FAQ</a>
     <a href="mailto:support@vizoguard.com">Contact</a>
     <div class="lang-switcher" role="navigation" id="lang-switcher" aria-label="Language selection">
@@ -258,9 +263,9 @@
         <button role="menuitem" data-lang-switch="en" onclick="switchLang('en')">English</button>
         <button role="menuitem" data-lang-switch="ar" onclick="switchLang('ar')">العربية</button>
         <button role="menuitem" data-lang-switch="hi" onclick="switchLang('hi')">हिन्दी</button>
-        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Fran&ccedil;ais</button>
-        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Espa&ntilde;ol</button>
-        <button role="menuitem" data-lang-switch="tr" onclick="switchLang('tr')">T&uuml;rk&ccedil;e</button>
+        <button role="menuitem" data-lang-switch="fr" onclick="switchLang('fr')">Français</button>
+        <button role="menuitem" data-lang-switch="es" onclick="switchLang('es')">Español</button>
+        <button role="menuitem" data-lang-switch="tr" onclick="switchLang('tr')">Türkçe</button>
         <button role="menuitem" data-lang-switch="ru" onclick="switchLang('ru')">Русский</button>
       </div>
     </div>
@@ -324,6 +329,7 @@
 
 <section class="comparison-section">
   <h2>Compare plans</h2>
+  <div style="overflow-x:auto">
   <table class="comparison-table">
     <caption>Comparison of Vizoguard Basic and Pro features</caption>
     <thead>
@@ -346,6 +352,7 @@
       <tr><td>Vizoguard desktop app</td><td class="dash">&mdash;</td><td class="check">&#10003;</td></tr>
     </tbody>
   </table>
+  </div>
 
   <div class="guarantee-badge">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

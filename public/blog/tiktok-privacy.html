@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>TikTok Privacy: What TikTok Knows About You (And How to Stop It) | Vizoguard</title>
   <meta name="description" content="Is TikTok safe? Learn exactly what data TikTok collects — device info, location, keystroke patterns, clipboard — and how to protect your privacy with practical steps and a VPN.">
   <meta name="keywords" content="tiktok privacy, tiktok data collection, is tiktok safe, tiktok spying, tiktok data harvesting, tiktok vpn, tiktok security">
@@ -172,7 +172,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
 
   <style>
@@ -443,5 +444,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

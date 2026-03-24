@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AI थ्रेट प्रोटेक्शन: Vizoguard रियल टाइम में खतरों को कैसे ब्लॉक करता है | Vizoguard</title>
   <meta name="description" content="AI थ्रेट प्रोटेक्शन कैसे काम करती है? जानें कि Vizoguard के 8 एनालिसिस वेक्टर ब्राउज़र लोड करने से पहले फिशिंग, मैलवेयर और ज़ीरो-डे खतरों को कैसे पकड़ते हैं।">
   <meta name="keywords" content="ai थ्रेट प्रोटेक्शन, ai सुरक्षा, रियल टाइम थ्रेट डिटेक्शन, फिशिंग प्रोटेक्शन, मैलवेयर ब्लॉकिंग, ज़ीरो डे प्रोटेक्शन">
@@ -168,7 +168,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -554,6 +555,11 @@
       }
     });
   });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>

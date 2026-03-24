@@ -120,7 +120,8 @@ nav a:hover { color: var(--text); text-decoration: none; }
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 4px 24px 4px 10px;
+  padding: 10px 24px 10px 10px;
+  min-height: 44px;
   border-radius: 6px;
   transition: color 0.15s, background 0.15s, border-color 0.15s;
   display: flex;
@@ -154,7 +155,7 @@ nav a:hover { color: var(--text); text-decoration: none; }
   border-radius: 8px;
   padding: 4px 0;
   min-width: 120px;
-  z-index: 200;
+  z-index: 250;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .lang-switcher.open .lang-dropdown { display: block; }
@@ -168,7 +169,8 @@ nav a:hover { color: var(--text); text-decoration: none; }
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 8px 14px;
+  padding: 12px 14px;
+  min-height: 44px;
   text-align: left;
   transition: color 0.15s, background 0.15s;
   white-space: nowrap;
@@ -205,6 +207,7 @@ nav a:hover { color: var(--text); text-decoration: none; }
   display: flex;
   gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* ── Buttons ──────────────────── */
@@ -954,10 +957,13 @@ table { max-width: 1200px; margin-left: auto; margin-right: auto; }
     padding: 0 20px;
     padding-top: env(safe-area-inset-top, 0);
   }
-  nav { gap: 20px; }
+  nav { gap: 20px; flex-wrap: wrap; justify-content: center; }
   nav a {
-    font-size: 0.75rem;
-    padding: 8px 0; /* 44px touch target with line-height */
+    font-size: 0.8125rem;
+    padding: 10px 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .hero { padding: 120px 20px 72px; }
@@ -1053,7 +1059,7 @@ table { max-width: 1200px; margin-left: auto; margin-right: auto; }
   .pricing-card { padding: 24px 20px; }
   .pricing-amount .dollar { font-size: 2rem; }
   .pricing-amount .cents { font-size: 1rem; }
-  .pricing-tag { top: 12px; right: 12px; font-size: 0.625rem; }
+  .pricing-tag { top: 12px; right: 12px; font-size: 0.75rem; }
 
   .steps-section { padding: 48px 16px; }
   .steps-section h2 { font-size: 1.5rem; }
@@ -1064,38 +1070,33 @@ table { max-width: 1200px; margin-left: auto; margin-right: auto; }
 
   .divider { padding: 0 16px; }
 
-  footer p { font-size: 0.6875rem; }
+  footer p { font-size: 0.75rem; }
 
   /* Urgency banner — small phone */
   .urgency-banner {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     padding: 6px 12px;
     line-height: 1.4;
   }
   .urgency-banner + header { top: 32px; }
   .urgency-banner ~ .hero { padding-top: 150px; }
 
-  /* Header stacks vertically — needs more space with banner */
-  header {
-    padding-top: calc(12px + env(safe-area-inset-top, 0));
-  }
-
   /* Social proof — stack on tiny screens */
   .social-proof { padding: 20px 16px; }
   .social-proof-inner { gap: 16px; }
   .proof-divider { display: none; }
   .proof-stat .num { font-size: 1.125rem; }
-  .proof-stat .label { font-size: 0.625rem; }
+  .proof-stat .label { font-size: 0.75rem; }
 
   /* Guarantee */
-  .guarantee { font-size: 0.6875rem; gap: 6px; margin-top: 20px; flex-wrap: wrap; }
+  .guarantee { font-size: 0.75rem; gap: 6px; margin-top: 20px; flex-wrap: wrap; }
 
   /* Price daily */
-  .price-daily { font-size: 0.6875rem; }
+  .price-daily { font-size: 0.75rem; }
 
   /* Sticky CTA — tighter on small phones */
   .sticky-cta { padding: 10px 12px; }
-  .sticky-cta .btn { height: 40px; font-size: 0.75rem; padding: 0 10px; border-radius: 20px; }
+  .sticky-cta .btn { height: 44px; font-size: 0.8125rem; padding: 0 10px; border-radius: 20px; }
 
   /* Thank-you extras */
   .referral-box { padding: 16px 12px; margin-top: 24px; }
@@ -1109,7 +1110,10 @@ table { max-width: 1200px; margin-left: auto; margin-right: auto; }
   .seo-page h1 { font-size: 1.3rem; }
 
   .trust-badges { gap: 20px; }
-  .trust-badge { font-size: 0.7rem; }
+  .trust-badge { font-size: 0.75rem; }
+  .pricing-tag { font-size: 0.75rem; }
+  .license-box label { font-size: 0.75rem; }
+  .discount-badge { font-size: 0.75rem; }
 }
 
 /* ── Print ───────────────────── */

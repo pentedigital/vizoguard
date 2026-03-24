@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Vizoguard مقابل Surfshark — مقارنة الأسعار والأمان (2026)</title>
   <meta name="description" content="Vizoguard مقابل Surfshark: أمان بالذكاء الاصطناعي + VPN من 24.99$/سنة مقابل VPN اقتصادي بأجهزة غير محدودة من 27.48$/سنة. قارن المميزات والأمان.">
   <meta name="keywords" content="Vizoguard مقابل Surfshark, بديل Surfshark, مقارنة VPN 2026, أفضل VPN اقتصادي 2026">
@@ -169,7 +169,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <link rel="stylesheet" href="/css/rtl.css?v=20">
   <style>
@@ -390,5 +391,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

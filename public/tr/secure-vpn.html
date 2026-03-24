@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Güvenli VPN: Bir VPN'i Gerçekten Güvenli Yapan Nedir? | Vizoguard</title>
   <meta name="description" content="Bir VPN'i gerçekten güvenli yapan nedir? Şifreleme standartları, VPN protokolleri, kill switch ve günlük tutma politikaları hakkında bilgi edinin — ve VPN güvenliğinizi nasıl doğrulayacağınızı öğrenin.">
   <meta name="keywords" content="güvenli vpn, vpn güvenliği, vpn şifreleme, aes 256 vpn, vpn protokolleri, wireguard, shadowsocks, vpn kill switch, sıfır log vpn">
@@ -177,7 +177,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .seo-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -616,6 +617,11 @@
       }
     });
   });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>

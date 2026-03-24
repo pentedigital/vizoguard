@@ -11,7 +11,7 @@
     gtag('config', 'GT-NGJF3VBT');
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Vizoguard vs ExpressVPN 2026 — Comparaison complète</title>
   <meta name="description" content="Vizoguard vs ExpressVPN : sécurité IA + VPN à partir de 24,99 $/an contre VPN premium à partir de 99,84 $/an. Fonctionnalités, tarifs et sécurité comparés.">
   <meta name="keywords" content="Vizoguard vs ExpressVPN, alternative ExpressVPN, comparaison VPN 2026, VPN sécurité IA, VPN pas cher, meilleur VPN 2026">
@@ -176,7 +176,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=20">
   <style>
     .compare-page { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
@@ -517,5 +518,10 @@
 </footer>
 
 <script src="/js/main.js?v=20"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>
