@@ -194,7 +194,7 @@
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
 - Sitemap: 121 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v40'`
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v41'`
 
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
