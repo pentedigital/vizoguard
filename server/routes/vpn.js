@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const crypto = require("crypto");
 const { db, stmts } = require("../db");
 const outline = require("../outline");
 const { vpnKeysCreatedTotal } = require('../metrics');
@@ -64,9 +65,9 @@ function requireVpnLicense(req, res, next) {
       return res.status(403).json({ error: "Your plan does not include VPN access" });
     }
 
-    if (license.plan === "security_vpn" && !license.device_id) {
+    if (!license.device_id) {
       return res.status(403).json({
-        error: "Please activate your desktop app first to bind your device before using VPN",
+        error: "Please activate your app first to bind your device before using VPN",
       });
     }
 
@@ -188,6 +189,35 @@ router.post("/delete", requireVpnLicense, async (req, res) => {
   } catch (err) {
     console.error(`[i${INSTANCE}] VPN delete error:`, err);
     res.status(500).json({ error: "Failed to delete VPN key" });
+  }
+});
+
+// POST /api/vpn/vless — provision or return per-device VLESS UUID for obfuscated transport
+router.post("/vless", requireVpnLicense, (req, res) => {
+  try {
+    const { license } = req;
+    const { device_id } = req.body;
+
+    // Device verification
+    if (license.device_id && (!device_id || device_id !== license.device_id)) {
+      return res.status(403).json({ error: "Device mismatch" });
+    }
+
+    // Idempotent: return existing UUID if already provisioned
+    if (license.vless_uuid) {
+      return res.json({ uuid: license.vless_uuid });
+    }
+
+    // Generate a new random UUID v4
+    const uuid = crypto.randomUUID();
+    stmts.setVlessUuid.run(uuid, license.id);
+    stmts.insertAudit.run('vless_provisioned', 'license', String(license.id), null, req.ip);
+    console.log(`[i${INSTANCE}] VLESS UUID provisioned for licenseId=${license.id}`);
+
+    res.json({ uuid });
+  } catch (err) {
+    console.error(`[i${INSTANCE}] VLESS provision error:`, err);
+    res.status(500).json({ error: "Failed to provision transport credential" });
   }
 });
 

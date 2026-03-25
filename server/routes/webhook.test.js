@@ -345,7 +345,8 @@ describe("POST /webhook", () => {
     await invoke(makeReq(), res);
 
     assert.equal(res._status, 200);
-    assert.equal(calls.updateStatus[0][0], "suspended");
+    assert.equal(calls.suspendStatus.length, 1, "suspendStatus must be called");
+    assert.equal(calls.suspendStatus[0][0], "sub_fail");
     assert.equal(calls.deleteAccessKey.length, 1, "deleteAccessKey must be called");
     assert.equal(calls.deleteAccessKey[0][0], "99");
     assert.equal(calls.clearOutlineKey.length, 1, "clearOutlineKey must be called");
@@ -382,10 +383,10 @@ describe("POST /webhook", () => {
         data: { object: subObj },
       });
       await invoke(makeReq(), makeRes());
-      // cancel_at_period_end and active use reactivateStatus; past_due/unpaid use updateStatus
+      // cancel_at_period_end and active use reactivateStatus; past_due/unpaid use suspendStatus
       const reactivate = calls.reactivateStatus[0] ? calls.reactivateStatus[0][0] : null;
-      const update = calls.updateStatus[0] ? calls.updateStatus[0][0] : null;
-      return reactivate || update;
+      const suspend = calls.suspendStatus.length > 0 ? "suspended" : null;
+      return reactivate || suspend;
     }
 
     assert.equal(

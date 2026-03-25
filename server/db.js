@@ -132,6 +132,15 @@ if (currentVersion < 2) {
   db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (2)").run();
 }
 
+// Migration v3: add vless_uuid to licenses for per-device obfuscated transport
+if (currentVersion < 3) {
+  const licCols3 = db.prepare("PRAGMA table_info(licenses)").all().map(c => c.name);
+  if (!licCols3.includes("vless_uuid")) {
+    db.exec("ALTER TABLE licenses ADD COLUMN vless_uuid TEXT");
+  }
+  db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (3)").run();
+}
+
 // Prune processed events older than 7 days (beyond Stripe's 72h retry window)
 db.prepare("DELETE FROM processed_events WHERE processed_at < datetime('now', '-7 days')").run();
 
@@ -153,10 +162,14 @@ const stmts = {
   clearDevice: db.prepare("UPDATE licenses SET device_id = NULL WHERE id = ?"),
   transferDevice: db.prepare("UPDATE licenses SET device_id = ? WHERE id = ? AND key = ? AND status = 'active'"),
   setOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = ?, outline_key_id = ? WHERE id = ?"),
-  clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL WHERE id = ?"),
+  clearOutlineKey: db.prepare("UPDATE licenses SET outline_access_key = NULL, outline_key_id = NULL, vpn_node_id = NULL, vless_uuid = NULL WHERE id = ?"),
   setLicenseNode: db.prepare("UPDATE licenses SET vpn_node_id = ? WHERE id = ?"),
   claimOutlineSlot: db.prepare("UPDATE licenses SET outline_key_id = 'pending' WHERE id = ? AND outline_key_id IS NULL"),
   resetOutlineClaim: db.prepare("UPDATE licenses SET outline_key_id = NULL WHERE id = ? AND outline_key_id = 'pending'"),
+
+  // VLESS per-device UUID
+  setVlessUuid: db.prepare("UPDATE licenses SET vless_uuid = ? WHERE id = ?"),
+  clearVlessUuid: db.prepare("UPDATE licenses SET vless_uuid = NULL WHERE id = ?"),
 
   // Circuit breaker
   getCB: db.prepare("SELECT * FROM circuit_breaker WHERE name = ?"),

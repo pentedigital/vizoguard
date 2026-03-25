@@ -116,7 +116,7 @@ function activeLicense(overrides = {}) {
     plan: "vpn",
     status: "active",
     expires_at: new Date(Date.now() + 86400 * 1000).toISOString(), // tomorrow
-    device_id: null,
+    device_id: "test-device-1234567890",
     outline_access_key: null,
     outline_key_id: null,
     vpn_node_id: null,
@@ -141,7 +141,7 @@ describe("POST /create", () => {
     const license = activeLicense();
     stmts.findByKey.get = () => license;
 
-    const { req, res } = makeReqRes({ key: license.key });
+    const { req, res } = makeReqRes({ key: license.key, device_id: license.device_id });
     await callRoute("post", "/create", req, res);
 
     assert.equal(res._status, 200);
@@ -156,7 +156,7 @@ describe("POST /create", () => {
     const license = activeLicense({ outline_access_key: "ss://existingkey", outline_key_id: "5" });
     stmts.findByKey.get = () => license;
 
-    const { req, res } = makeReqRes({ key: license.key });
+    const { req, res } = makeReqRes({ key: license.key, device_id: license.device_id });
     await callRoute("post", "/create", req, res);
 
     assert.equal(res._status, 200);
@@ -172,7 +172,7 @@ describe("POST /create", () => {
     stmts.findByKey.get = () => { callCount++; return license; };
     stmts.claimOutlineSlot.run = () => ({ changes: 0 }); // CAS fails
 
-    const { req, res } = makeReqRes({ key: license.key });
+    const { req, res } = makeReqRes({ key: license.key, device_id: license.device_id });
     await callRoute("post", "/create", req, res);
 
     assert.equal(res._status, 409);
@@ -191,7 +191,7 @@ describe("POST /create", () => {
     const license = activeLicense();
     stmts.findByKey.get = () => license;
 
-    const { req, res } = makeReqRes({ key: license.key });
+    const { req, res } = makeReqRes({ key: license.key, device_id: license.device_id });
     await callRoute("post", "/create", req, res);
 
     assert.equal(res._status, 500);

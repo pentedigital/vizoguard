@@ -256,7 +256,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
         const subId = invoice.subscription;
         if (!subId) break;
 
-        const suspResult = stmts.updateStatus.run("suspended", subId);
+        const suspResult = stmts.suspendStatus.run(subId);
         if (suspResult.changes === 0) console.warn(`[i${INSTANCE}] payment_failed: no license for subscription ${subId}`);
 
         // Revoke Outline VPN key on suspension to prevent continued access
@@ -306,7 +306,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
       case "charge.refunded": {
         const charge = event.data.object;
         // Only act on full refunds — partial refunds (goodwill credits) should not revoke access
-        if (charge.amount_refunded < charge.amount_captured) {
+        if (charge.amount_refunded < charge.amount) {
           console.log(`[i${INSTANCE}] charge.refunded: partial refund for charge ${charge.id}, skipping suspension`);
           webhookEventsTotal.inc({ event_type: event.type, result: 'skipped' });
           break;
@@ -371,7 +371,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           updResult = stmts.reactivateStatus.run("active", sub.id);
           console.log(`[i${INSTANCE}] Subscription reactivated: ${sub.id}`);
         } else if (sub.status === "past_due" || sub.status === "unpaid") {
-          updResult = stmts.updateStatus.run("suspended", sub.id);
+          updResult = stmts.suspendStatus.run(sub.id);
           console.log(`[i${INSTANCE}] Subscription suspended (${sub.status}): ${sub.id}`);
         } else {
           console.log(`[i${INSTANCE}] Subscription updated with unhandled status: ${sub.status} for ${sub.id}`);
