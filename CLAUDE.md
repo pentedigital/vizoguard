@@ -24,10 +24,10 @@
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
 
 ## Database
-- `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id
+- `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id, vless_uuid
 - `vpn_nodes` table: multi-node VPN (region, host, api_url, status, max_keys)
 - `audit_log` table: action, entity_type, entity_id, details, ip, created_at
-- `schema_version` table: tracks DB migration version (currently v1)
+- `schema_version` table: tracks DB migration version (currently v3)
 - `circuit_breaker` table: shared Outline API circuit breaker state (name, failures, state, opened_at)
 - Plans: `vpn` (Basic) and `security_vpn` (Pro)
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
@@ -49,6 +49,7 @@
 - `POST /api/vpn/create` — create Outline access key (params: `key`, `device_id`)
 - `POST /api/vpn/get` — retrieve existing VPN key (params: `key`, `device_id` — 403 on mismatch)
 - `POST /api/vpn/delete` — revoke VPN key (params: `key`)
+- `POST /api/vpn/vless` — provision per-device VLESS UUID for obfuscated transport (params: `key`, `device_id`)
 - `GET /api/vpn/status` — health only (`{"status":"online|offline"}` — no node details)
 - `GET /api/health` — API + VPN node health check (`{"status":"ok","vpn":"online|offline"}`)
 - `GET /metrics` — Prometheus metrics (blocked externally by nginx)
@@ -62,7 +63,7 @@
 - `charge.refunded` suspends license and revokes Outline VPN key
 - `customer.subscription.updated` detects plan changes from metadata and updates license plan
 - Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
-- Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `updateStatus` only for terminal states
+- Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `suspendStatus` guards against overwriting `expired`; `updateStatus` only for terminal states
 - Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes
 - Webhook Outline provisioning uses `claimOutlineSlot` CAS pattern (same as VPN route) to prevent duplicate keys in PM2 cluster
 - `invoice.payment_succeeded` re-provisions VPN key automatically when suspended license is reactivated (payment recovery)
@@ -75,7 +76,7 @@
 - PII (email) must never be passed to Outline API — use `lic-{id}` as key name
 - Circuit breaker state stored in SQLite `circuit_breaker` table (shared across PM2 cluster)
 - Health endpoint returns 503 when VPN offline or disk >90% — never lie about system state
-- `updateStatus` for terminal state changes, `reactivateStatus` only for recovery (guards against un-expiring)
+- `updateStatus` for terminal state changes, `reactivateStatus` only for recovery (guards against un-expiring), `suspendStatus` for payment_failed/past_due/unpaid (guards against overwriting `expired`)
 - Webhook Outline provisioning uses `claimOutlineSlot` CAS + `resetStalePending` before every provision
 - `/api/vpn/delete` only clears DB after successful Outline API delete — prevents orphaned keys
 
@@ -168,6 +169,7 @@
 - PM2 cluster: logs include `[i${INSTANCE}]` prefix from `process.env.NODE_APP_INSTANCE` — preserve this in all console.log/error calls
 - `/api/license/lookup` returns masked key + email (e.g., `VIZO-****-****-7890`, `u***@example.com`) — full key sent via email only
 - `device_id` format validation: `/^[a-zA-Z0-9\-]{16,64}$/` — enforced on POST /api/license only
+- Both Basic and Pro plans require device binding before VPN key creation — `requireVpnLicense` middleware enforces this
 - Adding a new language requires updating 7+ locations (see i18n section) — use `i18n-reviewer` subagent after changes
 - Webhook outer `catch` uses `if (!res.headersSent)` guard — checkout.session.completed responds early, so the catch must not double-send
 - Webhook Outline catch must call `stmts.resetOutlineClaim.run(newLicense.id)` — without this, failed provisioning permanently locks the license
@@ -192,12 +194,12 @@
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
 - Sitemap: 121 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v36'`
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v40'`
 
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
 - Run: `cd server && npm test` or `node --test **/*.test.js`
-- Test files: `routes/license.test.js` (9), `routes/webhook.test.js` (12), `routes/vpn.test.js` (11), `outline.test.js` (11), `app.test.js` (4) — 32 tests in runner
+- Test files: `routes/license.test.js`, `routes/webhook.test.js`, `routes/vpn.test.js`, `outline.test.js`, `app.test.js` — 69 tests in runner
 - All tests mock external APIs (Stripe, Outline, SMTP) — no real calls
 
 ## Monitoring
