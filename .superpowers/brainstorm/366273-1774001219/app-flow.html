@@ -1,0 +1,142 @@
+<h2>Vizoguard VPN — App Screens & User Flow (v1)</h2>
+<p class="subtitle">Single-screen app with activation overlay. Tap to select the flow that feels right.</p>
+
+<div class="section">
+<h3>Complete User Journey</h3>
+<div style="display:flex;gap:16px;overflow-x:auto;padding:16px 0;">
+
+  <!-- Screen 1: First Launch -->
+  <div style="min-width:220px;background:#111;border-radius:24px;padding:20px 16px;border:1px solid #333;text-align:center;">
+    <div style="font-size:0.6rem;color:#666;margin-bottom:12px;">FIRST LAUNCH</div>
+    <div style="font-size:1.5rem;margin-bottom:4px;">🛡️</div>
+    <div style="font-size:0.9rem;font-weight:600;color:#fff;margin-bottom:8px;">Welcome to<br><span style="color:#ff6b2b;">Vizoguard VPN</span></div>
+    <div style="font-size:0.7rem;color:#999;margin-bottom:16px;">Enter your license key to get started</div>
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:8px;font-family:monospace;font-size:0.65rem;color:#666;margin-bottom:8px;">VIZO-XXXX-XXXX-XXXX-XXXX</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
+      <div style="flex:1;background:#ff6b2b;color:#000;font-size:0.65rem;font-weight:600;padding:8px;border-radius:8px;">Activate</div>
+    </div>
+    <div style="font-size:0.6rem;color:#666;">or</div>
+    <div style="display:flex;gap:6px;margin-top:6px;">
+      <div style="flex:1;background:#1a1a1a;border:1px solid #333;color:#fff;font-size:0.6rem;padding:6px;border-radius:6px;">📷 Scan QR</div>
+      <div style="flex:1;background:#1a1a1a;border:1px solid #333;color:#fff;font-size:0.6rem;padding:6px;border-radius:6px;">📧 From Email</div>
+    </div>
+    <div style="font-size:0.55rem;color:#444;margin-top:10px;">No key? <span style="color:#ff6b2b;">Get one at vizoguard.com</span></div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;color:#666;font-size:1.2rem;">→</div>
+
+  <!-- Screen 2: Auto-connect prompt -->
+  <div style="min-width:220px;background:#111;border-radius:24px;padding:20px 16px;border:1px solid #333;text-align:center;">
+    <div style="font-size:0.6rem;color:#666;margin-bottom:12px;">ONBOARDING</div>
+    <div style="font-size:1.5rem;margin-bottom:8px;">🔒</div>
+    <div style="font-size:0.9rem;font-weight:600;color:#fff;margin-bottom:8px;">Stay protected<br>automatically?</div>
+    <div style="font-size:0.7rem;color:#999;margin-bottom:16px;line-height:1.4;">VPN connects when you open the app or restart your device.</div>
+    <div style="background:#ff6b2b;color:#000;font-size:0.7rem;font-weight:600;padding:10px;border-radius:8px;margin-bottom:8px;">Yes, keep me safe</div>
+    <div style="background:#1a1a1a;border:1px solid #333;color:#999;font-size:0.7rem;padding:10px;border-radius:8px;">I'll connect manually</div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;color:#666;font-size:1.2rem;">→</div>
+
+  <!-- Screen 3: Main screen - Disconnected -->
+  <div style="min-width:220px;background:#111;border-radius:24px;padding:20px 16px;border:1px solid #333;text-align:center;">
+    <div style="font-size:0.6rem;color:#666;margin-bottom:12px;">MAIN — DISCONNECTED</div>
+    <div style="width:100px;height:100px;border-radius:50%;border:3px solid #333;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;">
+      <div style="font-size:0.8rem;font-weight:600;color:#666;">TAP TO<br>CONNECT</div>
+    </div>
+    <div style="font-size:0.75rem;color:#ff3b3b;font-weight:500;margin-bottom:16px;">● Not Protected</div>
+    <div style="display:flex;gap:8px;text-align:center;">
+      <div style="flex:1;background:#1a1a1a;border-radius:8px;padding:8px;">
+        <div style="font-size:0.6rem;color:#666;">Status</div>
+        <div style="font-size:0.7rem;color:#999;">Disconnected</div>
+      </div>
+      <div style="flex:1;background:#1a1a1a;border-radius:8px;padding:8px;">
+        <div style="font-size:0.6rem;color:#666;">Plan</div>
+        <div style="font-size:0.7rem;color:#ff6b2b;">Basic</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:0.55rem;color:#444;">⚙️ Settings</div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;color:#666;font-size:1.2rem;">→</div>
+
+  <!-- Screen 4: Main screen - Connected -->
+  <div style="min-width:220px;background:#111;border-radius:24px;padding:20px 16px;border:1px solid #00e5a0;text-align:center;">
+    <div style="font-size:0.6rem;color:#00e5a0;margin-bottom:12px;">MAIN — CONNECTED</div>
+    <div style="width:100px;height:100px;border-radius:50%;border:3px solid #00e5a0;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,160,0.05);">
+      <div style="font-size:0.8rem;font-weight:600;color:#00e5a0;">VPN<br>ON</div>
+    </div>
+    <div style="font-size:0.75rem;color:#00e5a0;font-weight:500;margin-bottom:16px;">● Protected</div>
+    <div style="display:flex;gap:8px;text-align:center;">
+      <div style="flex:1;background:#1a1a1a;border-radius:8px;padding:8px;">
+        <div style="font-size:0.6rem;color:#666;">Duration</div>
+        <div style="font-size:0.7rem;color:#fff;">02:34:17</div>
+      </div>
+      <div style="flex:1;background:#1a1a1a;border-radius:8px;padding:8px;">
+        <div style="font-size:0.6rem;color:#666;">Data Used</div>
+        <div style="font-size:0.7rem;color:#fff;">1.2 GB</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:0.55rem;color:#444;">⚙️ Settings</div>
+  </div>
+
+</div>
+</div>
+
+<div class="section">
+<h3>Settings (Bottom Sheet)</h3>
+<div style="max-width:260px;margin:0 auto;background:#111;border-radius:16px;padding:16px;border:1px solid #333;">
+  <div style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:12px;">Settings</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #222;">
+    <span style="font-size:0.75rem;color:#ccc;">Auto-connect</span>
+    <div style="width:36px;height:20px;background:#ff6b2b;border-radius:10px;position:relative;"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px;"></div></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #222;">
+    <span style="font-size:0.75rem;color:#ccc;">Kill switch</span>
+    <div style="width:36px;height:20px;background:#ff6b2b;border-radius:10px;position:relative;"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px;"></div></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #222;">
+    <span style="font-size:0.75rem;color:#ccc;">Notifications</span>
+    <div style="width:36px;height:20px;background:#333;border-radius:10px;position:relative;"><div style="width:16px;height:16px;background:#666;border-radius:50%;position:absolute;left:2px;top:2px;"></div></div>
+  </div>
+  <div style="padding:10px 0;border-bottom:1px solid #222;">
+    <div style="font-size:0.75rem;color:#ccc;">License</div>
+    <div style="font-size:0.6rem;color:#666;font-family:monospace;margin-top:4px;">VIZO-A3K9-M7P2-X4L1-R8N5</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+    <span style="font-size:0.75rem;color:#ccc;">Plan expires</span>
+    <span style="font-size:0.7rem;color:#ff6b2b;">Mar 20, 2027</span>
+  </div>
+  <div style="text-align:center;margin-top:12px;">
+    <span style="font-size:0.6rem;color:#ff3b3b;">Sign out</span>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h3>Activation Methods</h3>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center;">
+  <div style="background:#1a1a1a;border-radius:12px;padding:16px 8px;border:1px solid #333;">
+    <div style="font-size:1.2rem;margin-bottom:6px;">🔗</div>
+    <div style="font-size:0.7rem;font-weight:600;color:#fff;">Deep Link</div>
+    <div style="font-size:0.6rem;color:#666;margin-top:4px;">From thank-you page<br><code style="color:#ff6b2b;font-size:0.55rem;">vizoguard://activate</code></div>
+  </div>
+  <div style="background:#1a1a1a;border-radius:12px;padding:16px 8px;border:1px solid #333;">
+    <div style="font-size:1.2rem;margin-bottom:6px;">📷</div>
+    <div style="font-size:0.7rem;font-weight:600;color:#fff;">QR Scan</div>
+    <div style="font-size:0.6rem;color:#666;margin-top:4px;">Cross-device<br>desktop → phone</div>
+  </div>
+  <div style="background:#1a1a1a;border-radius:12px;padding:16px 8px;border:1px solid #333;">
+    <div style="font-size:1.2rem;margin-bottom:6px;">📧</div>
+    <div style="font-size:0.7rem;font-weight:600;color:#fff;">Email Link</div>
+    <div style="font-size:0.6rem;color:#666;margin-top:4px;">Magic link in<br>license email</div>
+  </div>
+  <div style="background:#1a1a1a;border-radius:12px;padding:16px 8px;border:1px solid #333;">
+    <div style="font-size:1.2rem;margin-bottom:6px;">⌨️</div>
+    <div style="font-size:0.7rem;font-weight:600;color:#fff;">Manual</div>
+    <div style="font-size:0.6rem;color:#666;margin-top:4px;">Type key<br>last resort</div>
+  </div>
+</div>
+</div>

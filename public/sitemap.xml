@@ -112,6 +112,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vizoguard.com/compare/vizoguard-vs-expressvpn"/>
   </url>
   <url>
+    <loc>https://vizoguard.com/blog/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vizoguard.com/blog/what-is-vpn</loc>
     <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
