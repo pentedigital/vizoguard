@@ -338,12 +338,18 @@ async function showSuccess(data) {
 
   if (data.plan === "security_vpn") {
     // Pro plan
+    var isAndroid = /android/i.test(navigator.userAgent);
     document.getElementById("pro-license-key").textContent = data.key;
     document.getElementById("pro-email").textContent = data.email || "your email";
     if (vpnAccessUrl) {
       document.getElementById("pro-connect-btn").href = vpnAccessUrl;
       document.getElementById("pro-vpn-section").style.display = "block";
     }
+    // Android section for Pro users
+    var proTitle = isAndroid ? 'On Android?' : 'Also available: Vizoguard for Android';
+    var proAndroid = buildAndroidSection(proTitle, 'pro-android-qr', isAndroid);
+    document.getElementById("success-pro").appendChild(proAndroid);
+    showQR('pro-android-qr', buildAndroidIntentUrl(data.key));
     document.getElementById("pro-setup-link").href = "/setup.html" + (vpnAccessUrl ? "?key=" + encodeURIComponent(vpnAccessUrl) : "");
     document.getElementById("success-pro").style.display = "block";
   } else {
