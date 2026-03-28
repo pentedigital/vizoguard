@@ -38,6 +38,11 @@
     .vpn-steps { text-align: left; max-width: 320px; margin: 24px auto 0; }
     .vpn-steps li { color: var(--text-2); margin-bottom: 8px; font-size: 0.9rem; }
     .vpn-steps strong { color: var(--ice); }
+    .android-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin: 24px auto 0; max-width: 400px; text-align: center; }
+    .android-section h4 { color: var(--text); font-size: 0.95rem; margin: 0 0 12px; }
+    .android-section .btn { margin-bottom: 12px; }
+    .android-section .outline-fallback { font-size: 0.75rem; color: var(--text-3); margin-top: 12px; }
+    .android-section .outline-fallback a { color: rgba(0,229,160,0.7); }
   </style>
 </head>
 <body>
@@ -263,6 +268,44 @@ function showQR(canvasId, text) {
     new QRious({ element: document.getElementById(canvasId), value: text, size: 180, backgroundAlpha: 1, foreground: '#0a0a0f', background: '#ffffff', level: 'M' });
     document.getElementById(canvasId).parentElement.style.display = 'block';
   } catch (e) { /* QR library not loaded — skip */ }
+}
+
+function buildAndroidIntentUrl(key) {
+  return 'intent://activate?key=' + encodeURIComponent(key) +
+    '#Intent;scheme=vizoguard-vpn;package=com.vizoguard.vpn;' +
+    'S.browser_fallback_url=https%3A%2F%2Fvizoguard.com%2Fdownloads%2FVizoguard-latest.apk;end';
+}
+
+function buildAndroidSection(title, qrCanvasId, showApkBtn) {
+  var section = document.createElement('div');
+  section.className = 'android-section';
+
+  var h4 = document.createElement('h4');
+  h4.textContent = title;
+  section.appendChild(h4);
+
+  if (showApkBtn) {
+    var btn = document.createElement('a');
+    btn.href = '/downloads/Vizoguard-latest.apk';
+    btn.className = 'btn';
+    btn.style.marginBottom = '12px';
+    btn.textContent = 'Download Vizoguard APK';
+    section.appendChild(btn);
+  }
+
+  var qrBox = document.createElement('div');
+  qrBox.className = 'qr-box';
+  qrBox.style.display = 'none';
+  var canvas = document.createElement('canvas');
+  canvas.id = qrCanvasId;
+  qrBox.appendChild(canvas);
+  var label = document.createElement('div');
+  label.className = 'qr-label';
+  label.textContent = 'Scan to install and activate on your phone';
+  qrBox.appendChild(label);
+  section.appendChild(qrBox);
+
+  return section;
 }
 
 async function showSuccess(data) {
