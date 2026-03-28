@@ -22,6 +22,7 @@
 - Legal entity: PRIME360 HOLDING LTD (Malta)
 - Pages: 124 HTML pages — 7 landing pages (en, ar, hi, fr, es, tr, ru), 5 core SEO, 4 authority, 11 blog, 5 comparisons, 60 international translations, plus setup/privacy/terms/thank-you/pricing/download/press
 - Analytics: Google Ads (AW-18020160060) + GA4 (GT-NGJF3VBT) on all pages; begin_checkout fires on CTA click (with language), purchase + enhanced conversions (user email) fire on thank-you page
+- Android APK: hosted at `vizoguard.com/downloads/Vizoguard-latest.apk`, linked from `download.html` and `thank-you.html` with intent deep links (`vizoguard-vpn://activate?key=`) and QR codes
 
 ## Database
 - `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id, vless_uuid
@@ -193,8 +194,8 @@
 - Post-discount: `/api/pricing` endpoint is the single source of truth for discount state; `main.js` fetches it and hides discount UI. Only `thank-you.html` has a separate inline date-check for upsell pricing
 - International: 10 Tier 1 pages translated into ar, hi, fr, es, tr, ru (60 pages) — hreflang cross-linked, localized meta/schemas
 - Arabic pages load `/css/rtl.css` for RTL layout
-- Sitemap: 121 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
-- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v41'`
+- Sitemap: 122 URLs in `public/sitemap.xml` (clean URLs, hreflang cross-references)
+- Cache: CSS/JS at `?v=20`, service worker `CACHE_NAME = 'vg-v42'`
 
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
