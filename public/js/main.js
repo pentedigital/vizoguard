@@ -82,7 +82,21 @@ window.addEventListener('pageshow', function(e){
       var banner = document.getElementById('urgency-banner');
       if (banner) banner.style.display = 'none';
     }
-  }).catch(function(err){ console.warn('Pricing fetch failed:', err); });
+  }).catch(function(err){
+    console.warn('Pricing fetch failed:', err);
+    // Fail closed: after discount end date, assume regular pricing
+    if (new Date() > new Date('2026-04-04T23:59:59Z')) {
+      window._vgPricing = { basic: 49.99, pro: 149.99 };
+      document.querySelectorAll('.price-regular').forEach(function(el){ el.style.display = 'none'; });
+      document.querySelectorAll('.discount-badge').forEach(function(el){ el.style.display = 'none'; });
+      document.querySelectorAll('[data-i18n="pricing.basic_price_dollar"]').forEach(function(el){ el.textContent = '$49'; });
+      document.querySelectorAll('[data-i18n="pricing.basic_price_cents"]').forEach(function(el){ el.textContent = '.99'; });
+      document.querySelectorAll('[data-i18n="pricing.pro_price_dollar"]').forEach(function(el){ el.textContent = '$149'; });
+      document.querySelectorAll('[data-i18n="pricing.pro_price_cents"]').forEach(function(el){ el.textContent = '.99'; });
+      var banner = document.getElementById('urgency-banner');
+      if (banner) banner.style.display = 'none';
+    }
+  });
 })();
 
 // ── FAQ accordion ────────────────────────────
