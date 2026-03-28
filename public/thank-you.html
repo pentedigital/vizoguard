@@ -348,12 +348,88 @@ async function showSuccess(data) {
     document.getElementById("success-pro").style.display = "block";
   } else {
     // Basic plan
+    var isAndroid = /android/i.test(navigator.userAgent);
     document.getElementById("basic-license-key").textContent = data.key;
     document.getElementById("basic-email").textContent = data.email || "your email";
     if (vpnAccessUrl) {
-      document.getElementById("basic-connect-btn").href = vpnAccessUrl;
       document.getElementById("basic-vpn-section").style.display = "block";
-      showQR("basic-qr", vpnAccessUrl);
+      if (isAndroid) {
+        // Android: replace Outline flow with APK download + intent QR
+        var vpnSection = document.getElementById("basic-vpn-section");
+        // Clear existing Outline content
+        while (vpnSection.firstChild) vpnSection.removeChild(vpnSection.firstChild);
+
+        // APK download button
+        var dlBtns = document.createElement('div');
+        dlBtns.className = 'download-buttons';
+        dlBtns.style.marginTop = '24px';
+        var dlLink = document.createElement('a');
+        dlLink.href = '/downloads/Vizoguard-latest.apk';
+        dlLink.className = 'btn';
+        dlLink.textContent = 'Download Vizoguard for Android';
+        dlBtns.appendChild(dlLink);
+        vpnSection.appendChild(dlBtns);
+
+        // Intent QR code
+        var qrBox = document.createElement('div');
+        qrBox.className = 'qr-box';
+        qrBox.style.display = 'none';
+        var qrCanvas = document.createElement('canvas');
+        qrCanvas.id = 'basic-android-qr';
+        qrBox.appendChild(qrCanvas);
+        var qrLabel = document.createElement('div');
+        qrLabel.className = 'qr-label';
+        qrLabel.textContent = 'Scan to install and activate on your phone';
+        qrBox.appendChild(qrLabel);
+        vpnSection.appendChild(qrBox);
+
+        // Steps
+        var steps = document.createElement('ol');
+        steps.className = 'vpn-steps';
+        var s1 = document.createElement('li');
+        var s1b = document.createElement('strong');
+        s1b.textContent = 'Download and install';
+        s1.appendChild(s1b);
+        s1.appendChild(document.createTextNode(' the Vizoguard APK above.'));
+        steps.appendChild(s1);
+        var s2 = document.createElement('li');
+        var s2b = document.createElement('strong');
+        s2b.textContent = 'Open the app';
+        s2.appendChild(s2b);
+        s2.appendChild(document.createTextNode(' \u2014 your license activates automatically.'));
+        steps.appendChild(s2);
+        var s3 = document.createElement('li');
+        var s3b = document.createElement('strong');
+        s3b.textContent = 'Tap Connect';
+        s3.appendChild(s3b);
+        s3.appendChild(document.createTextNode(' \u2014 you\u2019re protected.'));
+        steps.appendChild(s3);
+        vpnSection.appendChild(steps);
+
+        // Outline fallback
+        var fallback = document.createElement('p');
+        fallback.className = 'outline-fallback';
+        fallback.style.cssText = 'font-size:0.75rem;color:var(--text-3);margin-top:12px;';
+        fallback.appendChild(document.createTextNode('Or use '));
+        var fallbackLink = document.createElement('a');
+        fallbackLink.href = 'https://play.google.com/store/apps/details?id=org.outline.android.client';
+        fallbackLink.target = '_blank';
+        fallbackLink.rel = 'noopener';
+        fallbackLink.style.color = 'rgba(0,229,160,0.7)';
+        fallbackLink.textContent = 'Outline on Google Play';
+        fallback.appendChild(fallbackLink);
+        vpnSection.appendChild(fallback);
+
+        showQR('basic-android-qr', buildAndroidIntentUrl(data.key));
+      } else {
+        // Non-Android: existing Outline flow
+        document.getElementById("basic-connect-btn").href = vpnAccessUrl;
+        showQR("basic-qr", vpnAccessUrl);
+        // Bonus: "Also on Android" section for desktop buyers
+        var androidSection = buildAndroidSection('Also available: Vizoguard for Android', 'basic-desktop-android-qr', false);
+        document.getElementById("basic-vpn-section").appendChild(androidSection);
+        showQR('basic-desktop-android-qr', buildAndroidIntentUrl(data.key));
+      }
     }
     document.getElementById("basic-setup-link").href = "/setup.html" + (vpnAccessUrl ? "?key=" + encodeURIComponent(vpnAccessUrl) : "");
     document.getElementById("success-basic").style.display = "block";
