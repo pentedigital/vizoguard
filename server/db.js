@@ -174,6 +174,7 @@ const stmts = {
   // Circuit breaker
   getCB: db.prepare("SELECT * FROM circuit_breaker WHERE name = ?"),
   updateCB: db.prepare("UPDATE circuit_breaker SET failures = ?, state = ?, opened_at = ? WHERE name = ?"),
+  casOpenToHalfOpen: db.prepare("UPDATE circuit_breaker SET state = 'half-open' WHERE name = ? AND state = 'open' AND ? - opened_at >= ?"),
 
   // Audit log
   insertAudit: db.prepare("INSERT INTO audit_log (action, entity_type, entity_id, details, ip) VALUES (?, ?, ?, ?, ?)"),

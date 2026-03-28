@@ -32,8 +32,14 @@ function outlineFetch(apiUrl, path, method = "GET", body = null) {
   let cb = getCBState();
   if (cb.state === "open") {
     if (Date.now() - cb.opened_at >= CB_TIMEOUT_MS) {
-      cb.state = "half-open";
-      updateCBState(cb.failures, "half-open", cb.opened_at);
+      // CAS: atomically transition open→half-open; only one instance wins
+      const won = cbStmts && cbStmts.casOpenToHalfOpen.run('outline', Date.now(), CB_TIMEOUT_MS);
+      if (won && won.changes > 0) {
+        cb.state = "half-open";
+      } else {
+        // Another instance already transitioned — this one waits
+        return Promise.reject(new Error("Outline API circuit breaker open"));
+      }
     } else {
       return Promise.reject(new Error("Outline API circuit breaker open"));
     }
