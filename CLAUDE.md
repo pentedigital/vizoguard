@@ -28,7 +28,8 @@
 - `licenses` table: key, email, plan, stripe IDs, device_id, status, expires_at, outline keys, vpn_node_id, vless_uuid
 - `vpn_nodes` table: multi-node VPN (region, host, api_url, status, max_keys)
 - `audit_log` table: action, entity_type, entity_id, details, ip, created_at
-- `schema_version` table: tracks DB migration version (currently v3)
+- `email_retry` table: id, email, license_key, plan, access_url, attempts, next_retry, created_at, last_error (3 retries at 5/15/60min)
+- `schema_version` table: tracks DB migration version (currently v4)
 - `circuit_breaker` table: shared Outline API circuit breaker state (name, failures, state, opened_at)
 - Plans: `vpn` (Basic) and `security_vpn` (Pro)
 - Statuses: `active`, `cancelled`, `expired`, `suspended`
@@ -65,7 +66,8 @@
 - `customer.subscription.updated` detects plan changes from metadata and updates license plan
 - Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
 - Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `suspendStatus` guards against overwriting `expired`; `updateStatus` only for terminal states
-- Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes
+- Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes; Outline delete failure preserves DB key for hourly cleanup retry (never clears DB if delete fails)
+- Email retry: failed license emails queued in `email_retry` table; retried 3x at 5/15/60min backoff by `processEmailRetryQueue()` (instance 0 only, every 5min)
 - Webhook Outline provisioning uses `claimOutlineSlot` CAS pattern (same as VPN route) to prevent duplicate keys in PM2 cluster
 - `invoice.payment_succeeded` re-provisions VPN key automatically when suspended license is reactivated (payment recovery)
 - `charge.refunded` retrieves subscription ID via `stripe.invoices.retrieve(charge.invoice)` — Stripe Charge objects don't have `.subscription` directly
@@ -200,7 +202,7 @@
 ## Backend Tests
 - Framework: `node:test` + `node:assert/strict` (built-in, no install)
 - Run: `cd server && npm test` or `node --test **/*.test.js`
-- Test files: `routes/license.test.js`, `routes/webhook.test.js`, `routes/vpn.test.js`, `outline.test.js`, `app.test.js` — 69 tests in runner
+- Test files: `routes/license.test.js`, `routes/webhook.test.js`, `routes/vpn.test.js`, `routes/security.test.js`, `routes/failure.test.js`, `outline.test.js`, `app.test.js` — 75 tests in runner
 - All tests mock external APIs (Stripe, Outline, SMTP) — no real calls
 
 ## Monitoring
@@ -208,6 +210,7 @@
 - Prometheus: scrapes `vizoguard-api` at `127.0.0.1:3000/metrics` every 15s
 - Grafana: `localhost:3001`, Prometheus datasource at `host.docker.internal:9090`, "Vizoguard API" dashboard
 - Counters: `http_requests_total`, `license_validations_total`, `vpn_keys_created_total`, `webhook_events_total`, `stripe_checkout_sessions_total`, `outline_api_calls_total`, `email_sends_total`
+- Gauges: `active_licenses`, `active_outline_keys`, `stale_pending_claims`, `email_retry_queue_depth`
 - Histograms: `http_request_duration_seconds`, `outline_api_duration_seconds`
 - Alerts: 6 rules in `/opt/outline/persisted-state/prometheus/alert_rules.yml` (APIHighErrorRate, WebhookProcessingFailures, VPNKeyProvisioningFailures, HighRequestLatency, ProcessRestarted, APIDown)
 
