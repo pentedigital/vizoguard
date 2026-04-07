@@ -74,6 +74,37 @@ const cleanupInterval = setInterval(cleanupExpiredKeys, 3600000); // Every hour
 cleanupInterval.unref();
 setTimeout(cleanupExpiredKeys, 30000); // First run 30s after startup
 
+// Retry failed email sends (runs every 5min, instance 0 only)
+async function processEmailRetryQueue() {
+  if (INSTANCE !== '0') return;
+  const { sendLicenseEmail } = require('./email');
+  const { emailSendsTotal } = require('./metrics');
+  try {
+    const pending = stmts.pendingEmailRetries.all();
+    for (const item of pending) {
+      try {
+        await sendLicenseEmail(item.email, item.license_key, item.plan, item.access_url);
+        stmts.deleteEmailRetry.run(item.id);
+        emailSendsTotal.inc({ result: 'success' });
+        stmts.insertAudit.run('email_retry_success', 'email_retry', String(item.id), `attempts=${item.attempts + 1}`, 'system');
+        console.log(`[i${INSTANCE}] Email retry succeeded for id=${item.id}`);
+      } catch (err) {
+        const backoffMinutes = [15, 60][item.attempts] || 60;
+        stmts.updateEmailRetry.run(err.message, String(backoffMinutes), item.id);
+        console.error(`[i${INSTANCE}] Email retry #${item.attempts + 1} failed for id=${item.id}:`, err.message);
+        if (item.attempts + 1 >= 3) {
+          stmts.insertAudit.run('email_retry_exhausted', 'email_retry', String(item.id), `email=${item.email.replace(/^.+@/, '***@')}`, 'system');
+        }
+      }
+    }
+  } catch (err) {
+    console.error(`[i${INSTANCE}] Email retry queue error:`, err.message);
+  }
+}
+const emailRetryInterval = setInterval(processEmailRetryQueue, 300000);
+emailRetryInterval.unref();
+setTimeout(processEmailRetryQueue, 60000);
+
 // Trust nginx reverse proxy (needed for rate limiting with X-Forwarded-For)
 app.set("trust proxy", 1);
 app.disable("x-powered-by");

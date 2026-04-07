@@ -141,6 +141,26 @@ if (currentVersion < 3) {
   db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (3)").run();
 }
 
+// Migration v4: email retry queue + clean orphan test license + stale pending gauge
+if (currentVersion < 4) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS email_retry (
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      email       TEXT    NOT NULL,
+      license_key TEXT    NOT NULL,
+      plan        TEXT    NOT NULL,
+      access_url  TEXT,
+      attempts    INTEGER NOT NULL DEFAULT 0,
+      next_retry  TEXT    NOT NULL DEFAULT (datetime('now', '+5 minutes')),
+      created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+      last_error  TEXT
+    );
+  `);
+  // Clean orphaned test license (audit finding)
+  db.prepare("UPDATE licenses SET status = 'cancelled' WHERE id = 9 AND key = 'VIZO-EE44-FF55-AA66-BB77' AND status = 'active'").run();
+  db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (4)").run();
+}
+
 // Prune processed events older than 7 days (beyond Stripe's 72h retry window)
 db.prepare("DELETE FROM processed_events WHERE processed_at < datetime('now', '-7 days')").run();
 
@@ -232,6 +252,16 @@ const stmts = {
   // Gauge metrics — license/key counts for drift detection
   countActiveLicenses: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE status IN ('active', 'cancelled') AND expires_at > datetime('now')"),
   countActiveOutlineKeys: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE outline_key_id IS NOT NULL AND outline_key_id != 'pending'"),
+
+  // Email retry queue
+  insertEmailRetry: db.prepare("INSERT INTO email_retry (email, license_key, plan, access_url) VALUES (?, ?, ?, ?)"),
+  pendingEmailRetries: db.prepare("SELECT * FROM email_retry WHERE attempts < 3 AND next_retry <= datetime('now')"),
+  updateEmailRetry: db.prepare("UPDATE email_retry SET attempts = attempts + 1, last_error = ?, next_retry = datetime('now', ? || ' minutes') WHERE id = ?"),
+  deleteEmailRetry: db.prepare("DELETE FROM email_retry WHERE id = ?"),
+  countPendingEmailRetries: db.prepare("SELECT COUNT(*) AS count FROM email_retry WHERE attempts < 3"),
+
+  // Stale pending claims gauge
+  countStalePendingClaims: db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE outline_key_id = 'pending' AND (last_check < datetime('now', '-5 minutes') OR (last_check IS NULL AND created_at < datetime('now', '-5 minutes')))"),
 };
 
 module.exports = { db, stmts };

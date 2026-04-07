@@ -35,7 +35,9 @@ const mockStmts = {
   setLicenseNode:     { run: null },
   clearOutlineKey:    { run: null },
   resetOutlineClaim:  { run: null },
+  resetStalePending:  { run: null },
   findNodeById:       { get: null },
+  insertEmailRetry:   { run: null },
 };
 
 const mockOutline = {
@@ -68,11 +70,13 @@ const calls = {
   setLicenseNode:    [],
   clearOutlineKey:   [],
   resetOutlineClaim: [],
+  resetStalePending: [],
   findNodeById:      [],
   createAccessKey:   [],
   setDataLimit:      [],
   deleteAccessKey:   [],
   sendLicenseEmail:  [],
+  insertEmailRetry:  [],
 };
 
 function resetCalls() {
@@ -113,7 +117,7 @@ const stmtsProxy = {};
 [
   "findBySubscription", "findByCustomer", "findByKey", "bestNode",
   "insert", "insertEvent", "insertAudit", "claimOutlineSlot", "updateExpiry", "updateStatus", "updatePlan", "reactivateStatus", "suspendStatus",
-  "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "findNodeById",
+  "setOutlineKey", "setLicenseNode", "clearOutlineKey", "resetOutlineClaim", "resetStalePending", "findNodeById", "insertEmailRetry",
 ].forEach((name) => {
   stmtsProxy[name] = {
     get: (...args) => { calls[name].push(args); return mockStmts[name].get(...args); },
@@ -192,7 +196,9 @@ function resetAll() {
   mockStmts.setLicenseNode.run     = () => ({});
   mockStmts.clearOutlineKey.run    = () => ({});
   mockStmts.resetOutlineClaim.run  = () => ({});
+  mockStmts.resetStalePending.run  = () => ({});
   mockStmts.findNodeById.get       = () => null;
+  mockStmts.insertEmailRetry.run   = () => ({});
 
   mockOutline.createAccessKey = async () => ({ id: "42", accessUrl: "ss://fake" });
   mockOutline.setDataLimit    = async () => null;
@@ -510,5 +516,152 @@ describe("POST /webhook", () => {
     assert.equal(calls.deleteAccessKey.length, 1);
     assert.equal(calls.deleteAccessKey[0][0], "99");
     assert.equal(calls.clearOutlineKey.length, 1);
+  });
+
+  // 13. checkout.session.completed — email failure queues retry
+  it("checkout.session.completed — email failure queues retry", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "checkout.session.completed",
+      data: {
+        object: {
+          id: "cs_email_fail",
+          customer_details: { email: "retry@example.com" },
+          customer: "cus_email_fail",
+          subscription: "sub_email_fail",
+          metadata: { plan: "security_vpn" },
+        },
+      },
+    });
+    mockEmail.sendLicenseEmail = async () => { throw new Error("SMTP connection refused"); };
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.insertEmailRetry.length, 1, "insertEmailRetry must be called");
+    assert.equal(calls.insertEmailRetry[0][0], "retry@example.com");
+    assert.match(calls.insertEmailRetry[0][1], /^VIZO-/);
+    assert.equal(calls.insertEmailRetry[0][2], "security_vpn");
+  });
+
+  // 14. invoice.payment_succeeded — reactivation email failure queues retry
+  it("invoice.payment_succeeded — reactivation email failure queues retry", async () => {
+    const periodEnd = 1800000000;
+    mockConstructEvent.impl = () => ({
+      type: "invoice.payment_succeeded",
+      data: {
+        object: {
+          subscription: "sub_react",
+          billing_reason: "subscription_cycle",
+          lines: { data: [{ period: { end: periodEnd } }] },
+        },
+      },
+    });
+    // Reactivation scenario: license is suspended with no outline key
+    mockStmts.findBySubscription.get = () => ({
+      id: 20,
+      key: "VIZO-REACT-1234",
+      email: "react@example.com",
+      plan: "vpn",
+      outline_key_id: null,
+      vpn_node_id: null,
+    });
+    mockStmts.reactivateStatus.run = () => ({ changes: 1 });
+    mockEmail.sendLicenseEmail = async () => { throw new Error("SMTP timeout"); };
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.insertEmailRetry.length, 1, "insertEmailRetry must be called for reactivation");
+    assert.equal(calls.insertEmailRetry[0][0], "react@example.com");
+    assert.equal(calls.insertEmailRetry[0][1], "VIZO-REACT-1234");
+    assert.equal(calls.insertEmailRetry[0][2], "vpn");
+  });
+
+  // 15. invoice.payment_failed — Outline delete failure preserves DB key
+  it("invoice.payment_failed — Outline delete failure preserves DB key", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "invoice.payment_failed",
+      data: { object: { subscription: "sub_fail_outline" } },
+    });
+    mockStmts.findBySubscription.get = () => ({
+      id: 30,
+      outline_key_id: "key_30",
+      vpn_node_id: null,
+    });
+    mockOutline.deleteAccessKey = async () => { throw new Error("Outline unreachable"); };
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.deleteAccessKey.length, 1, "deleteAccessKey must be attempted");
+    assert.equal(calls.clearOutlineKey.length, 0, "clearOutlineKey must NOT be called when delete fails");
+  });
+
+  // 16. customer.subscription.deleted — Outline delete failure preserves DB key
+  it("customer.subscription.deleted — Outline delete failure preserves DB key", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "customer.subscription.deleted",
+      data: { object: { id: "sub_del_outline" } },
+    });
+    mockStmts.findBySubscription.get = () => ({
+      id: 31,
+      outline_key_id: "key_31",
+      vpn_node_id: null,
+    });
+    mockOutline.deleteAccessKey = async () => { throw new Error("Outline unreachable"); };
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.deleteAccessKey.length, 1, "deleteAccessKey must be attempted");
+    assert.equal(calls.clearOutlineKey.length, 0, "clearOutlineKey must NOT be called when delete fails");
+  });
+
+  // 17. charge.refunded — Outline delete failure preserves DB key
+  it("charge.refunded — Outline delete failure preserves DB key", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "charge.refunded",
+      data: { object: { id: "ch_refund_fail", amount: 1000, amount_refunded: 1000, invoice: "in_refund_fail" } },
+    });
+    mockStripeInvoices.retrieve = async () => ({ subscription: "sub_refund_fail" });
+    mockStmts.findBySubscription.get = () => ({
+      id: 32,
+      outline_key_id: "key_32",
+      vpn_node_id: null,
+    });
+    mockOutline.deleteAccessKey = async () => { throw new Error("Outline unreachable"); };
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.deleteAccessKey.length, 1, "deleteAccessKey must be attempted");
+    assert.equal(calls.clearOutlineKey.length, 0, "clearOutlineKey must NOT be called when delete fails");
+  });
+
+  // 18. invoice.payment_failed — successful Outline delete clears DB key
+  it("invoice.payment_failed — successful Outline delete clears DB key", async () => {
+    mockConstructEvent.impl = () => ({
+      type: "invoice.payment_failed",
+      data: { object: { subscription: "sub_fail_ok" } },
+    });
+    mockStmts.findBySubscription.get = () => ({
+      id: 33,
+      outline_key_id: "key_33",
+      vpn_node_id: null,
+    });
+    mockOutline.deleteAccessKey = async () => null;
+
+    const res = makeRes();
+    await invoke(makeReq(), res);
+
+    assert.equal(res._status, 200);
+    assert.equal(calls.deleteAccessKey.length, 1, "deleteAccessKey must be called");
+    assert.equal(calls.clearOutlineKey.length, 1, "clearOutlineKey must be called on successful delete");
+    assert.equal(calls.clearOutlineKey[0][0], 33);
   });
 });

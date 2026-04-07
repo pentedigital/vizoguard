@@ -91,6 +91,30 @@ const activeOutlineKeysGauge = new client.Gauge({
   },
 });
 
+const stalePendingClaimsGauge = new client.Gauge({
+  name: 'stale_pending_claims',
+  help: 'Licenses stuck in outline_key_id=pending for more than 5 minutes',
+  collect() {
+    try {
+      const { stmts } = require('./db');
+      const row = stmts.countStalePendingClaims.get();
+      this.set(row ? row.count : 0);
+    } catch { this.set(0); }
+  },
+});
+
+const emailRetryQueueDepth = new client.Gauge({
+  name: 'email_retry_queue_depth',
+  help: 'Number of emails pending retry (attempts < 3)',
+  collect() {
+    try {
+      const { stmts } = require('./db');
+      const row = stmts.countPendingEmailRetries.get();
+      this.set(row ? row.count : 0);
+    } catch { this.set(0); }
+  },
+});
+
 // Middleware to track HTTP requests
 function metricsMiddleware(req, res, next) {
   const start = process.hrtime.bigint();

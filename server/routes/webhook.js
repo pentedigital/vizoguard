@@ -166,7 +166,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           emailSendsTotal.inc({ result: 'success' });
         } catch (emailErr) {
           emailSendsTotal.inc({ result: 'error' });
-          console.error(`[i${INSTANCE}] Failed to send license email:`, emailErr.stack || emailErr);
+          console.error(`[i${INSTANCE}] Failed to send license email, queued for retry:`, emailErr.stack || emailErr);
+          try { stmts.insertEmailRetry.run(email, licenseKey, plan, accessUrl); } catch (qErr) {
+            console.error(`[i${INSTANCE}] Failed to queue email retry:`, qErr.message);
+          }
         }
         webhookEventsTotal.inc({ event_type: event.type, result: 'success' });
         return; // Already responded above
@@ -234,7 +237,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
                     emailSendsTotal.inc({ result: 'success' });
                   } catch (emailErr) {
                     emailSendsTotal.inc({ result: 'error' });
-                    console.error(`[i${INSTANCE}] Failed to send reactivation email:`, emailErr.message);
+                    console.error(`[i${INSTANCE}] Failed to send reactivation email, queued for retry:`, emailErr.message);
+                    try { stmts.insertEmailRetry.run(reactivatedEmail, reactivatedLicense.key, reactivatedLicense.plan, result.accessUrl); } catch (qErr) {
+                      console.error(`[i${INSTANCE}] Failed to queue email retry:`, qErr.message);
+                    }
                   }
                 }
               } catch (outlineErr) {
@@ -265,11 +271,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           try {
             const revokeApiUrl = getNodeApiUrlForLicense(suspendedLicense);
             await outline.deleteAccessKey(suspendedLicense.outline_key_id, revokeApiUrl);
+            stmts.clearOutlineKey.run(suspendedLicense.id);
             console.log(`[i${INSTANCE}] Outline key revoked on suspension for ${subId}`);
           } catch (err) {
-            console.error(`[i${INSTANCE}] Failed to revoke Outline key on suspension:`, err.message);
-          } finally {
-            stmts.clearOutlineKey.run(suspendedLicense.id);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key on suspension (cleanup job will retry):`, err.message);
           }
         }
 
@@ -290,11 +295,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           try {
             const revokeApiUrl = getNodeApiUrlForLicense(expiredLicense);
             await outline.deleteAccessKey(expiredLicense.outline_key_id, revokeApiUrl);
+            stmts.clearOutlineKey.run(expiredLicense.id);
             console.log(`[i${INSTANCE}] Outline key revoked for subscription ${sub.id}`);
           } catch (err) {
-            console.error(`[i${INSTANCE}] Failed to revoke Outline key:`, err.message);
-          } finally {
-            stmts.clearOutlineKey.run(expiredLicense.id);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key (cleanup job will retry):`, err.message);
           }
         }
 
@@ -341,11 +345,10 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
           try {
             const revokeApiUrl = getNodeApiUrlForLicense(refundedLicense);
             await outline.deleteAccessKey(refundedLicense.outline_key_id, revokeApiUrl);
+            stmts.clearOutlineKey.run(refundedLicense.id);
             console.log(`[i${INSTANCE}] Outline key revoked on refund for ${subId}`);
           } catch (err) {
-            console.error(`[i${INSTANCE}] Failed to revoke Outline key on refund:`, err.message);
-          } finally {
-            stmts.clearOutlineKey.run(refundedLicense.id);
+            console.error(`[i${INSTANCE}] Failed to revoke Outline key on refund (cleanup job will retry):`, err.message);
           }
         }
 
