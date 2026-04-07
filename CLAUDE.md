@@ -67,7 +67,7 @@
 - Webhook idempotency: `processed_events` table deduplicates by Stripe event ID (INSERT OR IGNORE, atomic)
 - Status transitions guarded: `reactivateStatus` prevents un-expiring deleted subscriptions; `suspendStatus` guards against overwriting `expired`; `updateStatus` only for terminal states
 - Outline key lifecycle: orphaned keys cleaned up on any failure; stale `pending` claims auto-reset after 5 minutes; Outline delete failure preserves DB key for hourly cleanup retry (never clears DB if delete fails)
-- Email retry: failed license emails queued in `email_retry` table; retried 3x at 5/15/60min backoff by `processEmailRetryQueue()` (instance 0 only, every 5min)
+- Email retry: failed license emails queued in `email_retry` table; retried 3x at 5/15/60min backoff by `processEmailRetryQueue()` (instance 0 only, every 5min); after 3 failures, row stays for manual resolution via `/email-retry-status`
 - Webhook Outline provisioning uses `claimOutlineSlot` CAS pattern (same as VPN route) to prevent duplicate keys in PM2 cluster
 - `invoice.payment_succeeded` re-provisions VPN key automatically when suspended license is reactivated (payment recovery)
 - `charge.refunded` retrieves subscription ID via `stripe.invoices.retrieve(charge.invoice)` — Stripe Charge objects don't have `.subscription` directly
