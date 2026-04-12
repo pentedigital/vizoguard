@@ -86,11 +86,16 @@
 ## Security Rules
 - Never log license keys, VPN access URLs, email addresses, or Stripe secrets
 - Email addresses redacted in webhook logs (`***@domain.com`)
-- Outline API uses `rejectUnauthorized: false` — scoped to self-signed Outline server only
-- All API routes are rate-limited
+- Outline API uses `rejectUnauthorized: false` — scoped to self-signed Outline server only (see detailed security notice in `outline.js`)
+- All API routes are rate-limited (memory store by default, Redis optional via `REDIS_URL`)
 - Request ID correlation: every request gets `req.id` (8-char UUID) logged as `[i${INSTANCE}] [${req.id}]`
 - `data-i18n-attr` in i18n.js sanitizes `href`/`src` values — rejects `javascript:` URIs
 - Failed license validations logged with `req.ip` for abuse detection
+
+## Security Improvements (2026-04-12)
+- **Redis-backed rate limiting**: Optional cluster-wide rate limiting when `REDIS_URL` env var is set. Install optional deps: `npm i ioredis rate-limit-redis`
+- **TLS verification documentation**: Added comprehensive security notice in `outline.js` explaining the `rejectUnauthorized: false` trade-off for self-signed Outline certificates
+- PM2 cluster in-memory rate limiting noted — effective limit = max × instance count; nginx `limit_req_zone` is authoritative
 
 ## Infrastructure
 - Production path: `/var/www/vizoguard/` — `public/` and `server/` are symlinks to `/root/vizoguard/`
