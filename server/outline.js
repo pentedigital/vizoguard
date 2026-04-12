@@ -13,6 +13,37 @@ const DEFAULT_API_URL = process.env.OUTLINE_API_URL;
 const CB_THRESHOLD = 5;
 const CB_TIMEOUT_MS = 30000;
 
+/**
+ * SECURITY NOTICE: TLS Certificate Verification
+ * 
+ * The Outline VPN server uses a self-signed certificate. Node.js's HTTPS client
+ * is configured with `rejectUnauthorized: false` to allow connections to this
+ * server. This is a deliberate security trade-off:
+ * 
+ * 1. The Outline server's API URL contains a cryptographically random secret prefix
+ *    (e.g., https://outline.example.com/SECRET_PREFIX/api/...) that acts as the
+ *    authentication mechanism.
+ * 
+ * 2. The API URL is stored in the database (vpn_nodes.api_url) and is NEVER
+ *    user-settable. Compromise of this table would be a critical security breach
+ *    regardless of TLS verification.
+ * 
+ * 3. The secret prefix is 32+ bytes of random data, making brute-force attacks
+ *    infeasible.
+ * 
+ * MITIGATION:
+ * - If you have a custom CA-signed certificate for your Outline server, set
+ *   the NODE_EXTRA_CA_CERTS environment variable or modify the code below
+ *   to use a custom CA bundle.
+ * 
+ * ALTERNATIVE APPROACHES:
+ * - Pin the Outline server's certificate fingerprint
+ * - Use a reverse proxy with valid TLS in front of Outline
+ * - Use Outline's built-in certbot integration for valid certificates
+ * 
+ * See: https://github.com/Jigsaw-Code/outline-server/issues/607
+ */
+
 // SQLite-backed circuit breaker (shared across PM2 cluster instances via prepared stmts)
 let cbStmts;
 try { cbStmts = require('./db').stmts; } catch { /* db not available in test */ }

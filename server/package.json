@@ -16,5 +16,10 @@
     "nodemailer": "^8.0.2",
     "prom-client": "^15.1.3",
     "stripe": "^14.14.0"
-  }
+  },
+  "optionalDependencies": {
+    "ioredis": "^5.3.0",
+    "rate-limit-redis": "^4.2.0"
+  },
+  "_comment": "Install optional deps for Redis-backed rate limiting: npm i ioredis rate-limit-redis"
 }

@@ -148,9 +148,51 @@ app.use((req, res, next) => {
 
 // Rate limiting — NOTE: in-memory store means each PM2 cluster instance has its own counter.
 // Effective limits are max * instance_count. Use nginx limit_req_zone for strict enforcement.
-const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false });
-const checkoutLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, standardHeaders: true, legacyHeaders: false });
-const licenseLimiter = rateLimit({ windowMs: 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false });
+//
+// OPTIONAL REDIS BACKEND:
+// For strict cluster-wide rate limiting, set REDIS_URL env variable:
+//   REDIS_URL=redis://localhost:6379 node app.js
+//
+// The Redis store provides:
+// - Shared counters across all PM2 instances
+// - Persistence across restarts
+// - Configurable TTL for rate limit windows
+
+let RedisStore;
+try {
+  if (process.env.REDIS_URL) {
+    const { Redis } = require('ioredis');
+    const RedisStoreModule = require('rate-limit-redis');
+    RedisStore = RedisStoreModule.default || RedisStoreModule;
+    console.log(`[i${INSTANCE}] Using Redis-backed rate limiting: ${process.env.REDIS_URL}`);
+  }
+} catch (err) {
+  console.warn(`[i${INSTANCE}] Redis modules not available, using memory store. Install: npm i ioredis rate-limit-redis`);
+}
+
+function createRateLimiter(windowMs, max, name) {
+  const config = { windowMs, max, standardHeaders: true, legacyHeaders: false };
+  
+  // Use Redis store if available for cluster-wide rate limiting
+  if (RedisStore && process.env.REDIS_URL) {
+    try {
+      const { Redis } = require('ioredis');
+      config.store = new RedisStore({
+        sendCommand: (...args) => new Redis(process.env.REDIS_URL).call(...args),
+        prefix: `rl:${name}:`,
+      });
+      console.log(`[i${INSTANCE}] Rate limiter '${name}' using Redis store (max=${max}, window=${windowMs}ms)`);
+    } catch (err) {
+      console.error(`[i${INSTANCE}] Failed to create Redis store for '${name}', falling back to memory:`, err.message);
+    }
+  }
+  
+  return rateLimit(config);
+}
+
+const apiLimiter = createRateLimiter(60 * 1000, 30, 'api');
+const checkoutLimiter = createRateLimiter(60 * 1000, 5, 'checkout');
+const licenseLimiter = createRateLimiter(60 * 1000, 10, 'license');
 
 // License API
 app.use("/api/license", licenseLimiter, licenseRouter);
