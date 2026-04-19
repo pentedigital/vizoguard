@@ -135,7 +135,10 @@ const pages = allHtmlFiles.map((file) => ({
   dir: path.dirname(file),
 }));
 
-// ── Tests ───────────────────────────────────────────────────────────────────
+// Pages that are exempt from full SEO (verification files, raw assets)
+const structureExempt = new Set(["/google4695fa22216f6680.html"]);
+
+// ── Tests ─────────────────────────────────────────────────────────────────--
 
 describe("Website HTML structure", () => {
   for (const page of pages) {
