@@ -1,0 +1,13 @@
+# Global fallback
+* @pentedigital
+
+# CI/CD workflows require owner review
+.github/workflows/ @pentedigital
+
+# Backend server code
+server/** @pentedigital
+
+# Security-sensitive files
+**/security* @pentedigital
+**/auth* @pentedigital
+**/vpn* @pentedigital
